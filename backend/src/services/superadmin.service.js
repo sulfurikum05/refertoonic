@@ -170,10 +170,14 @@ export class SuperadminService {
     const trx = await pg.transaction();
     try {
         
-        const file = await SuperadminModel.getVideoById(id, trx)
-        const filePath = file[0].video_url
-        const cleanPath = filePath.trim();
-        await DeleteFiles.deleteFileFromStorage(cleanPath)
+        const video = await SuperadminModel.getVideoById(id, trx)
+        const videoPath = video[0].video_url
+        const cleanVideoPath = videoPath.trim();
+        const gifPath = video[0].gif_url
+        const cleanGifPath = gifPath.trim();
+        
+
+        await DeleteFiles.deleteFileFromStorage(cleanVideoPath, cleanGifPath)
         await SuperadminModel.deleteLibraryVideo(id, trx)
         await trx.commit();
         return { message: "Video deleted successfully"};

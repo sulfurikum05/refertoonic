@@ -72,16 +72,13 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         });
         const data = await response.json();
         if (!data.status) {
-            console.log(data.page, 1, data.status);
             showMessage(data.message)
         }else{
             if (data.page) {                
                 localStorage.setItem("accessToken", data.accessToken)
-                console.log(data.page, 2);
                 
                 window.location.href = data.page
             }else{
-                console.log(data, 3);
                 showMessage(data.errors)
             }
         }

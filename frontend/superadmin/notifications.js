@@ -92,7 +92,6 @@ document.querySelector('.notifications-create-button').addEventListener('click',
             message,
             status: "publish"
         };
-    console.log(newData);
 
      const token = localStorage.getItem("accessToken");
         const response = await fetch('http://localhost:3030/api/v1/superadmin/sendNotification', {
