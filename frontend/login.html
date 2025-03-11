@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <header>
+    <div class="nav">
+        <a href="#">Pricing</a>
+        <a href="#">Demo</a>
+        <a href="#">About us</a>
+        <a href="#">Help center</a>
+    </div>
+
+    <div class="login_btnContainer">
+        <a href="login.html" class="login">Login or Register</a>
+    </div>           
+    </header>
+
+    <div class="video-container1">
+        <video autoplay muted loop>
+            <source src="111.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="main-div">
+        <div class="form-container">
+
+            <!-- Login Form -->
+            <form class="form" id="loginForm" style="display: block;">
+                <h2>Вход</h2>
+                <div class="input-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" name="loginEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Пароль:</label>
+                    <input type="password" id="loginPassword" name="loginPassword" required>
+                </div>
+                <button type="submit" class="form-button">Войти</button>
+                <p>
+                    <a href="#" id="showRegister">Регистрация</a> |
+                    <a href="#" id="showResetPassword">Забыли пароль?</a>
+                </p>
+            </form>
+
+            <!-- Registration Form -->
+            <form class="form" id="registerForm" style="display: none;">
+                <h2>Регистрация</h2>
+                <div class="input-group">
+                    <label for="registerName">Имя:</label>
+                    <input type="text" id="registerName" name="registerName" required>
+                </div>
+                <div class="input-group">
+                    <label for="registerSurname">Фамилия:</label>
+                    <input type="text" id="registerSurname" name="registerSurname">
+                </div>
+                <div class="input-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" name="registerEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="registerPassword">Пароль:</label>
+                    <input type="password" id="registerPassword" name="registerPassword" required>
+                </div>
+                <div class="input-group">
+                    <label for="confirmPassword">Подтвердите пароль:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="form-button">Регистрация</button>
+                <p>
+                    <a href="#" id="showLogin">Уже есть аккаунт? Войти</a>
+                </p>
+            </form>
+
+            <!-- Reset Password Form -->
+            <form class="form" id="resetPasswordForm" style="display: none;">
+                <h2>Сброс пароля</h2>
+                <div class="input-group">
+                    <label for="resetEmail">Email:</label>
+                    <input type="email" id="resetEmail" name="resetEmail" required>
+                </div>
+                <button type="button" class="form-button" id="sendResetCode">Получить код</button>
+                <div class="input-group">
+                    <label for="resetCode">Код:</label>
+                    <input type="text" id="resetCode" name="resetCode" required>
+                </div>
+                <div class="input-group">
+                    <label for="newPassword">Новый пароль:</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                </div>
+                <button type="submit" class="form-button" id="resetPassword">Восстановить пароль</button>
+                <p>
+                    <a href="#" id="showLoginFromReset">Вернуться к входу</a>
+                </p>
+            </form>
+
+        </div>
+    </div>
+    <!-- <footer>
+        <div class="footer-content">
+            <p>&copy; Refertoonic. Все права защищены.</p>
+            <ul class="social-media">
+                <li><a href="#">ВКонтакте</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">Facebook</a></li>
+            </ul>
+        </div>
+    </footer> -->
+    <script src="login.js"></script>
+</body>
+</html>

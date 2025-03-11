@@ -1,0 +1,75 @@
+
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="ключевое слово 1, ключевое слово 2, ключевое слово 3">
+    <title>Refertoonic</title>
+    <link rel="stylesheet" href="../main_style.css">
+    <link rel="stylesheet" href="superadmin.css">
+    
+</head>
+<body>
+    <header>
+        <a href="../dashboard.html" class="logout">Logout</a> 
+    </header>
+    
+    <main>
+        <div class="sidebar">
+              <ul class="menu">
+                <li><a class="menu-item-dashboard" href="superadmin.dashboard.html">Dashboard</a></li>
+                <li><a class="menu-item-dashManagement" href="dashboardManagement.html">Dashboard management</a></li>
+                <li><a class="menu-item-userManagement" href="userManagement.html">User management</a></li>
+                <li><a class="menu-item-paymentHistoryManagement" href="paymentHistoryManagement.html">Payment his. management</a></li>
+                <li><a class="menu-item-videoModeration" href="videoModeration.html">Video moderation</a></li>
+                <li><a class="menu-item-messages" href="messages.html">Messages</a></li>
+                <li><a class="menu-item-notifications" href="notifications.html">Notificatoins</a></li>
+                <li><a class="menu-item-flieLibrary" href="flieLibrary.html">Flie library</a></li>
+                <li><a class="menu-item-profile" href="profile.html">Profile</a></li>
+            </ul>
+        </div>
+        <div class="table-container file-library-table-container">
+            <div class="info-container">
+                <div>
+                    <span class="videosCountInfo" onClick="showVideosCount()" title="Users statistic"><img src="../icons/info.png"></span>
+                </div>
+            </div>
+            
+            <h2 class="videos-header header table-header">
+                References
+                <div>
+                    <button class="video-bulk-upload-button create-button"><b>Bulk</b></button>
+                    <button class="video-upload-button create-button"><b>Upload</b></button>
+                </div>
+            </h2>
+            
+            <table class="videos-table table">
+                <thead>
+                    <tr>
+                        <th>Video</th>
+                        <th>Title</th>
+                        <th>Keywords</th>
+                        <th>User</th>
+                        <th>upload date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ////////////////// -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <script src="fileLibrary.js"></script>
+    <script src="menu.active.js"></script>
+    <script src="../logout.js"></script>
+</body>
+</html>
+
+
+
+
+

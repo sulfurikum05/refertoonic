@@ -1,0 +1,80 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="ключевое слово 1, ключевое слово 2, ключевое слово 3">
+    <title>Refertoonic</title>
+    <link rel="stylesheet" href="../main_style.css">
+    <link rel="stylesheet" href="../superadmin/superadmin.css">
+    <link rel="stylesheet" href="../user/user.css">
+    
+</head>
+<body>
+    <header>
+        <a href="../dashboard.html" class="logout">Logout</a>  
+    <!-- <img class="infoImage" src="../info.png" alt="Information" title="To access the functions for uploading your own references and adding references to your favorites list, purchase the VIP or ENTERPRISE package."> -->
+    </header>
+    
+    <main>
+        <div class="sidebar">
+            <ul class="menu">
+                <li><a class="menu-item-dashboard" href="admin.dashboard.html">Dashboard</a></li>
+                <li><a class="menu-item-profile" href="admin.profile.html">Profile</a></li>
+                <li><a class="menu-item-userManagement" href="admin.userManagement.html">User management</a></li>
+                <li><a class="menu-item-flieLibrary" href="admin.file.library.html">File library</a></li>
+                <li><a class="menu-item-videoModeration" href="admin.videoModeration.html">Video moderation</a></li>
+                <li><a class="menu-item-paymentPackages" href="admin.payment.packages.html">Payment packages</a></li>
+                <li><a class="menu-item-paymentHistory" href="admin.payment.history.html">Payment history</a></li>
+                <li><a class="menu-item-help" href="admin.help.html">Help</a></li>
+                <li><a class="menu-item-messages" href="admin.messages.html">Messages</a></li>
+                <li><a class="menu-item-notifications" href="admin.notifications.html">Notificatoins</a></li>
+            </ul>
+        </div>
+        <div class="table-container file-library-table-container">
+            
+            <h2 class="videos-header header table-header">Your references<button class="video-upload-button create-button"><b>Upload</b></button></h2>
+            <table class="videos-table table">
+                <thead>
+                    <tr>
+                        <th>Video</th>
+                        <th>Title</th>
+                        <th>Keywords</th>
+                        <th>Upload date</th>
+                        <th>Status</th>
+                        <th id="action-th" class="hide">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ////////////////// -->
+                </tbody>
+            </table>
+            <h2 class="wishlist-videos-header header table-header">Your wishlist</h2>
+            <table class="wishlist-table table">
+                <thead>
+                    <tr>
+                        <th>Video</th>
+                        <th>Title</th>
+                        <th>Keywords</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- ////////////////// -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <script src="../vip/vip.file.library.js"></script>
+    <script src="menu.active.js"></script>
+    <script src="../logout.js"></script>
+</body>
+</html>
+
+
+
+
+

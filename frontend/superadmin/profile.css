@@ -1,0 +1,178 @@
+body{
+  font-family: cursive !important;
+}
+
+
+.profileFirstDiv {
+  display: flex;
+
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  padding: 20px;
+
+}
+.profileSecondDiv{
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  padding: 20px;
+}
+.profileSecondDiv .input{
+margin: auto;
+margin-top: 20px;
+}
+
+.picture img {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+}
+
+.personalInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 50px;
+  text-align: left;
+}
+
+.profileInput{
+  max-width: 200px;
+  min-width: 200px;
+  margin: auto;
+}
+.profileInputFile{
+  max-width: 157px;
+  min-width: 157px;
+  color: #f9f9f9;
+}
+.profileInputFile .button{
+  background-color: #5a2626;
+}
+.input.profileInputFile {
+  display: none;
+}
+.custom-label {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* Эффект наведения */
+.custom-label:hover {
+  background-color: #0056b3;
+}
+.file-name {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+.personalInfo h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.personalInfo span {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.personalInfo a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.personalInfo a:hover {
+  text-decoration: underline;
+}
+
+.aboutText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.aboutText span {
+  margin: 10px 0;
+  font-size: 1rem;
+  color: #555;
+
+}
+.aboutText h3 {
+    font-size: 2rem;
+    color: #007bff;
+    
+  }
+
+.changeSettings {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.personalInfo button {
+  font-family: cursive !important;
+  margin: 30px 0 0 5px;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
+}
+
+.personalInfo button:hover {
+  background-color: #0056b3;
+}
+
+/* Для адаптации под мобильные устройства */
+@media (max-width: 768px) {
+  .profileFirstDiv,
+  .profileSecondDiv {
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .personalInfo {
+    margin-left: 0;
+    margin-top: 15px;
+  }
+
+  .aboutText {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+
+  .changeSettings {
+    width: 100%;
+    align-items: center;
+  }
+
+  .personalInfo button {
+    width: 100%;
+    text-align: center;
+  }
+}
