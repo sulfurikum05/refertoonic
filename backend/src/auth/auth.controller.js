@@ -1,8 +1,9 @@
-import AuthService from './auth.service';
-import { SuccessHandlerUtil } from '../utils';
-import { path } from 'path';
+import AuthService from "./auth.service";
+import { SuccessHandlerUtil } from "../utils";
+import { path } from "path";
 
 export default class AuthController {
+
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -16,7 +17,6 @@ export default class AuthController {
   static async refresh(req, res, next) {
     try {
       const { refreshToken } = req.body;
-
       const refreshResult = await AuthService.refresh(refreshToken);
       SuccessHandlerUtil.handleAdd(res, next, refreshResult);
     } catch (error) {

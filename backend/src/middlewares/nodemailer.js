@@ -1,35 +1,18 @@
-
-import  nodemailer  from "nodemailer";
-import  config  from "../config/variables.config.js";
-
-
-
-
-
+import nodemailer from "nodemailer";
+import config from "../config/variables.config.js";
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail', 
+  service: "gmail",
   auth: {
-    user: config.GOOGLE_CONFIG.EMAIL,  
+    user: config.GOOGLE_CONFIG.EMAIL,
     pass: config.GOOGLE_CONFIG.APP_PASSWORD,
-
   },
 });
 
-
-
-
-
-
 export default class SendEmail {
-
-  
-
-  
-  static async sendResetCode (emailOptions) {
-
+  static async sendResetCode(emailOptions) {
     const sendResetCodeOptions = {
-      from: config.GOOGLE_CONFIG.EMAIL,           
+      from: config.GOOGLE_CONFIG.EMAIL,
       to: emailOptions.email,
       subject: emailOptions.subject,
       text: emailOptions.title,
@@ -51,21 +34,19 @@ export default class SendEmail {
                 </div>
             </div>
         </body>
-      `
+      `,
     };
 
     try {
       await transporter.sendMail(sendResetCodeOptions);
     } catch (error) {
-      console.error('Ошибка при отправке письма:', error);
+      console.error("Ошибка при отправке письма:", error);
     }
-  };
+  }
 
-
-  static async sendTransactionCreatingNotification (emailOptions) {
-
+  static async sendTransactionCreatingNotification(emailOptions) {
     const sendTransactionCreatingNotificationOptions = {
-      from: config.GOOGLE_CONFIG.EMAIL,           
+      from: config.GOOGLE_CONFIG.EMAIL,
       to: emailOptions.email,
       subject: emailOptions.subject,
       text: emailOptions.title,
@@ -107,24 +88,22 @@ export default class SendEmail {
               </div>
             </body>
 
-      `
-
+      `,
+    };
+    try {
+      await transporter.sendMail(sendTransactionCreatingNotificationOptions);
+    } catch (error) {
+      console.error("Ошибка при отправке письма:", error);
     }
-  try {
-    await transporter.sendMail(sendTransactionCreatingNotificationOptions);
-  } catch (error) {
-    console.error('Ошибка при отправке письма:', error);
   }
-};
 
-
-static async sendMessage (emailOptions) {
-  const sendMessageOptions = {
-    from: config.GOOGLE_CONFIG.EMAIL,           
-    to: emailOptions.email,
-    subject: emailOptions.subject,
-    text: emailOptions.title,
-    html: `
+  static async sendMessage(emailOptions) {
+    const sendMessageOptions = {
+      from: config.GOOGLE_CONFIG.EMAIL,
+      to: emailOptions.email,
+      subject: emailOptions.subject,
+      text: emailOptions.title,
+      html: `
           <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
             <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);">
                 
@@ -143,34 +122,32 @@ static async sendMessage (emailOptions) {
             </div>
           </body>
 
-    `
+    `,
+    };
+    try {
+      await transporter.sendMail(sendMessageOptions);
+    } catch (error) {
+      console.error("Ошибка при отправке письма:", error);
+    }
   }
-try {
-  await transporter.sendMail(sendMessageOptions);
-} catch (error) {
-  console.error('Ошибка при отправке письма:', error);
+
+  static async sendTransactionStatusChangeNotification() {
+    const sendTransactionStatusChangeNotificationOptions = {};
+    try {
+      await transporter.sendMail(
+        sendTransactionStatusChangeNotificationOptions
+      );
+    } catch (error) {
+      console.error("Ошибка при отправке письма:", error);
+    }
+  }
+
+  static async sendEmailNotification() {
+    const sendEmailNotificationOptions = {};
+    try {
+      await transporter.sendMail(sendEmailNotificationOptions);
+    } catch (error) {
+      console.error("Ошибка при отправке письма:", error);
+    }
+  }
 }
-};
-
-static async sendTransactionStatusChangeNotification () {
-  const sendTransactionStatusChangeNotificationOptions = {}
-try {
-  await transporter.sendMail(sendTransactionStatusChangeNotificationOptions);
-} catch (error) {
-  console.error('Ошибка при отправке письма:', error);
-}
-};
-
-static async sendEmailNotification () {
-  const sendEmailNotificationOptions = {}
-try {
-  await transporter.sendMail(sendEmailNotificationOptions);
-} catch (error) {
-  console.error('Ошибка при отправке письма:', error);
-}
-};
-
-}
-
-
-

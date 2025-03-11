@@ -1,10 +1,9 @@
-
-   const sendResetCodeOptions = {
-      from: config.GOOGLE_CONFIG.EMAIL,           
-      to: email,
-      subject: subject,
-      text: title,
-      html: `
+const sendResetCodeOptions = {
+  from: config.GOOGLE_CONFIG.EMAIL,
+  to: email,
+  subject: subject,
+  text: title,
+  html: `
         <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
                 <div style="background-color: #be9342; padding: 20px; color: #ffffff; text-align: center; font-size: 24px; font-weight: bold;">
@@ -22,9 +21,9 @@
                 </div>
             </div>
         </body>
-      `
-    };
+      `,
+};
 
-     const sendTransactionCreatingNotificationOptions = {}
-     const sendTransactionStatusChangeNotificationOptions = {}
-     const sendEmailNotificationOptions = {}
+const sendTransactionCreatingNotificationOptions = {};
+const sendTransactionStatusChangeNotificationOptions = {};
+const sendEmailNotificationOptions = {};

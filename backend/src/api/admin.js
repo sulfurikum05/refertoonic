@@ -6,35 +6,22 @@ import AuthService from '../auth/auth.service';
 
 const router = express.Router();
 
-
-
-
-
-
   router.get("/getUsers", AuthService.validateAccessToken, AdminController.getUsers);
   router.post("/createVipProUser", AuthService.validateAccessToken, AdminController.createVipProUser);
   router.get("/getAvailableUsersCount", AuthService.validateAccessToken, AdminController.getAvailableUsersCount);
   router.post("/blockUser", AuthService.validateAccessToken, AdminController.blockUser);
   router.post("/unblockUser", AuthService.validateAccessToken, AdminController.unblockUser);
-
   router.get("/getMessagesData", AuthService.validateAccessToken, AdminController.getMessagesData);
   // router.post("/deleteMessage", AuthService.validateAccessToken, AdminController.deleteMessage);
   // router.post("/resendMessage", AuthService.validateAccessToken, AdminController.resendMessage);
-
   router.get("/getNotificationsData", AuthService.validateAccessToken, AdminController.getNotificationsData);
   router.post("/sendNotification", AuthService.validateAccessToken, AdminController.sendNotification);
   router.get("/getSentNotificationsData", AuthService.validateAccessToken, AdminController.getSentNotificationsData);
-  
   router.get("/getModerationVideos", AuthService.validateAccessToken, AdminController.getModerationVideos);
   router.delete("/deleteModerationVideo", AuthService.validateAccessToken, AdminController.deleteModerationVideo);
   router.post("/publishModerationVideo", AuthService.validateAccessToken, AdminController.publishModerationVideo);
   router.post("/rejectModerationVideo", AuthService.validateAccessToken, AdminController.rejectModerationVideo);
   router.post("/upgradeUserCount", AuthService.validateAccessToken, AdminController.upgradeUserCount);
-    
-  
-  
-
-
   
 export default router;
 
