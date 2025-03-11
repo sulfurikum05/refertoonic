@@ -119,7 +119,32 @@ export default class SendEmail {
 
 
 static async sendMessage (emailOptions) {
-  const sendMessageOptions = {}
+  const sendMessageOptions = {
+    from: config.GOOGLE_CONFIG.EMAIL,           
+    to: emailOptions.email,
+    subject: emailOptions.subject,
+    text: emailOptions.title,
+    html: `
+          <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
+            <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);">
+                
+                <div style="background: linear-gradient(135deg, #224259, #05141f); padding: 25px; color: #ffffff; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 1px;">
+                    ReferToonic
+                </div>
+
+                <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
+                    <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
+                    <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.message}</p>
+                    <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
+                </div>
+                <!-- Подвал -->
+                <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
+                </div>
+            </div>
+          </body>
+
+    `
+  }
 try {
   await transporter.sendMail(sendMessageOptions);
 } catch (error) {

@@ -97,6 +97,7 @@ localStorage.removeItem("accessToken")
 }
 
 
+
 function showMessage(messageText) {
 
     const messageContainer = document.createElement('div');
@@ -132,7 +133,6 @@ async function sendMessage(elem) {
         const input = cell.querySelector('.input');
         let value = input ? input.value.trim() : cell.textContent.trim(); 
         body[name] = value;
-            console.log( body[name]);
     });
         delete body.null
     
@@ -150,6 +150,8 @@ async function sendMessage(elem) {
             window.open("../dashboard.html");
         }
             const data = await response.json()
+            const createButton = document.querySelector('.message-create-button')
+            createButton.classList.remove('hide')
             fetchMessagesData()
             showMessage(data.message)
 

@@ -387,7 +387,7 @@ export class SuperadminController {
       const role = req.role
       if (role !== "superadmin") {
         return res.status(401).json({ message: 'Unauthorized' });
-     }else{
+     }else{ 
       const {email, subject, message} = req.body
       const data = await SuperadminService.sendMessage(email, subject, message)
       SuccessHandlerUtil.handleList(res, next, data)

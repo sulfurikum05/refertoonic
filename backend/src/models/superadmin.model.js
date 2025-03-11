@@ -107,7 +107,10 @@ export class SuperadminModel {
       static async  updatePaymentStatus(payment_status, order_id, trx) {
         await pg("payments").update(payment_status).where({order_id: order_id}).transacting(trx);
       }
-
+      static async  getUserByEmail(email, trx) {
+       return await pg("users").select("*").where({email: email}).transacting(trx);
+      }
+      
       
       
 }

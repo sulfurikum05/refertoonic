@@ -167,8 +167,9 @@ export class SuperadminService {
 
 
   static async deleteLibraryVideo(id) {
+    const trx = await pg.transaction();
     try {
-        const trx = await pg.transaction();
+        
         const file = await SuperadminModel.getVideoById(id, trx)
         const filePath = file[0].video_url
         const cleanPath = filePath.trim();
@@ -185,8 +186,9 @@ export class SuperadminService {
   
   }
   static async deleteModerationVideo(id) {
+    const trx = await pg.transaction();
     try {
-      const trx = await pg.transaction();
+     
       const file = await SuperadminModel.getVideoById(id, trx)
       const filePath = file[0].video_url
       const cleanPath = filePath.trim();
@@ -216,8 +218,9 @@ export class SuperadminService {
   }
 
     static async getMessagesData() {
+      const trx = await pg.transaction();
       try {
-        const trx = await pg.transaction();
+        
         const messages = await SuperadminModel.getMessagesData(trx) 
         let usersId = []  
         messages.forEach((message)=>{
@@ -244,20 +247,27 @@ export class SuperadminService {
 
   static async sendMessage(email, subject, message) {
 
+    const trx = await pg.transaction();
     try {
+      
+      const user = await SuperadminModel.getUserByEmail(email, trx)
+      if (!user[0]) {
+        await trx.commit();
+        return { message: "User not found"}; 
+      }
       const emailOptions = {
-        code: Math.floor(100000 + Math.random() * 900000),
-        title : subject,
-        subject : "",
-        text : "Ваш проверочный код: ",
-        user : "уважаемый пользователь",
-        content1 : message,
+        user: user[0].name,
+        email : email,
+        subject : subject,
+        message : message,
       
       }
+      
       await SendEmail.sendMessage(emailOptions)
+      await trx.commit();
       return { message: "Message sent successfully"};   
     } catch (error) {
-      
+      await trx.rollback();
     }
    
   }
@@ -306,8 +316,9 @@ export class SuperadminService {
   }
   
   static async ipnPaymentStatus(payment_status, order_id) {
+    const trx = await pg.transaction();
     try {
-      const trx = await pg.transaction();
+
       if (payment_status !== "finished") {
         await SuperadminModel.updatePaymentStatus(payment_status, order_id, trx)
       }else{

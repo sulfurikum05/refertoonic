@@ -40,7 +40,7 @@ const router = express.Router();
   router.post("/rejectModerationVideo", AuthService.validateAccessToken,  SuperadminController.rejectModerationVideo);
 
   router.get("/getMessagesData", AuthService.validateAccessToken, SuperadminController.getMessagesData);
-  router.get("/sendMessage", AuthService.validateAccessToken, SuperadminController.sendMessage);
+  router.post("/sendMessage", AuthService.validateAccessToken, SuperadminController.sendMessage);
   router.delete("/deleteMessage", AuthService.validateAccessToken, SuperadminController.deleteMessage);
   
   router.get("/getNotificationsData", AuthService.validateAccessToken, SuperadminController.getNotificationsData);
