@@ -53,35 +53,24 @@ export default class SendEmail {
       html: `
             <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
               <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);">
-                  
-                  <!-- Заголовок -->
                   <div style="background: linear-gradient(135deg, #224259, #05141f); padding: 25px; color: #ffffff; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 1px;">
                       ReferToonic
                   </div>
-
-                  <!-- Основное содержимое -->
                   <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
                       <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
                       <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.content1}</p>
-
                       <div style="background: #f8f8f8; padding: 15px; border-radius: 8px; margin: 15px 0;">
                           <p style="margin: 5px 0; color: #333; font-size: 16px;"><b>${emailOptions.text}</b></p>
                           <p style="margin: 5px 0; color: #3c3d3c;"><b>Приобретаемый пакет:</b> ${emailOptions.paymentPackage}</p>
                           <p style="margin: 5px 0; color: #3c3d3c;"><b>Период:</b> ${emailOptions.packagePeriod}</p>
                           <p style="margin: 5px 0; color: #3c3d3c;"><b>Стоимость:</b> ${emailOptions.packagePrice} $</p>
                       </div>
-
                       <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.content2}</p>
-
-                      <!-- Кнопка -->
                       <div style="text-align: center; margin-top: 20px;">
                           <a href="${emailOptions.invoice_url}" style="background: #0052aa; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-size: 16px; display: inline-block; font-weight: bold;">Ссылка для оплаты</a>
                       </div>
-
                       <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
                   </div>
-
-                  <!-- Подвал -->
                   <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
                       <p style="margin: 0;">${emailOptions.content3}</p>
                   </div>
@@ -106,17 +95,14 @@ export default class SendEmail {
       html: `
           <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
             <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);">
-                
                 <div style="background: linear-gradient(135deg, #224259, #05141f); padding: 25px; color: #ffffff; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 1px;">
                     ReferToonic
                 </div>
-
                 <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
                     <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
                     <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.message}</p>
                     <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
                 </div>
-                <!-- Подвал -->
                 <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
                 </div>
             </div>
@@ -131,8 +117,32 @@ export default class SendEmail {
     }
   }
 
-  static async sendTransactionStatusChangeNotification() {
-    const sendTransactionStatusChangeNotificationOptions = {};
+  static async sendTransactionStatusChangeNotification(emailOptions) {
+    const sendTransactionStatusChangeNotificationOptions = {
+      from: config.GOOGLE_CONFIG.EMAIL,
+      to: emailOptions.email,
+      subject: "Order status change",
+      text: "",
+      html: `
+          <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
+            <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);">
+                <div style="background: linear-gradient(135deg, #224259, #05141f); padding: 25px; color: #ffffff; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 1px;">
+                    ReferToonic
+                </div>
+                <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
+                    <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
+                    <p style="margin: 10px 0; font-size: 16px; color: #555;">Статус платежа по ордеру ${emailOptions.order_id} изменена на ${emailOptions.payment_status}</p>
+                    <p style="margin: 10px 0; font-size: 16px; color: #555;">Статус платежей вы можете отслеживать в вашем личном кабинетеб в разделе Payment history.</p>
+                    <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
+                </div>
+                <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
+                </div>
+            </div>
+          </body>
+
+    `,
+
+    };
     try {
       await transporter.sendMail(
         sendTransactionStatusChangeNotificationOptions
@@ -142,10 +152,10 @@ export default class SendEmail {
     }
   }
 
-  static async sendEmailNotification() {
-    const sendEmailNotificationOptions = {};
+  static async sendEmailConfirmation() {
+    const sendEmailConfirmationOptions = {};
     try {
-      await transporter.sendMail(sendEmailNotificationOptions);
+      await transporter.sendMail(sendEmailConfirmationOptions);
     } catch (error) {
       console.error("Ошибка при отправке письма:", error);
     }

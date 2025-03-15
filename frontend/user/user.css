@@ -83,6 +83,11 @@ h1{
     cursor: unset;
 }
 
+.Extend{
+    background-color: #004c9e;
+}
+
+
 .payment-package h2{
     background: #05141f00 !important;
 }

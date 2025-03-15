@@ -190,7 +190,7 @@ export default class UsersServices {
       }
       if (role == "vip" && pp !== "vipPro") {
         ppData[0].status = "hide";
-        ppData[1].status = "Current";
+        ppData[1].status = "Extend";
         ppData[2].status = "Upgrade";
         ppData[1].color = "color";
       }
@@ -203,7 +203,7 @@ export default class UsersServices {
       if (role == "admin") {
         ppData[0].status = "hide";
         ppData[1].status = "hide";
-        ppData[2].status = "Current";
+        ppData[2].status = "Extend";
         ppData[2].color = "color";
       }
       await trx.commit();

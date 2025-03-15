@@ -439,6 +439,57 @@ export class SuperadminController {
     }
   }
 
+  static async getUserPayments(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "superadmin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const userId = req.params.userId;
+        const data = await SuperadminService.getUserPayments(userId);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+  static async updatePaymentSuperadmin(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "superadmin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const status = req.body[1];
+        const expire_at = req.body[2];
+        const order_id = req.body.order_id;
+        const data = await SuperadminService.updatePaymentSuperadmin(status, expire_at, order_id);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async editUserPackage(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "superadmin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const role = req.body[3];
+        const payment_package = req.body[4];
+        const id = req.body.user_id;
+        const data = await SuperadminService.editUserPackage(role, payment_package, id);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
+
+  
   static async getNotificationsData(req, res, next) {
     try {
       const role = req.role;
@@ -499,7 +550,8 @@ export class SuperadminController {
     try {
       const payment_status = req.body.payment_status;
       const order_id = req.body.order_id;
-      await SuperadminService.ipnPaymentStatus(payment_status, order_id);
+      const logs = req.body
+      await SuperadminService.ipnPaymentStatus(payment_status, order_id, logs);
       SuccessHandlerUtil.handleList(res, next);
     } catch (error) {
       next(error);

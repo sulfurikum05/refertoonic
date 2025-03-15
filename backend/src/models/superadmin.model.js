@@ -120,6 +120,18 @@ export class SuperadminModel {
     return await pg("users_profile").select("*").where({ user_id: userId });
   }
 
+  static async getUserPayments(userId) {
+    return await pg("payments").select("*").where({ user_id: userId });
+  }
+
+  static async updatePaymentSuperadmin(data, order_id) {
+    await pg("payments").update(data).where({ order_id: order_id });
+  }
+
+  static async editUserPackage(data, id) {
+    await pg("users").update(data).where({ id: id });
+  }
+  
   static async getNotificationsData() {
     return await pg("notifications")
       .select("*")
@@ -141,17 +153,24 @@ export class SuperadminModel {
       .transacting(trx);
   }
 
-  static async updateUserPackage(userId, newData, trx) {
+  static async updatePayment(order_id, newPaymentData, trx) {
     await pg("payments")
-      .update(newData)
+      .update(newPaymentData)
+      .where({ order_id: order_id })
+      .transacting(trx);
+  }
+
+  static async getUserAllPayments(userId, trx) {
+    return await pg("payments")
+      .select("*")
       .where({ user_id: userId })
       .transacting(trx);
   }
 
-  static async updatePaymentStatus(payment_status, order_id, trx) {
-    await pg("payments")
-      .update(payment_status)
-      .where({ order_id: order_id })
+  static async updateUserPackage(userId, newUserData, trx) {
+    await pg("users")
+      .update(newUserData)
+      .where({ id: userId })
       .transacting(trx);
   }
   
@@ -161,4 +180,19 @@ export class SuperadminModel {
       .where({ email: email })
       .transacting(trx);
   }
+
+  static async writePaymentLogs(logData, trx) {
+     await pg("payments_status_logs")
+      .insert(logData)
+      .transacting(trx);
+  }
+
+  static async getUserById(userId, trx) {
+    return await pg("users")
+      .select("*")
+      .where({ id: userId })
+      .transacting(trx);
+  }
+  
+  
 }

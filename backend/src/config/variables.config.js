@@ -31,6 +31,11 @@ const config = {
      APP_PASSWORD : process.env.APP_PASSWORD
   },
 
+
+  DOMAINS: {
+    DOMAIN: process.env.DOMAIN
+  },
+
   WALLET_CONNECT : {
     
   },

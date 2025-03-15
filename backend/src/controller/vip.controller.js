@@ -129,4 +129,24 @@ export class VipController {
       next(error);
     }
   }
+
+  static async extend(req, res, next) {
+    try {
+      const userId = req.userId;
+      const pp = req.pp;
+      const packageForExtend = req.body.packageForUpgrade;
+      const period = req.body.period;
+
+      const data = await VipServices.extend(
+        packageForExtend,
+        period,
+        userId,
+        pp
+      );
+      SuccessHandlerUtil.handleList(res, next, data);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
 }

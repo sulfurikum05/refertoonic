@@ -146,6 +146,11 @@ function up(pg) {
       table.text("birthday");
       table.text("gender");
       table.text("about");
+    })
+
+    .createTable("payments_status_logs", (table) => {
+      table.increments("id").primary();
+      table.text("payment");
     });
 }
 

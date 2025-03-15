@@ -17,5 +17,6 @@ const router = express.Router();
   router.post("/addVideoToWishlist", AuthService.validateAccessToken, VipController.addVideoToWishlist);
   router.post("/removeVideoFromWishlist", AuthService.validateAccessToken, VipController.removeVideoFromWishlist);
   router.post("/upgrade", AuthService.validateAccessToken, VipController.upgrade);
+  router.post("/extend", AuthService.validateAccessToken, VipController.extend);
 
 export default router;

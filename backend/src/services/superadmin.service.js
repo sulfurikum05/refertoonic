@@ -273,6 +273,28 @@ export class SuperadminService {
     return await SuperadminModel.getUsersPersonalInfo(userId);
   }
 
+  static async getUserPayments(userId) {
+    return await SuperadminModel.getUserPayments(userId);
+  }
+
+  static async updatePaymentSuperadmin(status, expire_at, order_id) {
+    const data = {
+      status: status,
+      expire_at: expire_at
+    }
+    await SuperadminModel.updatePaymentSuperadmin(data, order_id);
+    return { message: "Payment updated successfully" };
+  }
+
+  static async editUserPackage(role, payment_package, id) {
+    const data = {
+      role: role,
+      payment_package: payment_package
+    }
+    await SuperadminModel.editUserPackage(data, id);
+    return { message: "Package updated successfully" };
+  }
+
   static async getNotificationsData() {
     return await SuperadminModel.getNotificationsData();
   }
@@ -296,46 +318,113 @@ export class SuperadminService {
     return { message: "Notification deleted successfully" };
   }
 
-  static async ipnPaymentStatus(payment_status, order_id) {
+
+
+
+
+
+
+
+
+
+  static async ipnPaymentStatus(payment_status, order_id, logs) {
     const trx = await pg.transaction();
     try {
+      const logData = {
+        payment: logs
+      }
+      await SuperadminModel.writePaymentLogs(logData, trx)
+      const userPayment = await SuperadminModel.getOrderByOrderId(
+        order_id,
+        trx
+      );
+      const userId = userPayment[0].user_id;
+      const user = await SuperadminModel.getUserById(userId, trx)
+      const userEmail = user[0].email
+      const emailOptions = {
+        user: user[0].name,
+        email: userEmail,
+        payment_status: payment_status,
+        order_id: order_id
+      }
       if (payment_status !== "finished") {
-        await SuperadminModel.updatePaymentStatus(
-          payment_status,
-          order_id,
-          trx
-        );
+        const newPaymentData = {
+          status: payment_status
+        } 
+        await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
       } else {
-        const userPayment = await SuperadminModel.getOrderByOrderId(
-          order_id,
-          trx
-        );
-        const userId = userPayment[0].user_id;
-        const newData = {};
+        const newUserData = {};
+        const newPaymentData = {};
         if (userPayment[0].package == "enterprise") {
-          newData.payment_package = "admin";
-          newData.role = "admin";
-          newData.expire_at = new Date();
-
+          newUserData.payment_package = "admin";
+          newUserData.role = "admin";
+          newPaymentData.expire_at = new Date();
+          newPaymentData.status = payment_status
+          if (userPayment[0].period == "monthly") {
+            if (userPayment[0].method == "upgrade") {
+              newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
+            }else{
+              const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+              const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+              const userSecondLastPayment = sortedPayments[1];
+              newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+              newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
+            }
+          }
+          if (userPayment[0].period == "yearly") {
+            if (userPayment[0].method == "upgrade") {
+              newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+            }else{
+              const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+              const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+              const userSecondLastPayment = sortedPayments[1];
+              newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+              newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+            }
+          }
           const vipProData = {
             role: "vip",
             payment_package: "vipPro",
           };
+          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+          await SuperadminModel.updateUserPackage(userId,newUserData,trx);
           await UsersModel.upgradeUsersByAdminId(userId, vipProData, trx);
         }
         if (userPayment[0].package == "vip") {
-          newData.payment_package = "vip";
-          newData.role = "vip";
-          newData.expire_at = new Date();
+          
+            newUserData.payment_package = "vip";
+            newUserData.role = "vip";
+            newPaymentData.expire_at = new Date();
+            newPaymentData.status = payment_status
+            if (userPayment[0].period == "monthly") {
+              if (userPayment[0].method == "upgrade") {
+                newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
+              }else{
+                const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+                const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+                const userSecondLastPayment = sortedPayments[1];
+                newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+                newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
+              }
+            }
+            if (userPayment[0].period == "yearly") {
+              if (userPayment[0].method == "upgrade") {
+                newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+              }else{
+                const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+                const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+                const userSecondLastPayment = sortedPayments[1];
+                newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+                newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+              }
+            } 
+            await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+            await SuperadminModel.updateUserPackage(userId,newUserData,trx);
         }
-        await SuperadminModel.updateUserPackage(userId, newData, trx);
-        await SuperadminModel.updatePaymentStatus(
-          payment_status,
-          order_id,
-          trx
-        );
-        await trx.commit();
+
       }
+      await SendEmail.sendTransactionStatusChangeNotification(emailOptions)
+      await trx.commit();
     } catch (error) {
       await trx.rollback();
     }

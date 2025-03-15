@@ -7,10 +7,12 @@ async function fetchpaymentPackagesData(){
             headers: {"Authorization": `Bearer ${token}`},
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         const ppData = await response.json();
+        // console.log(ppData);
+        
         const ppSecondDiv = document.querySelector('.ppSecondDiv')
         ppData.sort((a, b) => a.id - b.id);
         ppData.forEach(item => {
@@ -51,7 +53,7 @@ localStorage.removeItem("accessToken")
                         <li>${Sixteen}</li>
                         </ul>
                     </div>
-                    <button class="${status} ${upgradeButton} currentUpgradeButton" onClick=pay(this)>${status}</button>
+                    <button class="${status} ${upgradeButton} currentUpgradeButton" data-package="${item.title}" onClick="upgradeOrExtend(this)">${status}</button>
             `;
 
                 ppSecondDiv.appendChild(package);
@@ -103,8 +105,18 @@ function yearlyToggleButtonFunction(){
     monthlyButton.classList.add('show')
 }
 
-async function pay() {
-    let period = ""
+
+async function upgradeOrExtend(elem) {
+    if (elem.classList.contains("Upgrade")) {
+        elem.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        elem.appendChild(loader);
+        setTimeout(() => {
+            elem.disabled = false;
+            loader.remove();
+        }, 3000);
+        let period = ""
     const toggleButtons = document.querySelectorAll('.toggle-btn')
     toggleButtons.forEach((toggleButton)=>{
         if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('monthly')) {
@@ -114,7 +126,7 @@ async function pay() {
             period = "monthly"
         }
     })
-    const package = "enterprise"
+    const package = elem.dataset.package.toLowerCase()
     const token = localStorage.getItem("accessToken");
         const response = await fetch("http://localhost:3030/api/v1/vip/upgrade", {
             method: 'POST',
@@ -125,10 +137,57 @@ async function pay() {
             body: JSON.stringify({packageForUpgrade: package, period: period})
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         const paymentUrl = await response.json()
         window.open(paymentUrl, '_blank');
 
+
+    }
+    if (elem.classList.contains("Extend")) {
+        elem.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        elem.appendChild(loader);
+        setTimeout(() => {
+            elem.disabled = false;
+            loader.remove();
+        }, 3000);
+
+        let period = ""
+    const toggleButtons = document.querySelectorAll('.toggle-btn')
+    toggleButtons.forEach((toggleButton)=>{
+        if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('monthly')) {
+            period = "yearly"
+            
+        }if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('yearly')) {
+            period = "monthly"
+        }
+    })
+    const package = elem.dataset.package.toLowerCase()
+    const token = localStorage.getItem("accessToken");
+        const response = await fetch("http://localhost:3030/api/v1/vip/extend", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({packageForUpgrade: package, period: period})
+        })
+        if(response.status == 401){
+            localStorage.removeItem("accessToken")
+            window.open("../dashboard.html");
+          }
+        const paymentUrl = await response.json()
+        window.open(paymentUrl, '_blank');
+
+    }
 }
+
+    
+    
+
+
+    
+    

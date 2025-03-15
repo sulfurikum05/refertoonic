@@ -30,34 +30,65 @@
     </div>
 
 
-        <div class="table-container payment-history-table-container">
-            <div class="search-container">
-                <label for="searchInput">Search:</label>
-                <input type="text" id="searchInput" placeholder="Enter search text">
+        <div class="table-container user-management-table-container">
+
+            <div class="search-container main-container">
+                
+
+                <div>
+                    <label for="searchInput">Search:</label>
+                    <input type="text" id="searchInput" placeholder="Enter search text">
+                </div>
             </div>
-            <h2 class="payment-history-header header table-header">Payment History</h2>
-            <table class="payment-history-table table">
+            <h2>User management</h2>
+            
+            <table class="users-table table">
                 <thead>
                     <tr>
-                        <th>User</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Package</th>
+                        <th>Admin</th>
+                        <th>Create date</th>
+                        <th>Detailing</th>
+                        <th>Payments</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            
+            <table class="payments-table table hide">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User ID</th>
                         <th>Payment ID</th>
                         <th>Order ID</th>
-                        <th>Description</th>
-                        <th>Payment method</th>
+                        <th>Method</th>
                         <th>Package</th>
-                        <th>Amount</th>
+                        <th>Price</th>
                         <th>Period</th>
-                        <th>Create date/time</th>
-                        <th>Expire date/time</th>
                         <th>Status</th>
+                        <th>Invoice</th>
+                        <th>Expire</th>
+                        <th>Create</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
         </div>
+        
+
         </main>
-    <script src="paymentHistoryManagement.js"></script>
+ 
+    <script src="statusChange.js"></script>
     <script src="menu.active.js"></script>
     <script src="../logout.js"></script>
 </body>

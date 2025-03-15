@@ -115,23 +115,23 @@ class UsersModel {
   }
 
   static async resetUsersByAdminId(adminId, data, trx) {
-    return await pg("users")
+    await pg("users")
       .where({ admin_id: adminId })
       .update(data)
       .transacting(trx);
   }
 
   static async resetPackage(userId, data, trx) {
-    return await pg("users")
+    await pg("users")
       .update(data)
       .where({ id: userId })
       .transacting(trx);
   }
 
   static async upgradeUsersByAdminId(userId, vipProData, trx) {
-    return await pg("users")
+    await pg("users")
       .update(vipProData)
-      .where({ id: userId })
+      .where({ admin_id: userId })
       .transacting(trx);
   }
 }

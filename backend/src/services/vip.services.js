@@ -6,6 +6,7 @@ import { UsersModel } from "../models";
 import SendEmail from "../middlewares/nodemailer";
 import knex from "knex";
 import knexConfigs from "../../knex.configs";
+import { toLower } from "lodash";
 const pg = knex(knexConfigs.development);
 
 export class VipServices {
@@ -177,4 +178,68 @@ export class VipServices {
       await trx.rollback();
     }
   }
+
+  static async extend(packageForExtend, period, userId, pp) {
+    const trx = await pg.transaction();
+    try {
+      let invoice_url = "";
+      const user = await UsersModel.getUserById(userId, trx);
+      if (pp !== "vipPro") {
+        const paymentPackages = await UsersModel.getPaymentPackages(trx);
+        let price = 0;
+        paymentPackages.forEach((paymentPackage) => {
+          if (paymentPackage.title.toLowerCase() == packageForExtend) {
+            price = paymentPackage.price;
+          }
+        });
+        if (period == "yearly") {
+          price = price * 12 * 0.8;
+        }
+        const emailOptions = {
+          email: user[0].email,
+          title: "Приобретение пакета",
+          subject: "Покупка платёжного пакета",
+          text: "Данные платёжного пакета: ",
+          user: user[0].name,
+          content1:"Вы инициировали оплату для приобретения платёжного пакета.",
+          paymentPackage: packageForExtend,
+          packagePeriod: period,
+          packagePrice: price,
+          content2:"Об изменениях статуса транзакции Вы получите дополнительное оповещение.",
+          content3: "Не отвечайте на данное письмо.",
+        };
+        const data = await PaymentService.createPayment(
+          price,
+          period,
+          packageForExtend
+        );
+        data.user_id = userId;
+        data.payment_id = Math.floor(
+          1000000000 + Math.random() * 9000000000
+        ).toString();
+        data.method = "extend";
+        data.package = packageForExtend;
+        data.price = data.price_amount;
+        delete data.price_amount;
+        data.period = period;
+        data.status = "Processing";
+        delete data.price_currency;
+        delete data.ipn_callback_url;
+        delete data.success_url;
+        delete data.cancel_url;
+        await UsersModel.createProcessingPayment(data, trx);
+        invoice_url = data.invoice_url;
+        emailOptions.invoice_url = invoice_url;
+        await SendEmail.sendTransactionCreatingNotification(emailOptions);
+      } else {
+        await trx.commit();
+        return { message: "Dont have permitions" };
+      }
+      await trx.commit();
+      return invoice_url;
+    } catch (error) {
+      await trx.rollback();
+    }
+  }
+
 }

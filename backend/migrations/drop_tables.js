@@ -14,7 +14,9 @@ function down(pg) {
     .dropTableIfExists("team")
     .dropTableIfExists("slider_videos")
     .dropTableIfExists("dashboard_texts")
-    .dropTableIfExists("users_profile");
+    .dropTableIfExists("users_profile")
+    .dropTableIfExists("payments_status_logs");
+    
 }
 
 async function init() {

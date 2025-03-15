@@ -35,8 +35,10 @@ const router = express.Router();
   router.post("/deleteNotification", AuthService.validateAccessToken, SuperadminController.deleteNotification);
   router.get("/getUserPersonalInfo", AuthService.validateAccessToken, SuperadminController.getUserPersonalInfo);
   router.get("/getUsersPersonalInfo/:userId", AuthService.validateAccessToken, SuperadminController.getUsersPersonalInfo);
-  router.post("/ipnPaymentStatus", SuperadminController.ipnPaymentStatus);
-  // /api/v1/superadmin/ipnPaymentStatus
+  router.get("/getUserPayments/:userId", AuthService.validateAccessToken, SuperadminController.getUserPayments);
+  router.post("/updatePaymentSuperadmin", AuthService.validateAccessToken, SuperadminController.updatePaymentSuperadmin);
+  router.post("/editUserPackage", AuthService.validateAccessToken, SuperadminController.editUserPackage);
+  router.post("/ipnPaymentStatus", AuthService.validateAccessToken, SuperadminController.ipnPaymentStatus);
 
 export default router;
 

@@ -11,7 +11,7 @@ async function seed(pg) {
         role: "superadmin",
         name: "Gevorg",
         surname: "Hakobyan",
-        email: "Gevorg@gmail.com",
+        email: "h.gevor555.gmail.com",
         password: bcrypt.hashSync(ADMIN_PASSWORD, bcrypt.genSaltSync(10), null),
         payment_package: `0`,
         new_or_existing: `1`,
@@ -28,12 +28,12 @@ async function seed(pg) {
       },
       {
         title: "Vip",
-        text: "Access to 3000+ references, Search by 500+ keywords, File library, Upload your own references, Add references to favorites list, , , , , , , , , , , ,",
+        text: "Access to 10000+ references, Search by 500+ keywords, File library, Upload your own references, Add references to favorites list, , , , , , , , , , , ,",
         price: "5",
       },
       {
         title: "Enterprise",
-        text: "Access to 3000+ references, Search by 500+ keywords, File library, Upload your own references, Add references to favorites list, Priority tech support, Priority reference moderation, Personal administrator dashboard, User management, Add 10+ VIP users to the system, VIP user email newsletter, Notification dispatch, Access to Cinema Room (coming soon), Access to affiliate program (coming soon), Access to Jobs section (coming soon), Access to promotions (coming soon)",
+        text: "Access to 10000+ references, Search by 500+ keywords, File library, Upload your own references, Add references to favorites list, Priority tech support, Priority reference moderation, Personal administrator dashboard, User management, Add 10+ VIP users to the system, VIP user email newsletter, Notification dispatch, Access to Cinema Room (coming soon), Access to affiliate program (coming soon), Access to Jobs section (coming soon), Access to promotions (coming soon)",
         price: "25",
       },
     ]);

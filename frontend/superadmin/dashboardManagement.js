@@ -541,7 +541,7 @@ async function deletePpFunction(elem) {
             body: JSON.stringify({ id: rowId })
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
         const data = await response.json()

@@ -12,7 +12,7 @@ localStorage.removeItem("accessToken")
           }
 
         const ppData = await response.json();
-        
+        console.log(ppData);
         const ppSecondDiv = document.querySelector('.ppSecondDiv')
 
         ppData.sort((a, b) => a.id - b.id);
@@ -121,6 +121,19 @@ function upgradeFunction(elem) {
 
 
 async function pay(package) {
+    
+    const upgradeButtons = document.querySelectorAll('.Upgrade')
+    upgradeButtons.forEach((button)=>{
+        button.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        button.appendChild(loader);
+        setTimeout(() => {
+            button.disabled = false;
+            loader.remove();
+        }, 5000);
+    })
+    
     let period = ""
     const toggleButtons = document.querySelectorAll('.toggle-btn')
     toggleButtons.forEach((toggleButton)=>{
@@ -131,6 +144,7 @@ async function pay(package) {
             period = "monthly"
         }
     })
+    
     const token = localStorage.getItem("accessToken");
         const response = await fetch("http://localhost:3030/api/v1/users/upgrade", {
             method: 'POST',
@@ -145,6 +159,7 @@ async function pay(package) {
             window.open("../dashboard.html");
           }
             const paymentUrl = await response.json()
+            
             window.open(paymentUrl, '_blank');
         
 

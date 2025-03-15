@@ -101,8 +101,6 @@ export default class AuthService {
         const nowDate = new Date();
         if (expireDate > nowDate) {
           if (user[0].role === "vip") {
-            console.log("1");
-
             payload.page = "./vip/vip.dashboard.html";
           }
           if (user[0].role === "admin") {
@@ -116,7 +114,6 @@ export default class AuthService {
               payment_package: "free",
             };
             await UsersModel.resetUsersByAdminId(adminId, data, trx);
-            console.log(user[0].role, adminId);
           }
           const data = {
             role: "user",
