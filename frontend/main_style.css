@@ -177,6 +177,7 @@ footer {
     display: flex; 
 	justify-content: space-between;
 	margin-top: 0 !important;
+    overflow: auto;
 }
 
 /* Боковое меню */
@@ -520,7 +521,10 @@ font-size: 35px;
 
 }
 .team_container{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 30px;
 }
 
@@ -1128,3 +1132,213 @@ body.overlay-active .overlay {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Общие стили остаются без изменений */
+
+/* ======================== */
+/* ==== Адаптивность ==== */
+/* ======================== */
+
+/* Для мобильных устройств (до 768px) */
+
+@media (max-width: 1270px) {
+    .team-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .demo-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    
+}
+
+@media (max-width: 768px) {
+
+    .nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn_login {
+        margin-right: 0;
+        margin-top: 10px;
+    }
+
+    .main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+
+
+    .payment-packages {
+        flex-direction: column;
+        align-items: center;
+        max-width: 100%;
+    }
+
+    .payment-package {
+        width: 90%;
+        height: auto;
+    }
+
+    .main-text {
+        margin: 20px 10px 0 10px;
+        font-size: 16px;
+    }
+
+    .logo {
+        max-width: 60px;
+        max-height: 30px;
+    }
+}
+
+/* Для планшетов (768px - 1024px) */
+@media (max-width: 1024px) {
+    .payment-packages {
+        flex-direction: column;
+        max-width: 90%;
+    }
+
+    .payment-package {
+        width: 100%;
+        height: auto;
+    }
+
+    .main-text {
+        margin: 50px 20px 0 20px;
+        font-size: 18px;
+    }
+}
+
+
+/* Existing styles remain unchanged */
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .team-photo {
+        width: 200px;
+    }
+    .form-control {
+        width: 40vw;
+    }
+    .team-section p {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .team-section ul {
+        flex-direction: column;
+    }
+    .team-photo {
+        width: 150px;
+    }
+    .form-control {
+        width: 60vw;
+    }
+    .team-section p, .contact-form-title {
+        font-size: 24px;
+    }
+    .serachText {
+        left: 40%;
+        width: 120px;
+    }
+    #search svg {
+        left: 38%;
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .team-photo {
+        width: 100px;
+    }
+    .form-control {
+        width: 80vw;
+    }
+    .team-section p, .contact-form-title {
+        font-size: 18px;
+    }
+    .serachText {
+        left: 35%;
+        width: 100px;
+    }
+    #search svg {
+        left: 33%;
+        max-width: 120px;
+    }
+    .form-container{
+        width: 220px;
+        left: calc(50% - 150px);
+    }
+}
+

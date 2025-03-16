@@ -126,13 +126,32 @@ export default class AuthService {
         }
       } else {
         if (user[0].role === "user") {
-          payload.page = "./user/user.dashboard.html";
+          if (user[0].admin_id == null) {
+            payload.page = "./user/user.dashboard.html";
+          }else{
+            const adminId = user[0].admin_id
+            const admin =  await UsersModel.getAdminByAdminId(adminId, trx);
+            if (admin[0].role == "admin") {
+              const userNewData = {
+                role: "vip",
+                payment_package: "vipPro"
+              }   
+              await UsersModel.updateUserPackage(userId, userNewData, trx);
+              payload.role = "vip"
+              payload.payment_package = "vipPro"
+              payload.page = "./vip/vip.dashboard.html";
+            }else{
+              payload.page = "./user/user.dashboard.html";
+            }
+          }
+        }
+        if (user[0].role === "vip") {
+          payload.page = "./vip/vip.dashboard.html";
         }
         if (user[0].role === "superadmin") {
           payload.page = "./superadmin/dashboardManagement.html";
         }
       }
-
       const accessToken = AuthService.generateTokens({ ...payload });
       payload.accessToken = accessToken;
       payload.status = true;

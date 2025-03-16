@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-  ADMIN_PASSWORD: '111111Aa',
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
   PORT: process.env.PORT || 3040,
   ONE_WAY_HASH_SECRET: process.env.ONE_WAY_HASH_SECRET,
   DISABLE_REQUEST_LOG: process.env.DISABLE_REQUEST_LOG,

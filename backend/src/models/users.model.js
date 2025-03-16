@@ -4,6 +4,20 @@ const pg = knex(knexConfigs.development);
 
 class UsersModel {
   
+  static async getAdminByAdminId(adminId, trx) {
+    return await pg("users")
+      .select("*")
+      .where({ id: adminId })
+      .transacting(trx);
+  }
+
+  static async updateUserPackage(userId, userNewData, trx) {
+    return await pg("users")
+      .update(userNewData)
+      .where({ id: userId })
+      .transacting(trx);
+  }
+
   static async getUserByEmail(email, trx) {
     return await pg("users")
       .select("*")

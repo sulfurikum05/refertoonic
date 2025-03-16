@@ -10,10 +10,10 @@ async function fetchNotificatoinsData() {
              }
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
-        const data = await response.json();
+        const data = await response.json();    
         populateNotificatoinsTable(data)
     } catch (error) {
         console.error("Не удалось получить данные:", error);
