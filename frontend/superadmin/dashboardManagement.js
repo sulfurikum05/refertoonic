@@ -369,9 +369,21 @@ function editTeamfunction(elem) {
             if (index === 0) {
                 const photoInput = document.createElement('input');
                 photoInput.type = 'file';
-                photoInput.className = 'photo-input';
+                photoInput.style = "display: none;";
+                photoInput.className = 'photo-input'; // Добавляем класс для поиска
                 cell.innerHTML = '';
                 cell.appendChild(photoInput);
+                
+                // Создаём кнопку для выбора фото
+                const photoInputButton = document.createElement('button');
+                photoInputButton.className = 'choosePhotoButton';
+                photoInputButton.textContent = "Photo";
+                cell.appendChild(photoInputButton);
+        
+                // Добавляем обработчик клика для открытия диалога выбора файла
+                photoInputButton.addEventListener('click', function () {
+                    photoInput.click();
+                });
             } else {
                 const textInput = document.createElement('input');
                 textInput.type = 'text';

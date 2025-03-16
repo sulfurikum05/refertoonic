@@ -12,7 +12,6 @@ localStorage.removeItem("accessToken")
           }
 
         const ppData = await response.json();
-        console.log(ppData);
         const ppSecondDiv = document.querySelector('.ppSecondDiv')
 
         ppData.sort((a, b) => a.id - b.id);

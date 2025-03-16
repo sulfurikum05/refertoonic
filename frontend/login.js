@@ -76,6 +76,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         }else{
             if (data.page) {                
                 localStorage.setItem("accessToken", data.accessToken)
+                console.log(data);
                 
                 window.location.href = data.page
             }else{

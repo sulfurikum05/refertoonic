@@ -5,6 +5,7 @@ body{
   
 .table-container{
     min-height: 100vh;
+    min-width: 1400px;
 }
 
 .helpFirstDiv{
@@ -41,7 +42,7 @@ width: 100%;
 }
 
 h1{
-    font-size: 21px !important;
+    font-size: 21px;
     color: #0052aa !important;
 }
 
@@ -113,7 +114,18 @@ max-width: 25%;
 .video-container{
     max-width: 80% !important;
 }
-
+.table-container-video{
+    margin: 50px;
+    width: 90%;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    font-family: cursive;
+    max-width: 90%;
+    min-height: 100vh;
+}
 .videoDiv {
     text-align: center;
 	display:flex;
@@ -170,3 +182,66 @@ max-width: 25%;
 .red{
     color: #f80000 !important;
 }
+
+.pp-table-container{
+    min-width: 100px !important;
+}
+
+@media (max-width: 1400px) {
+    .table-container-video{
+        width: 70%;
+        margin: auto;
+    }
+}
+
+@media (max-width: 950px) {
+    .table-container-video{
+        width: 65%;
+        margin: auto;
+        margin-top: 50px;
+        margin-bottom: 100px;
+    }
+    }
+
+
+@media (max-width: 800px) {
+    .table-container-video{
+        width: 50%;
+        min-width: 300px;
+        margin: auto;
+        margin-top: 50px;
+        margin-bottom: 100px;
+    }
+    }
+
+    @media (max-width: 1360px) {
+        .payment-package{
+            width: 50%;
+            min-width: 340px;
+        }
+        .ppSecondDiv{
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    
+    @media (max-width: 670px) {
+        .pp-table-container{
+            min-width: 245px !important;
+        }
+        .ppFirstDiv{
+            display: flex;
+            flex-direction: column;
+            font-size: 10px;
+        }
+        .ppFirstDiv h1{
+            font-size: 10px !important;
+        }
+        .payment-package{
+            width: 50%;
+            min-width: 200px;
+        }
+        .currentUpgradeButton{
+            min-width: 100px;
+        }
+    }

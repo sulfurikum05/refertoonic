@@ -169,7 +169,7 @@ export default class UsersController {
       if (role !== "user") {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
-        const data = await UsersServices.getNotificationsData(role, userId);
+        const data = await UsersServices.getNotificationsData(userId);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {

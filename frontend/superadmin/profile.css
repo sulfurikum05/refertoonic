@@ -1,11 +1,21 @@
 body{
   font-family: cursive !important;
 }
+.profile-table-container {
+  margin: 50px;
+  width: 90%;
+  background: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  font-family: cursive;
+  max-width: 90%;
 
+}
 
 .profileFirstDiv {
   display: flex;
-
   flex-wrap: wrap;
   justify-content: space-between;
   background-color: #fff;
