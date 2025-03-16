@@ -62,14 +62,19 @@ async function sendHelpMessage(){
     })
         if(response.status == 401){
         localStorage.removeItem("accessToken")
-     
         window.open("../dashboard.html");
         }
         const data = await response.json()
-        subject.value = ""
-        message.value = ""
-        fetchMessagesData()
-        showMessage(data.message)
+        if (data.success == false) {   
+            showMessage(data.errors)
+        }else{
+            subject.value = ""
+            message.value = ""
+            fetchMessagesData()
+            showMessage(data.message)
+        }
+        
+
 
 }
 

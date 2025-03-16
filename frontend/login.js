@@ -76,7 +76,6 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         }else{
             if (data.page) {                
                 localStorage.setItem("accessToken", data.accessToken)
-                
                 window.location.href = data.page
             }else{
                 showMessage(data.errors)
@@ -108,9 +107,13 @@ document.getElementById('registerForm').addEventListener('submit', async (event)
             body: JSON.stringify({ name, surname, email, password })
         });
         const data = await response.json();
-
+        if (data.success == false) {   
+            showMessage(data.errors)
+        }else{
             showMessage(data.message);
             toggleForm('loginForm');
+        }
+
         
     } catch (error) {
         showMessage("Server error!");
