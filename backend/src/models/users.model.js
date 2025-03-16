@@ -25,7 +25,7 @@ class UsersModel {
       .where({ email: email })
       .transacting(trx);
   }
-
+  
   static async updatePassword(email, code, trx) {
     await pg("users")
       .update({ password: code })

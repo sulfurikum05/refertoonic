@@ -31,7 +31,6 @@ localStorage.removeItem("accessToken")
             const text = item.text;
             const parts = text.split(',');
             const [One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Eleven, Twelve, Thirteen, Fourteen, Fifteen, Sixteen] = parts;
-
                 package.innerHTML = `
                     <h2 class="${item.color}" >${item.title}</h2>
                     <p class="price">${item.price}$ / month</p>

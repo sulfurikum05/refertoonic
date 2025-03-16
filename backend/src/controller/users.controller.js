@@ -176,7 +176,7 @@ export default class UsersController {
       next(error);
     }
   }
-
+  
   static async upgrade(req, res, next) {
     try {
       const userId = req.userId;

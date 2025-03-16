@@ -212,7 +212,6 @@ footer {
     color: #3498db;
 }
 
-/* Стили для скроллбара */
 ::-webkit-scrollbar {
     width: 8px;
     background-color: #777e86

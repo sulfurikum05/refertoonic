@@ -363,7 +363,7 @@ function editTeamfunction(elem) {
                 button.style.pointerEvents = "all";
             }
         });
-
+        
         Array.from(row.cells).forEach((cell, index) => {
             if (index === row.cells.length - 1) return;
             if (index === 0) {

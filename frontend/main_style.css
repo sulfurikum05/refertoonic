@@ -1105,11 +1105,9 @@ body.overlay-active .overlay {
     display: block;
 }
 
-
 .library-video{
     max-width: 200px;
 }
-
 .Upgrade:disabled {
     cursor: not-allowed;
     opacity: 0.7;

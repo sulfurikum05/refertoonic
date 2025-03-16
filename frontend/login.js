@@ -88,7 +88,6 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     }
 });
 
-// Регистрация
 document.getElementById('registerForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const name = document.getElementById('registerName').value;
