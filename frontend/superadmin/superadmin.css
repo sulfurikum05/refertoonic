@@ -144,7 +144,7 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
+  }
 
 .table th {
     cursor: pointer;
@@ -387,6 +387,7 @@ h1 {
 .showMessageContainer {
     display: block;
 }
+
 
 .userPopup img {
     width: 100px;

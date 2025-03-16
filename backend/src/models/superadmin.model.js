@@ -160,6 +160,13 @@ export class SuperadminModel {
       .transacting(trx);
   }
 
+  static async upgradeAdminAvailableUsersCount(userId, usersNewCountData, trx) {
+    await pg("users")
+      .update(usersNewCountData)
+      .where({ id: userId })
+      .transacting(trx);
+  }
+
   static async getUserAllPayments(userId, trx) {
     return await pg("payments")
       .select("*")

@@ -24,8 +24,9 @@ async function fetchProfileData() {
 fetchProfileData()
 
 function populateUserPersonalInfo(data) {
-        const userRole = data[0].role
-        profileFirstDiv.innerHTML = ""; 
+    const userRole = data[0].role
+    profileFirstDiv.innerHTML = ""; 
+
         const picture = document.createElement("div");
         picture.classList.add('picture')
         picture.innerHTML = `

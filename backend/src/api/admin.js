@@ -2,7 +2,7 @@ import express from 'express';
 import upload from '../middlewares/multer';
 import { AdminController } from "../controller/admin.controller";
 import AuthService from '../auth/auth.service';
-
+import Validation from '../middlewares/validation/validation';
 
 const router = express.Router();
 
@@ -21,12 +21,8 @@ const router = express.Router();
   router.delete("/deleteModerationVideo", AuthService.validateAccessToken, AdminController.deleteModerationVideo);
   router.post("/publishModerationVideo", AuthService.validateAccessToken, AdminController.publishModerationVideo);
   router.post("/rejectModerationVideo", AuthService.validateAccessToken, AdminController.rejectModerationVideo);
-  router.post("/upgradeUserCount", AuthService.validateAccessToken, AdminController.upgradeUserCount);
+  router.post("/upgradeUserCount", Validation.userCountUpgradeValidate, AuthService.validateAccessToken, AdminController.upgradeUserCount);
   
 export default router;
-
-
-
-
 
 

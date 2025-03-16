@@ -93,9 +93,9 @@ export default class AuthService {
       const userId = user[0].id;
       const userPayments = await UsersModel.getPaymentHistoryData(userId, trx);
       if (userPayments.length !== 0) {
-        const maxIdPayment = userPayments.reduce((max, payment) =>
-          payment.id > max.id ? payment : max
-        );
+        const maxIdPayment = userPayments
+        .filter(payment => payment.package !== "users count")
+        .reduce((max, payment) => (payment.id > max.id ? payment : max), { id: -Infinity });
         const expireDateStr = maxIdPayment.expire_at;
         const expireDate = new Date(expireDateStr);
         const nowDate = new Date();

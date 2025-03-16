@@ -438,12 +438,12 @@ async function changeOrderStatus(elem) {
     },
     body: JSON.stringify(body)
     });
-    // if(response.status == 401){
-    //     localStorage.removeItem("accessToken")
-    //     window.open("../dashboard.html");
-    // }
-    // const data = await response.json()
-    // showMessage(data.message)
+    if(response.status == 401){
+        localStorage.removeItem("accessToken")
+        window.open("../dashboard.html");
+    }
+    const data = await response.json()
+    showMessage(data.message)
     setTimeout(() => {
         window.location.reload()
     }, 100);

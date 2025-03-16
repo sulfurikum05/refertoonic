@@ -318,15 +318,6 @@ export class SuperadminService {
     return { message: "Notification deleted successfully" };
   }
 
-
-
-
-
-
-
-
-
-
   static async ipnPaymentStatus(payment_status, order_id, logs) {
     const trx = await pg.transaction();
     try {
@@ -334,10 +325,7 @@ export class SuperadminService {
         payment: logs
       }
       await SuperadminModel.writePaymentLogs(logData, trx)
-      const userPayment = await SuperadminModel.getOrderByOrderId(
-        order_id,
-        trx
-      );
+      const userPayment = await SuperadminModel.getOrderByOrderId(order_id,trx);
       const userId = userPayment[0].user_id;
       const user = await SuperadminModel.getUserById(userId, trx)
       const userEmail = user[0].email
@@ -347,53 +335,34 @@ export class SuperadminService {
         payment_status: payment_status,
         order_id: order_id
       }
-      if (payment_status !== "finished") {
+      if (userPayment[0].package == "users count") {
         const newPaymentData = {
           status: payment_status
-        } 
-        await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
-      } else {
-        const newUserData = {};
-        const newPaymentData = {};
-        if (userPayment[0].package == "enterprise") {
-          newUserData.payment_package = "admin";
-          newUserData.role = "admin";
-          newPaymentData.expire_at = new Date();
-          newPaymentData.status = payment_status
-          if (userPayment[0].period == "monthly") {
-            if (userPayment[0].method == "upgrade") {
-              newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
-            }else{
-              const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
-              const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
-              const userSecondLastPayment = sortedPayments[1];
-              newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
-              newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
-            }
-          }
-          if (userPayment[0].period == "yearly") {
-            if (userPayment[0].method == "upgrade") {
-              newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
-            }else{
-              const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
-              const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
-              const userSecondLastPayment = sortedPayments[1];
-              newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
-              newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
-            }
-          }
-          const vipProData = {
-            role: "vip",
-            payment_package: "vipPro",
-          };
-          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
-          await SuperadminModel.updateUserPackage(userId,newUserData,trx);
-          await UsersModel.upgradeUsersByAdminId(userId, vipProData, trx);
         }
-        if (userPayment[0].package == "vip") {
-          
-            newUserData.payment_package = "vip";
-            newUserData.role = "vip";
+        if (payment_status !== "finished") { 
+          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+        }else{
+          const usersCount =  Number(userPayment[0].price)
+          const availableUsersCount = Number(user[0].new_or_existing) * 10
+          const new_or_existing = (usersCount + availableUsersCount) / 10
+          const usersNewCountData = {
+            new_or_existing: new_or_existing
+          }
+          await SuperadminModel.upgradeAdminAvailableUsersCount(userId, usersNewCountData, trx); 
+          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+        }
+      }else{
+        if (payment_status !== "finished") {
+          const newPaymentData = {
+            status: payment_status
+          } 
+          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+        } else {
+          const newUserData = {};
+          const newPaymentData = {};
+          if (userPayment[0].package == "enterprise") {
+            newUserData.payment_package = "admin";
+            newUserData.role = "admin";
             newPaymentData.expire_at = new Date();
             newPaymentData.status = payment_status
             if (userPayment[0].period == "monthly") {
@@ -417,11 +386,48 @@ export class SuperadminService {
                 newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
                 newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
               }
-            } 
+            }
+            const vipProData = {
+              role: "vip",
+              payment_package: "vipPro",
+            };
             await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
             await SuperadminModel.updateUserPackage(userId,newUserData,trx);
+            await UsersModel.upgradeUsersByAdminId(userId, vipProData, trx);
+          }
+          if (userPayment[0].package == "vip") {
+            
+              newUserData.payment_package = "vip";
+              newUserData.role = "vip";
+              newPaymentData.expire_at = new Date();
+              newPaymentData.status = payment_status
+              if (userPayment[0].period == "monthly") {
+                if (userPayment[0].method == "upgrade") {
+                  newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
+                }else{
+                  const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+                  const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+                  const userSecondLastPayment = sortedPayments[1];
+                  newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+                  newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
+                }
+              }
+              if (userPayment[0].period == "yearly") {
+                if (userPayment[0].method == "upgrade") {
+                  newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+                }else{
+                  const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+                  const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+                  const userSecondLastPayment = sortedPayments[1];
+                  newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+                  newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+                }
+              } 
+              await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+              await SuperadminModel.updateUserPackage(userId,newUserData,trx);
+          }
+  
         }
-
       }
       await SendEmail.sendTransactionStatusChangeNotification(emailOptions)
       await trx.commit();

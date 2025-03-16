@@ -1,4 +1,3 @@
-// NPM modules
 import Joi from "joi";
 
 export default class Schemes {
@@ -17,5 +16,9 @@ export default class Schemes {
   HelpMessageScheme = Joi.object({
     subject: Joi.string().pattern(/^[A-Za-z0-9]+$/).min(1).max(50).required(),
     message: Joi.string().pattern(/^[A-Za-z0-9!@#$%&*()_\-=+]+$/).min(1).max(1000).required(),
+  });
+
+  userCountUpgradeScheme = Joi.object({
+    userCount: Joi.number().min(5).required()
   });
 }
