@@ -100,6 +100,21 @@ export class AdminController {
     }
   }
 
+  static async changeModerationVideoStatus(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "admin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const videoId = req.body.id;
+        const data = await AdminServices.changeModerationVideoStatus(videoId);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   static async deleteModerationVideo(req, res, next) {
     try {
       const role = req.role;

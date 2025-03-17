@@ -38,7 +38,7 @@ export class VipServices {
     }
   }
 
-  static async uploadLibraryVideo(videoPath, title, keywords, userId) {
+  static async uploadLibraryVideo(videoPath, title, keywords, userId, paymentPackage) {
     const video = {
       user_id: userId,
       video_url: videoPath,
@@ -46,6 +46,11 @@ export class VipServices {
       keywords: keywords,
       status: 0,
     };
+    if (paymentPackage == "vipPro") {
+      video.status = -2
+    }
+    console.log(paymentPackage, video,11111111111111111);
+    
     await VipModel.uploadLibraryVideo(video);
     return { message: "Video uploaded successfully" };
   }

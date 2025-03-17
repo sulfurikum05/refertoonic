@@ -290,6 +290,31 @@ export class SuperadminController {
     }
   }
 
+  static async downloadVideo(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "superadmin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const { filename } = req.params;
+        const filePath = await SuperadminService.downloadVideo(filename);
+        const downloadName = `downloaded_${filename}`;
+        res.sendFile(filePath, {
+          headers: {
+              'Content-Disposition': `attachment; filename="${downloadName}"`,
+              'Content-Type': 'video/mp4'
+          }
+      }, (err) => {
+          if (err) {
+              res.status(404).send('Видео не найдено');
+          }
+      });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   static async deleteLibraryVideo(req, res, next) {
     try {
       const role = req.role;
@@ -340,8 +365,11 @@ export class SuperadminController {
       if (role !== "superadmin") {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
-        const id = req.body.id;
-        const data = await SuperadminService.publishModerationVideo(id, role);
+        const { uploadDir } = req.body;
+        const gifPath = req.file ? req.file.filename : null;
+        const filePath = `${uploadDir}${gifPath} `;
+        const {id, title, keywords} = req.body;
+        const data = await SuperadminService.publishModerationVideo(id, title, keywords, filePath);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {
@@ -356,7 +384,7 @@ export class SuperadminController {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
         const id = req.body.id;
-        const data = await SuperadminService.rejectModerationVideo(id, role);
+        const data = await SuperadminService.rejectModerationVideo(id);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {

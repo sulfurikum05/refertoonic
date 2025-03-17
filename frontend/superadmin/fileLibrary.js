@@ -118,16 +118,13 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
             alert('Пожалуйста, выберите файл перед сохранением!');
             return;
         }
-
         const videoFileNameWithoutExtension = videoFile.name.replace(".mp4", "");
         const formData = new FormData();
         formData.append('video', videoFile);
         formData.append('gif', gifFile);
         formData.append('title', title.value);
         formData.append('keywords', videoFileNameWithoutExtension);
-        
         const token = localStorage.getItem("accessToken");
-        
         const response = await fetch('http://localhost:3030/api/v1/superadmin/uploadLibraryVideo', {
             method: 'POST',
             headers: { 
@@ -135,13 +132,10 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
             },
             body: formData
         });
-
         if(response.status == 401) {
             localStorage.removeItem("accessToken");
-         ;
             window.open("../dashboard.html");
         }
-
         const data = await response.json();
         fetchLibraryData();
         showMessage(data.message);

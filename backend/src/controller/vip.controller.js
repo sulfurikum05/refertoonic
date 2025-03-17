@@ -25,6 +25,7 @@ export class VipController {
   static async uploadLibraryVideo(req, res, next) {
     try {
       const role = req.role;
+      const paymentPackage = req.pp
       if (role == "vip" || role == "admin") {
         const userId = req.userId;
         const { uploadDir, title, keywords } = req.body;
@@ -38,7 +39,8 @@ export class VipController {
           videoPath,
           title,
           keywords,
-          userId
+          userId,
+          paymentPackage
         );
         SuccessHandlerUtil.handleList(res, next, data);
       } else {
@@ -54,7 +56,7 @@ export class VipController {
       const role = req.role;
       if (role == "vip" || role == "admin") {
         const userId = req.userId;
-        const data = await VipServices.getFileLibraryData(role, userId);
+        const data = await VipServices.getFileLibraryData(userId);
         SuccessHandlerUtil.handleList(res, next, data);
       } else {
         return res.status(401).json({ message: "Unauthorized" });

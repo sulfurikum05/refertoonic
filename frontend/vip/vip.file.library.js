@@ -12,11 +12,10 @@ async function fetchLibraryData() {
              
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         const data = await response.json();
-        
         populateReferenceTable(data)
     } catch (error) {
         console.error("Не удалось получить данные:", error);
@@ -70,7 +69,7 @@ function populateReferenceTable(data) {
         const date = new Date(item.upload_at);
         const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
 
-        if (item.status == 0) {
+        if (item.status == 0 || item.status == -2) {
             item.status = "Pending moderation"
         }
         if (item.status == 1) {
@@ -175,7 +174,7 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
             body: formData
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
                 const data = await response.json()

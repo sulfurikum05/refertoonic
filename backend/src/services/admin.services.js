@@ -82,6 +82,9 @@ export class AdminServices {
           return { message: "User created successfully" };
         }
       }
+      await trx.commit();
+      return { message: "User created successfully" };
+
     } catch (error) {
       await trx.rollback();
     }
@@ -150,6 +153,12 @@ export class AdminServices {
     }
   }
 
+  static async changeModerationVideoStatus(videoId) {
+    const data = { status: 0 };
+    await AdminModel.changeModerationVideoStatus(data, videoId);
+    return { message: "Video successfully sent to moderator" };
+    }
+  
   static async deleteModerationVideo(id) {
     const trx = await pg.transaction();
     try {

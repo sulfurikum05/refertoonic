@@ -71,16 +71,20 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
             body: JSON.stringify({ email, password })
         });
         const data = await response.json();
-        if (!data.status) {
-            showMessage(data.message)
-        }else{
+
             if (data.page) {                
                 localStorage.setItem("accessToken", data.accessToken)
                 window.location.href = data.page
             }else{
-                showMessage(data.errors)
+                if (!data.status) {
+                    if (data.message) {
+                        showMessage(data.message)
+                    }else{
+                        showMessage(data.errors)
+                    }
+                } 
             }
-        }
+        
 
     } catch (error) {
         showMessage('Login error!');

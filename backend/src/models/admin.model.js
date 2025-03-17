@@ -60,11 +60,15 @@ export class AdminModel {
   static async getModerationVideosByUsersId(usersId, trx) {
     return await pg("videos")
       .select("*")
-      .where("status", 0)
+      .where("status", -2)
       .whereIn("user_id", usersId)
       .transacting(trx);
   }
+  static async changeModerationVideoStatus(data, videoId) {
+    await pg("videos").update(data).where({ id: videoId });
+  }
 
+  
   static async getNotificationsData(trx) {
     return await pg("notifications")
       .select("*")

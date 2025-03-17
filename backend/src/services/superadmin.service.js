@@ -1,3 +1,4 @@
+import path from'path';
 import { SuperadminModel } from "../models/superadmin.model";
 import UsersModel from "../models/users.model";
 import SendEmail from "../middlewares/nodemailer";
@@ -159,6 +160,18 @@ export class SuperadminService {
     return { message: "Files uploaded successfully" };
   }
 
+  static async downloadVideo(filename) {
+    try {
+      const twoStepsBack = path.dirname(path.dirname(__dirname));
+      const videoFolder = path.join(twoStepsBack, 'src/storage/uploads');
+      const filePath = path.join(videoFolder, filename);
+      return filePath
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   static async deleteLibraryVideo(id) {
     const trx = await pg.transaction();
     try {
@@ -195,8 +208,11 @@ export class SuperadminService {
     }
   }
 
-  static async publishModerationVideo(id, role) {
+  static async publishModerationVideo(id, title, keywords, filePath) {
     const data = {
+      title: title,
+      keywords: keywords,
+      gif_url: filePath,
       status: 1,
     };
     await SuperadminModel.publishModerationVideo(id, data);

@@ -11,8 +11,6 @@ async function fetchpaymentPackagesData(){
             window.open("../dashboard.html");
           }
         const ppData = await response.json();
-        // console.log(ppData);
-        
         const ppSecondDiv = document.querySelector('.ppSecondDiv')
         ppData.sort((a, b) => a.id - b.id);
         ppData.forEach(item => {
@@ -67,10 +65,6 @@ async function fetchpaymentPackagesData(){
 
 fetchpaymentPackagesData()
 
-
-
-
-
 function monthlyToggleButtonFunction(){
     const monthlyButton = document.querySelector(".monthly")
     const yearlyButton = document.querySelector(".yearly")
@@ -85,8 +79,6 @@ function monthlyToggleButtonFunction(){
     monthlyButton.classList.add('hide')
     yearlyButton.classList.remove('hide')
     yearlyButton.classList.add('show')
-
-
 }
 
 function yearlyToggleButtonFunction(){
@@ -94,17 +86,16 @@ function yearlyToggleButtonFunction(){
     const yearlyButton = document.querySelector(".yearly")
     const paymentPackagesPrices = document.querySelectorAll(".price")
     paymentPackagesPrices.forEach(elem => {
-    const price = elem.textContent.split("$")[0].trim();
-    const notFixedPrice = Number(price) * 12 * 0.8
-    const fixedPrice = notFixedPrice.toFixed(0)
-    elem.textContent = `${fixedPrice}$ / year` 
+        const price = elem.textContent.split("$")[0].trim();
+        const notFixedPrice = Number(price) * 12 * 0.8
+        const fixedPrice = notFixedPrice.toFixed(0)
+        elem.textContent = `${fixedPrice}$ / year` 
     });
     yearlyButton.classList.remove('show')
     yearlyButton.classList.add('hide')
     monthlyButton.classList.remove('hide')
     monthlyButton.classList.add('show')
 }
-
 
 async function upgradeOrExtend(elem) {
     if (elem.classList.contains("Upgrade")) {
@@ -142,8 +133,6 @@ async function upgradeOrExtend(elem) {
           }
         const paymentUrl = await response.json()
         window.open(paymentUrl, '_blank');
-
-
     }
     if (elem.classList.contains("Extend")) {
         elem.disabled = true;
@@ -181,7 +170,6 @@ async function upgradeOrExtend(elem) {
           }
         const paymentUrl = await response.json()
         window.open(paymentUrl, '_blank');
-
     }
 }
 

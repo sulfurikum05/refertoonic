@@ -18,6 +18,7 @@ const router = express.Router();
   router.post("/sendNotification", AuthService.validateAccessToken, AdminController.sendNotification);
   router.get("/getSentNotificationsData", AuthService.validateAccessToken, AdminController.getSentNotificationsData);
   router.get("/getModerationVideos", AuthService.validateAccessToken, AdminController.getModerationVideos);
+  router.post("/changeModerationVideoStatus", AuthService.validateAccessToken, AdminController.changeModerationVideoStatus);
   router.delete("/deleteModerationVideo", AuthService.validateAccessToken, AdminController.deleteModerationVideo);
   router.post("/publishModerationVideo", AuthService.validateAccessToken, AdminController.publishModerationVideo);
   router.post("/rejectModerationVideo", AuthService.validateAccessToken, AdminController.rejectModerationVideo);

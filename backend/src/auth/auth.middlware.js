@@ -2,7 +2,7 @@
 import AuthService from "./auth.service";
 import { ErrorsUtil } from "../utils";
 
-const { UnauthorizedError, PermissionError } = ErrorsUtil;
+const { UnauthorizedError } = ErrorsUtil;
 
 export default class AuthMiddlaware {
   static async authenticate(accessToken) {
