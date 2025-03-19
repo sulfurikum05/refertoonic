@@ -77,7 +77,6 @@ export class AdminController {
   static async getMessagesData(req, res, next) {
     try {
       const userId = req.userId;
-
       const data = await AdminServices.getMessagesData(userId);
       SuccessHandlerUtil.handleList(res, next, data);
     } catch (error) {
@@ -85,6 +84,22 @@ export class AdminController {
     }
   }
 
+  static async deleteUser(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "admin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const userEmail = req.body.email
+        const adminId = req.userId
+        const data = await AdminServices.deleteUser(userEmail, adminId);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   static async getModerationVideos(req, res, next) {
     try {
       const role = req.role;

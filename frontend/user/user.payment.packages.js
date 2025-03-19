@@ -126,10 +126,6 @@ async function pay(package) {
         const loader = document.createElement('span');
         loader.className = 'loader';
         button.appendChild(loader);
-        setTimeout(() => {
-            button.disabled = false;
-            loader.remove();
-        }, 5000);
     })
     
     let period = ""
@@ -157,11 +153,9 @@ async function pay(package) {
             window.open("../dashboard.html");
           }
             const paymentUrl = await response.json()
-            
+            button.disabled = false;
+            loader.remove();
             window.open(paymentUrl, '_blank');
-        
-
-
 }
 
 

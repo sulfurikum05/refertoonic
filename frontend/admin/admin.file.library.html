@@ -35,6 +35,9 @@
         </div>
         <div class="table-container file-library-table-container">
             
+            <button class="create-button tableSwichButton" onclick="showReferencesTable()">References</button>
+            <button class="create-button tableSwichButton" onclick="showWishlistTable()">Wishlist</button>
+        
             <h2 class="videos-header header table-header">Your references<button class="video-upload-button create-button"><b>Upload</b></button></h2>
             <table class="videos-table table">
                 <thead>
@@ -51,8 +54,8 @@
                     <!-- ////////////////// -->
                 </tbody>
             </table>
-            <h2 class="wishlist-videos-header header table-header">Your wishlist</h2>
-            <table class="wishlist-table table">
+            <h2 class="wishlist-videos-header header table-header hide">Your wishlist</h2>
+            <table class="wishlist-table table hide">
                 <thead>
                     <tr>
                         <th>Video</th>

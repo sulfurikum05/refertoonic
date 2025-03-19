@@ -423,6 +423,11 @@ function openChangeStatusPopup(elem) {
 }
 
 async function changeOrderStatus(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const order_id = elem.dataset.order_id
     const payment_status = elem.textContent
     const body = {
@@ -438,14 +443,10 @@ async function changeOrderStatus(elem) {
     },
     body: JSON.stringify(body)
     });
-    if(response.status == 401){
-        localStorage.removeItem("accessToken")
-        window.open("../dashboard.html");
-    }
-    const data = await response.json()
     showMessage(data.message)
-    setTimeout(() => {
-        window.location.reload()
-    }, 100);
+    elem.disabled = false;
+    loader.remove();
+    window.location.reload()
+
 
 }

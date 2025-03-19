@@ -57,4 +57,31 @@ export default class Validation {
     }
     next();
   }
+
+  static confirmEmailValidate(req, res, next) {
+    const { error } = schemes.confirmEmailScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+  
+  static EmailValidate(req, res, next) {
+    const { error } = schemes.EmailScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+  
 }

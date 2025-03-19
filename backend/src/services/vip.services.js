@@ -49,7 +49,6 @@ export class VipServices {
     if (paymentPackage == "vipPro") {
       video.status = -2
     }
-    console.log(paymentPackage, video,11111111111111111);
     
     await VipModel.uploadLibraryVideo(video);
     return { message: "Video uploaded successfully" };

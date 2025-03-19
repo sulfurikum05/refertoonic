@@ -33,7 +33,7 @@ function populateTable(data) {
         row.dataset.id = `${item.id}`
         row.innerHTML = `
             <td>
-                <video class="library-video">
+                <video class="library-video" onclick="openVideoInPlayer(this)" data-video="${item.video_url}">
                     <source src="${item.video_url}" type="video/mp4">
                 </video>
             </td>
@@ -133,6 +133,222 @@ async function sendVideoToModeration(elem){
                 fetchModerationVideos()
                 showMessage(data.message)
 
+}
+
+
+function openVideoInPlayer(elem) {
+
+        
+    const videoplayerContainer = document.createElement('div');
+    videoplayerContainer.classList.add('moderationVideoShowContainer')
+    videoplayerContainer.classList.add('userPopup')
+    videoplayerContainer.innerHTML = `
+        <div class="v-player">
+            <div id="pan-container">
+                <video id="video" class="videoplayercontainer">
+                    <source src="${elem.dataset.video}" type="video/mp4">
+                </video>
+                <div id="timeline" class="timeline"></div>
+            </div> 
+            <div class="btn-group" role="group">
+                <div class="time">0</div>
+                <button class="frameright controls-button">⏮</button>
+                <button class="play controls-button">▶</button>
+                <button class="stop controls-button hide">⏸</button>
+                <button class="frameleft controls-button">⏭</button>
+                <button class="speed1x">1x</button>
+                <button class="fullScreen">FullScreen</button>
+                <button class="loop">Loop</button>
+                <input type="text" class="speed-input" placeholder="Input speed 0.1-5">
+                <button class="close controls-button" onclick="closeModeVideoPlayer()">Close</button>
+            </div>           
+        </div> 
+    `;
+    document.body.appendChild(videoplayerContainer)
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+    setupVideoControls();
+}
+
+function setupVideoControls() {
+    const video = document.getElementById("video");
+    const timeDisplay = document.querySelector(".time");
+    const timeline = document.getElementById("timeline");
+    
+    let isLooping = false;
+
+    document.querySelector(".play").addEventListener("click", () => {
+        video.play();
+        document.querySelector(".play").classList.add("hide");
+        document.querySelector(".stop").classList.remove("hide");
+    });
+
+    document.querySelector(".stop").addEventListener("click", () => {
+        video.pause();
+        document.querySelector(".stop").classList.add("hide");
+        document.querySelector(".play").classList.remove("hide");
+    });
+
+    document.querySelector(".frameright").addEventListener("click", () => {
+        video.currentTime -= 1 / 30;
+    });
+
+    document.querySelector(".frameleft").addEventListener("click", () => {
+        video.currentTime += 1 / 30;
+    });
+
+    document.querySelector(".loop").addEventListener("click", function () {
+        isLooping = !isLooping;
+        video.loop = isLooping;
+        this.textContent = isLooping ? "Unloop" : "Loop";
+    });
+
+    document.querySelector(".speed1x").addEventListener("click", () => {
+        video.playbackRate = 1;
+        document.querySelector(".speed-input").value = "1";
+    });
+
+    document.querySelector(".speed-input").addEventListener("input", (event) => {
+        let speed = parseFloat(event.target.value);
+        if (speed >= 0.1 && speed <= 5) {
+            video.playbackRate = speed;
+        }
+    });
+
+    document.querySelector(".fullScreen").addEventListener("click", function () {
+        const player = document.querySelector(".v-player");
+        if (!document.fullscreenElement) {
+            if (player.requestFullscreen) {
+                player.requestFullscreen();
+            } else if (player.mozRequestFullScreen) {
+                player.mozRequestFullScreen();
+            } else if (player.webkitRequestFullscreen) {
+                player.webkitRequestFullscreen();
+            } else if (player.msRequestFullscreen) {
+                player.msRequestFullscreen();
+            }
+            this.textContent = "Cancel FullScreen";
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            this.textContent = "FullScreen";
+        }
+    });
+
+    video.addEventListener("timeupdate", () => {
+        if (timeline) {
+            const progress = (video.currentTime / video.duration) * 100;
+            timeline.style.width = `${progress}%`;
+        }
+        if (timeDisplay) {
+            let frame = Math.floor(video.currentTime * 30);
+            timeDisplay.textContent = `${frame}`;
+        }
+    });
+    
+    timeline.parentElement.addEventListener("click", (event) => {
+        const rect = timeline.parentElement.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const percent = offsetX / rect.width;
+        video.currentTime = percent * video.duration;
+    });
+    
+    let isDragging = false;
+    let startX = 0;
+    let startTime = 0;
+
+    timeline.parentElement.addEventListener("mousedown", (event) => {
+        isDragging = true;
+        startX = event.clientX;
+        startTime = video.currentTime; 
+    });
+            
+    document.addEventListener("mousemove", (event) => {
+        if (isDragging) {
+
+            const rect = timeline.parentElement.getBoundingClientRect();
+            const offsetX = event.clientX - startX;
+            const percent = Math.min(Math.max((offsetX / rect.width) + (startTime / video.duration), 0), 1);
+            timeline.style.width = `${percent * 100}%`;
+        }
+    });
+            
+    document.addEventListener("mouseup", () => {
+        if (isDragging) {
+
+            const rect = timeline.parentElement.getBoundingClientRect();
+            const offsetX = event.clientX - startX;
+            const percent = Math.min(Math.max((offsetX / rect.width) + (startTime / video.duration), 0), 1);
+            video.currentTime = percent * video.duration;
+            isDragging = false;
+        }
+    });
+    
+    let lastMoveTime = 0;
+    const debounceDelay = 20;
+    
+    document.addEventListener("mousemove", (event) => {
+        const currentTime = new Date().getTime();
+        if (currentTime - lastMoveTime >= debounceDelay) {
+            if (isDragging) seek(event);
+            lastMoveTime = currentTime;
+        }
+    });
+    
+    document.addEventListener("mouseup", () => {
+        isDragging = false;
+    });
+    
+    function seek(event) {
+        const rect = timeline.parentElement.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+
+        const percent = Math.min(Math.max(offsetX / rect.width, 0), 1);
+        video.currentTime = percent * video.duration;
+    }
+
+    document.addEventListener("keydown", (event) => {
+
+        if (event.code === "Space") {
+            event.preventDefault(); 
+    
+
+            if (video.paused) {
+                video.play();
+                document.querySelector(".play").classList.add("hide");
+                document.querySelector(".stop").classList.remove("hide");
+            } else {
+                video.pause();
+                document.querySelector(".stop").classList.add("hide");
+                document.querySelector(".play").classList.remove("hide");
+            }
+        }
+    
+
+        if (event.code === "ArrowLeft") {
+            video.currentTime -= 1 / 30; 
+        }
+
+        if (event.code === "ArrowRight") {
+            video.currentTime += 1 / 30; 
+        }
+    });
+}
+
+
+function closeModeVideoPlayer(){
+    const moderationVideoShowContainer = document.querySelector('.moderationVideoShowContainer')
+    moderationVideoShowContainer.remove()
 }
 
 function showMessage(messageText) {

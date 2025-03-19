@@ -30,6 +30,14 @@ export class AdminModel {
     await pg("users").update({ status: "unblock" }).where({ email: email });
   }
 
+  static async getUserByEmail(userEmail, trx) {
+    return await pg("users").select("*").where({ email: userEmail }).transacting(trx);
+  }
+
+  static async deleteUser(userEmail, data, trx) {
+    await pg("users").update(data).where({ email: userEmail }).transacting(trx);
+  }
+
   static async getAllMessages(trx) {
     await pg("messages").select("*").transacting(trx);
   }

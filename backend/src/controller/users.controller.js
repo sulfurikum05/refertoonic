@@ -13,6 +13,26 @@ export default class UsersController {
     }
   }
 
+  static async confirmEmail(req, res, next) {
+    try {
+      const code = req.body.code;
+      const data = await UsersServices.confirmEmail(code);
+      SuccessHandlerUtil.handleList(res, next, data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getConfirmationCode(req, res, next) {
+    try {
+      const email = req.body.email;
+      const data = await UsersServices.getConfirmationCode(email);
+      SuccessHandlerUtil.handleList(res, next, data);
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   static async getResetCode(req, res, next) {
     try {
       const email = req.body.email;

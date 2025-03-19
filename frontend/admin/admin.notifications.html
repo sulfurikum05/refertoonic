@@ -33,6 +33,10 @@
             </ul>
         </div>
         <div class="table-container notifications-table-container">
+
+            <button class="create-button tableSwichButton" onclick="showRecieveNotificationsTable()">Recieve</button>
+            <button class="create-button tableSwichButton" onclick="showSentNotificationsTable()">Sent</button>
+
             <h2 class="notifications-header header table-header">Recieve notifications</h2>
             <table class="notifications-table table">
                 <thead>
@@ -49,8 +53,8 @@
                     <!-- ////////////////// -->
                 </tbody>
             </table>
-            <h2 class="notifications-header header table-header">Sent notifications<button class="notifications-create-button create-button"><b>Create</b></button></h2>
-            <table class="sent-notifications-table table">
+            <h2 class="sent-notifications-header header table-header hide">Sent notifications<button class="notifications-create-button create-button"><b>Create</b></button></h2>
+            <table class="sent-notifications-table table hide">
                 <thead>
                     <tr>
                         <th>Title</th>

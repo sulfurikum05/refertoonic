@@ -8,7 +8,9 @@ import Validation from '../middlewares/validation/validation';
 
 const router = express.Router();
 
-  router.post("/register", Validation.registerValidate, UsersController.register);
+  router.post("/register",UsersController.register);
+  router.post("/confirmEmail", Validation.confirmEmailValidate, UsersController.confirmEmail);
+  router.post("/getConfirmationCode", Validation.EmailValidate, UsersController.getConfirmationCode);
   router.post("/getResetCode", UsersController.getResetCode);
   router.post("/resetPassword", UsersController.resetPassword);
   router.post("/sendUnauthMessage", UsersController.sendUnauthMessage);

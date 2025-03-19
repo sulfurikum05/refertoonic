@@ -138,6 +138,36 @@ localStorage.removeItem("accessToken")
     fetchNotificatoinsData()
     fetcSenthNotificatoinsData()
 
+
+
+
+    const recieveNotificationsHeader = document.querySelector('.notifications-header')
+    const recieveNotificationsTable = document.querySelector('.notifications-table')
+    const sentNotificationsHeader = document.querySelector('.sent-notifications-header')
+    const sentNotificationsTable = document.querySelector('.sent-notifications-table')
+    
+    function showRecieveNotificationsTable() {
+        if (sentNotificationsHeader.classList.contains('hide') && sentNotificationsTable.classList.contains('hide')) {
+            return
+        }else{
+            recieveNotificationsHeader.classList.remove('hide')
+            recieveNotificationsTable.classList.remove('hide')
+            sentNotificationsHeader.classList.add('hide')
+            sentNotificationsTable.classList.add('hide')
+        }
+    }
+    function showSentNotificationsTable() {
+        if (recieveNotificationsHeader.classList.contains('hide') && recieveNotificationsTable.classList.contains('hide')) {
+            return
+        }else{
+            recieveNotificationsHeader.classList.add('hide')
+            recieveNotificationsTable.classList.add('hide')
+            sentNotificationsHeader.classList.remove('hide')
+            sentNotificationsTable.classList.remove('hide')
+        }
+    }
+
+
     function showMessage(messageText) {
 
         const messageContainer = document.createElement('div');

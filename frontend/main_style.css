@@ -1088,7 +1088,12 @@ body.overlay-active .overlay {
     display: block; /* Показывает попап и оверлей */
     pointer-events: all; /* Разрешает взаимодействие с попапом */
 }
-
+.tableSwichButton{
+    background-color: #0052aa !important;
+    padding: 10px !important;
+    width: 130px !important;
+    color: #ffffff !important;
+}
 
 .messageContainer {
     display: none;

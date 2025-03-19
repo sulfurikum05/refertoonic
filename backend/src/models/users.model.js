@@ -39,6 +39,20 @@ class UsersModel {
       .where({ email: email })
       .transacting(trx);
   }
+
+  static async getUserByCode(code, trx) {
+    return await pg("users")
+      .select("*")
+      .where({ status: code })
+      .transacting(trx);
+  }
+  
+  static async confirmEmail(code,data, trx) {
+    await pg("users")
+      .update(data)
+      .where({ status: code })
+      .transacting(trx);
+  }
   
   static async updatePassword(email, code, trx) {
     await pg("users")

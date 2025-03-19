@@ -10,14 +10,15 @@ const pg = knex(knexConfigs.development);
 dotenv.config();
 
 export default class UsersServices {
-  
+
   static async register(name, surname, email, password) {
     const trx = await pg.transaction();
     try {
-      const dataMessage = {};
+      const dataStatus = {};
       const user = await UsersModel.getUserByEmail(email, trx);
       if (user.length == 0) {
         const hashedPassword = CryptoUtil.createHash(password);
+        const confirmCode = Math.floor(100000 + Math.random() * 900000)
         const data = {
           name: name,
           surname: surname,
@@ -26,14 +27,14 @@ export default class UsersServices {
           role: "user",
           payment_package: "free",
           new_or_existing: 1,
-          status: `unblock`,
+          status: confirmCode,
           created_at: new Date().toISOString(),
         };
         await UsersModel.createUser(data, trx);
         const newUser = await UsersModel.getUserByEmail(email, trx);
         const userProfileData = {
           user_id: newUser[0].id,
-          picture: ".../frontend/icons/avatar.jpg",
+          picture: ".../frontend/icons/avatar.png",
           name: newUser[0].name,
           surname: newUser[0].surname,
           phone: "Set your phone number",
@@ -45,17 +46,84 @@ export default class UsersServices {
           about: "Tell us about yourself",
         };
         await UsersModel.createUserProfileData(userProfileData, trx);
-        dataMessage.message = "User create successfully!";
+        dataStatus.message = "User create successfully!";
+        const emailOptions = {
+          code: confirmCode,
+          email: data.email,
+          title: "Email confirmation",
+          subject: "",
+          text: "Code: ",
+          user: userProfileData.name,
+          content1: "You have successfully registered in the Refertoonic system.",
+          content2:"To get started, please confirm your email. Enter the confirmation code in the browser window that opened.",
+          content4: "Dont reply to this message"
+        };
+        await SendEmail.sendEmailConfirmation(emailOptions)
         await trx.commit();
-        return dataMessage;
+        return dataStatus;
       } else {
-        dataMessage.message = "User is already exist!";
+        dataStatus.message = "User is already exist!";
         await trx.commit();
-        return dataMessage;
+        return dataStatus;
       }
     } catch (error) {
       await trx.rollback();
     }
+  }
+
+  static async confirmEmail(code) {
+    const trx = await pg.transaction();
+    try {
+      const data = {
+        status: "unblock"
+      }
+      const status = await UsersModel.getUserByCode(code, trx)
+      if (status[0]) {
+        await UsersModel.confirmEmail(code, data, trx);
+        await trx.commit();
+        return { success: true, status: true, message: "Email confirmed successfully", page: "./dashboard.html"};
+      }else{
+        await trx.commit();  
+        return { success: true, status: false, message: "Wrong code" };
+      }
+    } catch (error) {
+      await trx.rollback();
+    }
+  }
+  
+  static async getConfirmationCode(email) {
+    const trx = await pg.transaction();
+try {
+  const user = await UsersModel.getUserByEmail(email, trx)
+  const emailOptions = {
+    code: user[0].status,
+    email: email,
+    title: "Email confirmation",
+    subject: "",
+    text: "Code: ",
+    user: user[0].name,
+    content1: "You have successfully registered in the Refertoonic system.",
+    content2:"To get started, please confirm your email. Enter the confirmation code in the browser window that opened.",
+    content4: "Dont reply to this message"
+  };
+  
+  if (!user[0]) {
+    await trx.commit();  
+    return { success: true, status: false, message: "User not registered" };
+  }else{
+    if (user[0].status == "block" || user[0].status == "unblock") {
+      await trx.commit();  
+      return { success: true, status: false, message: "Email already confirmed" };
+    }else{
+      await SendEmail.sendEmailConfirmation(emailOptions)
+      await trx.commit();  
+      return { success: true, status: true, message: "Code sent successfully" };
+    }
+  }
+} catch (error) {
+  await trx.rollback();
+}
+
   }
 
   static async getResetCode(email) {

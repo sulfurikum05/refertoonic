@@ -134,6 +134,36 @@ export class AdminServices {
     }
   }
 
+  static async deleteUser(userEmail, adminId) {
+    const trx = await pg.transaction();
+    try {
+      const data = {
+        admin_id: null,
+        role: "user",
+        payment_package: "free"
+      }
+      const user = await AdminModel.getUserByEmail(userEmail, trx)
+      if (user.length == 0) {
+        await trx.commit();
+        return { message: "User not exist" };
+      }
+      if (Number(user[0].admin_id) !== Number(adminId)) {
+        await trx.commit();
+        return { message: "You dont have permitions to delete this user" };
+      }else{
+        if (user[0].status == "block") {
+          data.status = "unblock"
+        }
+        await AdminModel.deleteUser(userEmail, data, trx)
+        await trx.commit();
+        return { message: "User deleted successfully" };
+      }
+    } catch (error) {
+      await trx.rollback();
+    }
+
+  }
+
   static async getModerationVideos(adminId) {
     const trx = await pg.transaction();
     try {

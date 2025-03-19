@@ -149,14 +149,39 @@ const data = {
 }
 
 
-function deleteUser(elem) {
-//Проверить new_or_existing 
-// Если new_or_existing == 1 //Проверить последний приобретённый пакет пользователя по таблице Payments
-//Если есть Payments, проверить сколько осталось и вернуть ему этот пакет с соответствующей датой экспирации
-//Открепить от данного админа payment_package = lastPackage, role = lastRole, admin_id = null,
+async function deleteUser(elem) {
 
-//Если new_or_existing == 0
-// Сделать его user-ом, payment_package = user, role = user, admin_id = null, new_or_existing = 1
+    const row = elem.closest('tr')
+    const cells = row.querySelectorAll("td");
+    let email = '';
+    cells.forEach(cell => {
+        if (cell.textContent.includes("@")) {
+            email = cell.textContent.trim();
+        }
+    });
+
+    try {
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch('http://localhost:3030/api/v1/admin/deleteUser', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+             },
+            body: JSON.stringify({email: email})
+        })
+        if(response.status == 401){
+            localStorage.removeItem("accessToken")
+            window.open("../dashboard.html");
+          }
+            const data = await response.json()
+            showMessage(data.message)
+            fetchUsers();
+            getAvailableUsersCount()
+    
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
 
 }
 
@@ -184,7 +209,7 @@ try {
         body: JSON.stringify({email: email})
     })
     if(response.status == 401){
-localStorage.removeItem("accessToken")
+        localStorage.removeItem("accessToken")
         window.open("../dashboard.html");
       }
         const data = await response.json()

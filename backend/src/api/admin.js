@@ -14,6 +14,7 @@ const router = express.Router();
   router.get("/getMessagesData", AuthService.validateAccessToken, AdminController.getMessagesData);
   // router.post("/deleteMessage", AuthService.validateAccessToken, AdminController.deleteMessage);
   // router.post("/resendMessage", AuthService.validateAccessToken, AdminController.resendMessage);
+  router.post("/deleteUser", AuthService.validateAccessToken, AdminController.deleteUser);
   router.get("/getNotificationsData", AuthService.validateAccessToken, AdminController.getNotificationsData);
   router.post("/sendNotification", AuthService.validateAccessToken, AdminController.sendNotification);
   router.get("/getSentNotificationsData", AuthService.validateAccessToken, AdminController.getSentNotificationsData);

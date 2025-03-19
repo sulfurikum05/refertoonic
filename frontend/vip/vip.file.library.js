@@ -226,6 +226,34 @@ async function deleteWishlistVideo(elem) {
     
 }
 
+
+const videosHeader = document.querySelector('.videos-header')
+const videosTable = document.querySelector('.videos-table')
+const wishlistHeader = document.querySelector('.wishlist-videos-header')
+const wishlistTable = document.querySelector('.wishlist-table')
+
+function showReferencesTable() {
+    if (wishlistHeader.classList.contains('hide') && wishlistTable.classList.contains('hide')) {
+        return
+    }else{
+        videosHeader.classList.remove('hide')
+        videosTable.classList.remove('hide')
+        wishlistHeader.classList.add('hide')
+        wishlistTable.classList.add('hide')
+    }
+}
+function showWishlistTable() {
+    if (videosHeader.classList.contains('hide') && videosTable.classList.contains('hide')) {
+        return
+    }else{
+        videosHeader.classList.add('hide')
+        videosTable.classList.add('hide')
+        wishlistHeader.classList.remove('hide')
+        wishlistTable.classList.remove('hide')
+    }
+}
+
+
 function showMessage(messageText) {
 
     const messageContainer = document.createElement('div');
@@ -239,3 +267,6 @@ function showMessage(messageText) {
         messageContainer.classList.remove('showMessageContainer');
     }, 2000); 
 }
+
+
+

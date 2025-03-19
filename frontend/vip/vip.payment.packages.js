@@ -103,10 +103,6 @@ async function upgradeOrExtend(elem) {
         const loader = document.createElement('span');
         loader.className = 'loader';
         elem.appendChild(loader);
-        setTimeout(() => {
-            elem.disabled = false;
-            loader.remove();
-        }, 3000);
         let period = ""
     const toggleButtons = document.querySelectorAll('.toggle-btn')
     toggleButtons.forEach((toggleButton)=>{
@@ -132,6 +128,8 @@ async function upgradeOrExtend(elem) {
             window.open("../dashboard.html");
           }
         const paymentUrl = await response.json()
+        elem.disabled = false;
+        loader.remove();
         window.open(paymentUrl, '_blank');
     }
     if (elem.classList.contains("Extend")) {
@@ -139,11 +137,6 @@ async function upgradeOrExtend(elem) {
         const loader = document.createElement('span');
         loader.className = 'loader';
         elem.appendChild(loader);
-        setTimeout(() => {
-            elem.disabled = false;
-            loader.remove();
-        }, 3000);
-
         let period = ""
     const toggleButtons = document.querySelectorAll('.toggle-btn')
     toggleButtons.forEach((toggleButton)=>{
@@ -169,6 +162,8 @@ async function upgradeOrExtend(elem) {
             window.open("../dashboard.html");
           }
         const paymentUrl = await response.json()
+        elem.disabled = false;
+        loader.remove();
         window.open(paymentUrl, '_blank');
     }
 }

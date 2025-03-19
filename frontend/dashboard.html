@@ -35,10 +35,11 @@
                         <label for="loginPassword">Password:</label>
                         <input type="password" id="loginPassword" name="loginPassword" required>
                     </div>
-                    <button type="submit" class="form-button">Login</button>
+                    <button type="submit" class="form-button loginButton">Login</button>
                     <p>
                         <a href="#" id="showRegister">Register</a> |
                         <a href="#" id="showResetPassword">Forgot password?</a>
+                        <a href="#" id="showEmailconfirmation">Confirm email</a>
                     </p>
                 </form>
     
@@ -65,7 +66,7 @@
                         <label for="confirmPassword">Confirm password:</label>
                         <input type="password" id="confirmPassword" name="confirmPassword" required>
                     </div>
-                    <button type="submit" class="form-button">Register</button>
+                    <button type="submit" class="form-button registerFormButton">Register</button>
                     <p>
                         <a href="#" id="showLogin">Already have account? Login</a>
                     </p>
@@ -92,6 +93,25 @@
                         <a href="#" id="showLoginFromReset">Back to login</a>
                     </p>
                 </form>
+                <!-- Email confirmation Form -->
+                <form class="form" id="emailConfirmationForm"  style="display: none;">
+                    <h2>Email confirmation</h2>
+                    <div class="input-group code">
+                        <label for="resetEmail">Code:</label>
+                        <input type="text" id="code" name="code" required>
+                    </div>
+                    <button type="button" class="form-button" id="confirm">Confirm</button>
+                    <div class="input-group email hide">
+                        <label for="Email">Email:</label>
+                        <input type="text" id="email" name="email" required>
+                    </div>
+                    <button type="button" class="form-button" id="sendCode">Get another code</button>
+                    <button type="button" class="form-button hide" id="send">Send</button>
+                    <p>
+                        <a href="#" id="showLoginFromConfirm">Back to login</a>
+                    </p>
+                </form>
+
     
             </div>
         </div>
@@ -112,18 +132,6 @@
                     </div>
             </div>
         </div>
-    <!-- <footer>
-        <div class="footer-content">
-            <p>&copy; Refertoonic. All rights reserved.</p>
-            <ul class="social-media">
-                <li><a href="#">ВКонтакте</a></li>
-                <li><a href="#">Instagram</a></li>
-                <li><a href="#">Facebook</a></li>
-                <li><a href="#">Twitter</a></li>
-                <li><a href="#">Telegram</a></li>
-            </ul>
-        </div>
-    </footer> -->
     <script src="dashboard.js"></script>
     <script src="login.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.4.0/fabric.min.js"></script>

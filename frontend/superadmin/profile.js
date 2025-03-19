@@ -121,28 +121,27 @@ function changeInfo() {
         `;
         profileFirstDiv.appendChild(personalInfoDiv)
 
-        document.querySelector('.saveInfoButton').addEventListener('click', async () => {
+            const saveInfoButton = document.querySelector('.saveInfoButton')
+            saveInfoButton.addEventListener('click', async () => {
+            saveInfoButton.disabled = true;
+            const loader = document.createElement('span');
+            loader.className = 'loader';
+            saveInfoButton.textContent = ""
+            saveInfoButton.appendChild(loader);
             const inputs = document.querySelectorAll('.profileInput');
             const fileInput = document.querySelector('#file-upload');
             const formData = new FormData();
         
-            // Собираем значения всех текстовых, селектов и даты
             inputs.forEach(input => {
                 const value = input.value.trim();
                 if (value) {
-                    // Для select используем name или placeholder для ключа
                     const key = input.name;
                     formData.append(key, value);
                 }
             });
-        
-            // Добавляем файл, если он выбран
             if (fileInput.files.length > 0) {
                 formData.append('photo', fileInput.files[0]);
             }
-
-            
-
             try {
 
                  const token = localStorage.getItem("accessToken");
@@ -155,12 +154,15 @@ function changeInfo() {
                 })
                 if(response.status == 401){
                     localStorage.removeItem("accessToken")
-                 
                     window.open("../dashboard.html");
                 }
                 const data = await response.json();
-                    fetchProfileData()
-                    showMessage(data.message)
+                saveInfoButton.disabled = false;
+                loader.remove();
+                saveInfoButton.textContent = "Save"
+                fetchProfileData()
+                showMessage(data.message)
+
                 
 
             } catch (error) {
@@ -182,12 +184,17 @@ function changePassword() {
     <input name="oldPassword" id="oldPassword" type="password" class="input profileInput" placeholder="Old password">
     <input name="newPassword" id="newPassword" type="password" class="input profileInput" placeholder="New password">
     <input name="newPasswordConfirm" id="newPasswordConfirm" type="password" class="input profileInput" placeholder="Confirm new password">
-    <button class="setNewPasswordButton" onClick="setNewPassword()">Save</button>
+    <button class="setNewPasswordButton" onClick="setNewPassword(this)">Save</button>
     `;
     
 }
 
- async function setNewPassword() {
+ async function setNewPassword(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const oldPassword = document.getElementById('oldPassword')
     const newPassword = document.getElementById('newPassword')
     const newPasswordConfirm = document.getElementById('newPasswordConfirm')
@@ -196,11 +203,7 @@ function changePassword() {
         newPassword: newPassword.value,
         newPasswordConfirm: newPasswordConfirm.value,
     }
-    
-
-
     try {
-
          const token = localStorage.getItem("accessToken");
          const response = await fetch('http://localhost:3030/api/v1/users/changePassword', {
             method: 'POST',
@@ -211,13 +214,15 @@ function changePassword() {
             body: JSON.stringify(body)
         })                
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
         const data = await response.json();
-        
-            fetchProfileData()
-            showMessage(data.message)
+        elem.disabled = false;
+        loader.remove();
+        elem.textContent = "Save"
+        fetchProfileData()
+        showMessage(data.message)
 
     } catch (error) {
         console.error('Error sending data:', error);

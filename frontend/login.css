@@ -12,7 +12,27 @@ body {
     min-height: 100vh;
     margin: 0;
 }
+.emailConfirmMainDiv{
+    background: #05141fcc;
+}
+.messageContainer {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px; /* Изначально скрыто за пределами экрана */
+    background-color: #0052aa;
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: right 0.5s ease-out; /* Плавное движение */
+    font-size: 20px;
+    z-index: 100000;
+}
 
+.showMessageContainer {
+    display: block;
+}
 header {
     display: flex !important;
     justify-content: space-between;

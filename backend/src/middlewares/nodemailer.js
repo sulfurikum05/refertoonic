@@ -152,9 +152,36 @@ export default class SendEmail {
     }
   }
 
-  static async sendEmailConfirmation() {
-    const sendEmailConfirmationOptions = {};
-    try {
+  static async sendEmailConfirmation(emailOptions) {
+    const sendEmailConfirmationOptions = {
+      from: config.GOOGLE_CONFIG.EMAIL,
+      to: emailOptions.email,
+      subject: emailOptions.title,
+      text: "",
+      html: `
+                     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
+              <div style="max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);">
+                  <div style="background: linear-gradient(135deg, #224259, #05141f); padding: 25px; color: #ffffff; text-align: center; font-size: 26px; font-weight: bold; letter-spacing: 1px;">
+                      ReferToonic
+                  </div>
+                  <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
+                      <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
+                      <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.content1}</p>
+                      <div style="background: #f8f8f8; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                          <p style="margin: 5px 0; color: #3c3d3c;"><b>Your code:</b> ${emailOptions.code}</p>
+                          <p style="margin: 5px 0; color: #3c3d3c;">${emailOptions.content2}</p>
+                      </div>
+                      <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
+                  </div>
+                  <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
+                      <p style="margin: 0;">${emailOptions.content4}</p>
+                  </div>
+              </div>
+            </body>
+
+    `,
+    };
+    try {   
       await transporter.sendMail(sendEmailConfirmationOptions);
     } catch (error) {
       console.error("Ошибка при отправке письма:", error);
