@@ -11,16 +11,12 @@ const { AUTH } = config;
 
 const {
   JWT_ACCESS_SECRET,
-  // JWT_REFRESH_SECRET,
   ACCESS_TOKEN_ACTIVE_TIME,
-  // REFRESH_TOKEN_ACTIVE_TIME,
 } = AUTH;
-
-// const { UnauthorizedError } = ErrorsUtil;
 
 export default class AuthService {
   static generateTokens(payload) {
-    const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET);
+    const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, { expiresIn: ACCESS_TOKEN_ACTIVE_TIME });
     return accessToken;
   }
 
@@ -28,11 +24,11 @@ export default class AuthService {
     try {
       const token = req.headers.authorization?.split(" ")[1];
       if (!token) {
-        return res.status(401).json({ message: "Токен отсутствует" });
+        return res.status(401).json({ message: "Token is missing" });
       }
       const payload = jwt.verify(token, JWT_ACCESS_SECRET);
       if (!payload.id) {
-        return res.status(401).json({ message: "ID отсутствует в payload" });
+        return res.status(401).json({ message: "ID is missing in payload" });
       }
       req.role = payload.role;
       req.name = payload.name;
@@ -42,29 +38,10 @@ export default class AuthService {
 
       next();
     } catch (error) {
-      console.error("Ошибка проверки токена:", error.message);
-      return res.status(401).json({ message: "Токен недействителен" });
+      console.error("Token verification error", error.message);
+      return res.status(401).json({ message: "Token is invalid" });
     }
   }
-
-  // static validateRefreshToken(refreshToken) {
-  //   try {
-  //     return jwt.verify(refreshToken, JWT_REFRESH_SECRET);
-  //   } catch (error) {
-  //     throw new UnauthorizedError();
-  //   }
-  // }
-
-  // static async refresh(token) {
-  //   const user = AuthService.validateRefreshToken(token);
-  //   const { accessToken, refreshToken } = AuthService.generateTokens(user);
-  //   const payload = {
-  //     accessToken,
-  //     refreshToken,
-  //     ...user
-  //   };
-  //   return payload;
-  // }
 
   static async login(email, password) {
     

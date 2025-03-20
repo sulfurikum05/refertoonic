@@ -1,4 +1,4 @@
-// NPM Modules
+
 import knex from "knex";
 import knexConfigs from "../knex.configs";
 

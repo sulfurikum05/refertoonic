@@ -23,11 +23,11 @@ export default class SendEmail {
                     ReferToonic
                 </div>
                 <div style="padding: 20px; color: #333; line-height: 1.6; background-color: #ffffff;">
-                    <h1 style="color: #0f0f0f; font-size: 20px; margin: 0 0 10px;">Здравствуйте, ${emailOptions.user}!</h1>
+                    <h1 style="color: #0f0f0f; font-size: 20px; margin: 0 0 10px;">Hello, dear ${emailOptions.user}!</h1>
                     <p style="margin: 10px 0; color: #0f0f0f;">${emailOptions.content1}</p>
                     <p style="margin: 10px 0; color: #3c3d3c;"><b>${emailOptions.text}${emailOptions.code}</b></p>
                     <p style="margin: 10px 0; color: #0f0f0f;">${emailOptions.content2}</p>
-                    <p style="margin: 10px 0; color: #0f0f0f;">С Уважением,<br>Команда ReferToonic</p>
+                    <p style="margin: 10px 0; color: #0f0f0f;">Best regards,<br>The Team ReferToonic</p>
                 </div>
                 <div style="background-color: #2a2d2d; color: #f2e782; text-align: center; padding: 15px; font-size: 12px;">
                     <p style="margin: 0;">${emailOptions.content3}</p>
@@ -40,7 +40,7 @@ export default class SendEmail {
     try {
       await transporter.sendMail(sendResetCodeOptions);
     } catch (error) {
-      console.error("Ошибка при отправке письма:", error);
+      console.error("Error sending the email", error);
     }
   }
 
@@ -57,19 +57,19 @@ export default class SendEmail {
                       ReferToonic
                   </div>
                   <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
-                      <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
+                      <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Hello, dear ${emailOptions.user}!</h1>
                       <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.content1}</p>
                       <div style="background: #f8f8f8; padding: 15px; border-radius: 8px; margin: 15px 0;">
                           <p style="margin: 5px 0; color: #333; font-size: 16px;"><b>${emailOptions.text}</b></p>
-                          <p style="margin: 5px 0; color: #3c3d3c;"><b>Приобретаемый пакет:</b> ${emailOptions.paymentPackage}</p>
-                          <p style="margin: 5px 0; color: #3c3d3c;"><b>Период:</b> ${emailOptions.packagePeriod}</p>
-                          <p style="margin: 5px 0; color: #3c3d3c;"><b>Стоимость:</b> ${emailOptions.packagePrice} $</p>
+                          <p style="margin: 5px 0; color: #3c3d3c;"><b>The package being purchased:</b> ${emailOptions.paymentPackage}</p>
+                          <p style="margin: 5px 0; color: #3c3d3c;"><b>Preiod:</b> ${emailOptions.packagePeriod}</p>
+                          <p style="margin: 5px 0; color: #3c3d3c;"><b>Price:</b> ${emailOptions.packagePrice} $</p>
                       </div>
                       <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.content2}</p>
                       <div style="text-align: center; margin-top: 20px;">
-                          <a href="${emailOptions.invoice_url}" style="background: #0052aa; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-size: 16px; display: inline-block; font-weight: bold;">Ссылка для оплаты</a>
+                          <a href="${emailOptions.invoice_url}" style="background: #0052aa; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-size: 16px; display: inline-block; font-weight: bold;">Payment link</a>
                       </div>
-                      <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
+                      <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">Best regards,<br>The Team ReferToonic</b></p>
                   </div>
                   <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
                       <p style="margin: 0;">${emailOptions.content3}</p>
@@ -82,7 +82,7 @@ export default class SendEmail {
     try {
       await transporter.sendMail(sendTransactionCreatingNotificationOptions);
     } catch (error) {
-      console.error("Ошибка при отправке письма:", error);
+      console.error("Error sending the email", error);
     }
   }
 
@@ -99,9 +99,9 @@ export default class SendEmail {
                     ReferToonic
                 </div>
                 <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
-                    <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
+                    <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Hello, dear ${emailOptions.user}!</h1>
                     <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.message}</p>
-                    <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
+                    <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">Best regards,<br>The Team ReferToonic</b></p>
                 </div>
                 <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
                 </div>
@@ -113,7 +113,7 @@ export default class SendEmail {
     try {
       await transporter.sendMail(sendMessageOptions);
     } catch (error) {
-      console.error("Ошибка при отправке письма:", error);
+      console.error("Error sending the email", error);
     }
   }
 
@@ -130,10 +130,10 @@ export default class SendEmail {
                     ReferToonic
                 </div>
                 <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
-                    <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
-                    <p style="margin: 10px 0; font-size: 16px; color: #555;">Статус платежа по ордеру ${emailOptions.order_id} изменена на ${emailOptions.payment_status}</p>
-                    <p style="margin: 10px 0; font-size: 16px; color: #555;">Статус платежей вы можете отслеживать в вашем личном кабинетеб в разделе Payment history.</p>
-                    <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
+                    <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Hello, dear ${emailOptions.user}!</h1>
+                    <p style="margin: 10px 0; font-size: 16px; color: #555;">The payment status for the order ${emailOptions.order_id} has been changed to ${emailOptions.payment_status}</p>
+                    <p style="margin: 10px 0; font-size: 16px; color: #555;">You can track the payment status in your personal account under the section Payment history.</p>
+                    <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">Best regards,<br>The Team ReferToonic</b></p>
                 </div>
                 <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
                 </div>
@@ -148,7 +148,7 @@ export default class SendEmail {
         sendTransactionStatusChangeNotificationOptions
       );
     } catch (error) {
-      console.error("Ошибка при отправке письма:", error);
+      console.error("Error sending the email", error);
     }
   }
 
@@ -165,13 +165,13 @@ export default class SendEmail {
                       ReferToonic
                   </div>
                   <div style="padding: 30px; color: #333; line-height: 1.8; background-color: #ffffff;">
-                      <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Здравствуйте, уважаемый ${emailOptions.user}!</h1>
+                      <h1 style="color: #0f0f0f; font-size: 22px; margin-bottom: 15px;">Hello, dear ${emailOptions.user}!</h1>
                       <p style="margin: 10px 0; font-size: 16px; color: #555;">${emailOptions.content1}</p>
                       <div style="background: #f8f8f8; padding: 15px; border-radius: 8px; margin: 15px 0;">
                           <p style="margin: 5px 0; color: #3c3d3c;"><b>Your code:</b> ${emailOptions.code}</p>
                           <p style="margin: 5px 0; color: #3c3d3c;">${emailOptions.content2}</p>
                       </div>
-                      <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">С Уважением,<br><b>Команда ReferToonic</b></p>
+                      <p style="margin-top: 30px; color: #777; font-size: 14px; text-align: center;">Best regards,<br>The Team ReferToonic</b></p>
                   </div>
                   <div style="background-color: #05141f; color: #ffffff; text-align: center; padding: 15px; font-size: 12px;">
                       <p style="margin: 0;">${emailOptions.content4}</p>
@@ -184,7 +184,7 @@ export default class SendEmail {
     try {   
       await transporter.sendMail(sendEmailConfirmationOptions);
     } catch (error) {
-      console.error("Ошибка при отправке письма:", error);
+      console.error("Error sending the email", error);
     }
   }
 }

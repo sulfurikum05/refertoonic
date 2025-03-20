@@ -17,7 +17,7 @@ async function fetchModerationVideos() {
           }
         populateTable(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -66,7 +66,7 @@ if (item.status == 0) {
 
 fetchModerationVideos()
 
-//DELETE VIDEO START//
+
 
 async function deleteVideo(elem) {
 
@@ -94,10 +94,6 @@ localStorage.removeItem("accessToken")
 
 }
 
-//DELETE VIDEO END//
-
-
-//PUBLISH VIDEO START//
 
 async function publishVideo(elem) {
 
@@ -146,10 +142,6 @@ async function publishVideo(elem) {
 
 }
 
-//PUBLISH VIDEO END//
-
-
-//REJECT VIDEO START//
 
 async function rejectVideo(elem) {
 
@@ -179,9 +171,6 @@ async function rejectVideo(elem) {
 
 }
 
-//REJECT VIDEO END//
-
-//EDIT VIDEO START//
 
 async function editVideo(elem){
     const row = elem.closest("tr");
@@ -226,9 +215,6 @@ async function editVideo(elem){
             });
 
 }
-//EDIT VIDEO END//
-
-//DOWNLOAD VIDEO START//
 
 async function downloadVideo(elem) {
     const row = elem.closest('tr')
@@ -251,7 +237,6 @@ async function downloadVideo(elem) {
             link.remove();
 
 }
-//DOWNLOAD VIDEO END//
 
 
 function openVideoInPlayer(elem) {

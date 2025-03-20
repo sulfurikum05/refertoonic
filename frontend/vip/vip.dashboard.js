@@ -27,7 +27,7 @@ async function fetchVideos() {
             page++;
         }
     } catch (error) {
-        console.error('Ошибка загрузки видео:', error);
+        console.error('Error uploading video', error);
     } finally {
         isLoading = false;
     }
@@ -95,7 +95,7 @@ localStorage.removeItem("accessToken")
 
         
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -359,7 +359,7 @@ localStorage.removeItem("accessToken")
 
     
         } catch (error) {
-            console.error("Не удалось добавить видео в избранный лист:", error);
+            console.error("Failed to add video to the favorites list", error);
         }
     }
     async function removeFromWishlist(elem) {
@@ -385,7 +385,7 @@ localStorage.removeItem("accessToken")
             showMessage(data.message)
     
         } catch (error) {
-            console.error("Не удалось удалить видео из избранного листа:", error);
+            console.error("Failed to remove video from the favorites list", error);
         }
     }
 

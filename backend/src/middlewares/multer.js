@@ -2,7 +2,6 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 
-// Настройка хранилища multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = path.resolve(__dirname, "..", "storage", "uploads");
@@ -18,7 +17,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// Экспортируем конфигурированный multer
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
@@ -34,4 +32,4 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 * 1024 * 1024 },
 });
 
-module.exports = upload; // Экспортируем экземпляр multer
+module.exports = upload;

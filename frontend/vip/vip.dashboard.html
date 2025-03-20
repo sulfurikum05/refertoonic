@@ -1,83 +1,86 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="ключевое слово 1, ключевое слово 2, ключевое слово 3">
+    <meta name="keywords" content="keywords">
     <title>Refertoonic</title>
     <link rel="stylesheet" href="../main_style.css">
     <link rel="stylesheet" href="../superadmin/superadmin.css">
     <link rel="stylesheet" href="../VideoPlayerCss.css">
     <link rel="stylesheet" href="../user/user.css">
-    
+
 </head>
+
 <body>
     <header>
-        <a href="../dashboard.html" class="logout">Logout</a> 
-    <!-- <img class="infoImage" src="../info.png" alt="Information" title="A limited number of references are available for your package based on the following keywords: run, jump, fly. To access the search for all 500+ keywords and all 10,000+ references, you can purchase a VIP or ENTERPRISE package."> -->
+        <a href="../dashboard.html" class="logout">Logout</a>
+        <!-- <img class="infoImage" src="../info.png" alt="Information" title="A limited number of references are available for your package based on the following keywords: run, jump, fly. To access the search for all 500+ keywords and all 10,000+ references, you can purchase a VIP or ENTERPRISE package."> -->
 
-                    <div class="SearchAll">
-                        <input type="text" class="serachText">
-        <div id="search" class="search">
-            <svg viewBox="0 0 420 60" >
-                <rect class="bar"/>
-                <g class="magnifier">
-                    <circle class="glass"/>
-                    <line class="handle" x1="32" y1="32" x2="44" y2="44"></line>
-                </g>
-                <g class="sparks">
-                    <circle class="spark"/>
-                    <circle class="spark"/>
-                    <circle class="spark"/>
-                </g>
-                <g class="burst pattern-one">
-                    <circle class="particle circle"/>
-                    <path class="particle triangle"/>
-                    <circle class="particle circle"/>
-                    <path class="particle plus"/>
-                    <rect class="particle rect"/>
-                    <path class="particle triangle"/>
-                </g>
-                <g class="burst pattern-two">
-                    <path class="particle plus"/>
-                    <circle class="particle circle"/>
-                    <path class="particle triangle"/>
-                    <rect class="particle rect"/>
-                    <circle class="particle circle"/>
-                    <path class="particle plus"/>
-                </g>
-                <g class="burst pattern-three">
-                    <circle class="particle circle"/>
-                    <rect class="particle rect"/>
-                    <path class="particle plus"/>
-                    <path class="particle triangle"/>
-                    <rect class="particle rect"/>
-                    <path class="particle plus"/>
-                </g>
-            </svg>
+        <div class="SearchAll">
+            <input type="text" class="serachText">
+            <div id="search" class="search">
+                <svg viewBox="0 0 420 60">
+                    <rect class="bar" />
+                    <g class="magnifier">
+                        <circle class="glass" />
+                        <line class="handle" x1="32" y1="32" x2="44" y2="44"></line>
+                    </g>
+                    <g class="sparks">
+                        <circle class="spark" />
+                        <circle class="spark" />
+                        <circle class="spark" />
+                    </g>
+                    <g class="burst pattern-one">
+                        <circle class="particle circle" />
+                        <path class="particle triangle" />
+                        <circle class="particle circle" />
+                        <path class="particle plus" />
+                        <rect class="particle rect" />
+                        <path class="particle triangle" />
+                    </g>
+                    <g class="burst pattern-two">
+                        <path class="particle plus" />
+                        <circle class="particle circle" />
+                        <path class="particle triangle" />
+                        <rect class="particle rect" />
+                        <circle class="particle circle" />
+                        <path class="particle plus" />
+                    </g>
+                    <g class="burst pattern-three">
+                        <circle class="particle circle" />
+                        <rect class="particle rect" />
+                        <path class="particle plus" />
+                        <path class="particle triangle" />
+                        <rect class="particle rect" />
+                        <path class="particle plus" />
+                    </g>
+                </svg>
+            </div>
         </div>
-    </div>
     </header>
-    
+
     <main>
         <div class="sidebar">
             <ul class="menu">
-                <li><a class="menu-item-dashboard"  href="vip.dashboard.html">Dashboard</a></li>
-                <li><a class="menu-item-profile"  href="vip.profile.html">Profile</a></li>
-                <li><a class="menu-item-fileLibrary"  href="vip.file.library.html">Flie library</a></li>
-                <li><a class="menu-item-paymentPackages"  href="vip.payment.packages.html">Payment packages</a></li>
-                <li><a class="menu-item-paymentHistory"  href="vip.payment.history.html">Payment history</a></li>
-                <li><a class="menu-item-help"  href="vip.help.html">Help</a></li>
-                <li><a class="menu-item-notifications"  href="vip.notifications.html">Notificatoins</a></li>
+                <li><a class="menu-item-dashboard" href="vip.dashboard.html">Dashboard</a></li>
+                <li><a class="menu-item-profile" href="vip.profile.html">Profile</a></li>
+                <li><a class="menu-item-fileLibrary" href="vip.file.library.html">Flie library</a></li>
+                <li><a class="menu-item-paymentPackages" href="vip.payment.packages.html">Payment packages</a></li>
+                <li><a class="menu-item-paymentHistory" href="vip.payment.history.html">Payment history</a></li>
+                <li><a class="menu-item-help" href="vip.help.html">Help</a></li>
+                <li><a class="menu-item-notifications" href="vip.notifications.html">Notificatoins</a></li>
             </ul>
         </div>
 
         <div class="video-container table-container-video">
-            <div class="videoplayer-container"></div>             
+            <div class="videoplayer-container"></div>
         </div>
     </main>
     <script src="vip.dashboard.js"></script>
     <script src="menu.active.js"></script>
     <script src="../logout.js"></script>
 </body>
+
 </html>

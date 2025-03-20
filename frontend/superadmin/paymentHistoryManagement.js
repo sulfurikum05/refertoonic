@@ -34,7 +34,7 @@ localStorage.removeItem("accessToken")
         
         populatePaymentHistoryTable(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 

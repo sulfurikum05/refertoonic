@@ -7,16 +7,14 @@ import Validation from '../middlewares/validation/validation';
 const router = express.Router();
 
   router.get("/getUsers", AuthService.validateAccessToken, AdminController.getUsers);
-  router.post("/createVipProUser", AuthService.validateAccessToken, AdminController.createVipProUser);
+  router.post("/createVipProUser", Validation.createVipProUserValidate, AuthService.validateAccessToken, AdminController.createVipProUser);
   router.get("/getAvailableUsersCount", AuthService.validateAccessToken, AdminController.getAvailableUsersCount);
   router.post("/blockUser", AuthService.validateAccessToken, AdminController.blockUser);
   router.post("/unblockUser", AuthService.validateAccessToken, AdminController.unblockUser);
   router.get("/getMessagesData", AuthService.validateAccessToken, AdminController.getMessagesData);
-  // router.post("/deleteMessage", AuthService.validateAccessToken, AdminController.deleteMessage);
-  // router.post("/resendMessage", AuthService.validateAccessToken, AdminController.resendMessage);
   router.post("/deleteUser", AuthService.validateAccessToken, AdminController.deleteUser);
   router.get("/getNotificationsData", AuthService.validateAccessToken, AdminController.getNotificationsData);
-  router.post("/sendNotification", AuthService.validateAccessToken, AdminController.sendNotification);
+  router.post("/sendNotification", Validation.sendNotificationValidate, AuthService.validateAccessToken, AdminController.sendNotification);
   router.get("/getSentNotificationsData", AuthService.validateAccessToken, AdminController.getSentNotificationsData);
   router.get("/getModerationVideos", AuthService.validateAccessToken, AdminController.getModerationVideos);
   router.post("/changeModerationVideoStatus", AuthService.validateAccessToken, AdminController.changeModerationVideoStatus);

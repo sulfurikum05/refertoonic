@@ -32,7 +32,20 @@ export default class Validation {
     next();
   }
 
-  static HelpMessageValidate(req, res, next) {
+  static unauthMessageValidate(req, res, next) {
+    const { error } = schemes.UnauthMessageScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static helpMessageValidate(req, res, next) {
     const { error } = schemes.HelpMessageScheme.validate(req.body, { abortEarly: false });
     if (error) {
       return res
@@ -71,8 +84,99 @@ export default class Validation {
     next();
   }
   
-  static EmailValidate(req, res, next) {
+  static emailValidate(req, res, next) {
     const { error } = schemes.EmailScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static resetPasswordValidate(req, res, next) {
+    const { error } = schemes.ResetPasswordScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+  
+  static changePasswordValidate(req, res, next) {
+    const { error } = schemes.changePasswordScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+  
+  static changeInfoValidate(req, res, next) {
+    const { error } = schemes.changeInfoScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+  
+  static videoUploadValidate(req, res, next) {
+    const { error } = schemes.VideoUploadScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static upgradeValidate(req, res, next) {
+    const { error } = schemes.UpgradeScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static createVipProUserValidate(req, res, next) {
+    const { error } = schemes.CreateVipProUserScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+  
+  static sendNotificationValidate(req, res, next) {
+    const { error } = schemes.SendNotificationScheme.validate(req.body, { abortEarly: false });
     if (error) {
       return res
         .status(400)

@@ -19,7 +19,7 @@ async function fetchUsers() {
           }
         populateTable(users);
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -126,20 +126,20 @@ function showUsersCount(){
 
     
 
-// Получаем заголовки таблицы
+
 const headers = document.querySelectorAll("th");
 const table = document.querySelector(".users-table");
-let isAsc = true; // Направление сортировки, true для возрастания, false для убывания
+let isAsc = true; 
 
 headers.forEach((header, index) => {
     header.addEventListener("click", () => {
         sortTable(index);
-        isAsc = !isAsc; // Меняем направление сортировки при каждом клике
+        isAsc = !isAsc; 
     });
 });
 
 function sortTable(columnIndex) {
-    const rows = Array.from(table.querySelectorAll('tbody tr')); // Получаем все строки из tbody
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
 
     const sortedRows = rows.sort((rowA, rowB) => {
         const cellA = rowA.cells[columnIndex].textContent.trim();
@@ -147,18 +147,18 @@ function sortTable(columnIndex) {
 
         let comparison = 0;
 
-        // Проверяем, если столбец с числовыми значениями
+
         if (!isNaN(cellA) && !isNaN(cellB)) {
             comparison = parseFloat(cellA) - parseFloat(cellB);
         } else {
-            // Для строк, используем localeCompare
+
             comparison = cellA.localeCompare(cellB);
         }
 
-        return isAsc ? comparison : -comparison; // Возвращаем сравнение в зависимости от направления сортировки
+        return isAsc ? comparison : -comparison; 
     });
 
-    // Вставляем отсортированные строки обратно в таблицу
+
     sortedRows.forEach(row => table.querySelector('tbody').appendChild(row));
 }
 

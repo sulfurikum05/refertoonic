@@ -16,7 +16,7 @@ async function fetchMessagesData() {
         const data = await response.json();
         populateTable(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 

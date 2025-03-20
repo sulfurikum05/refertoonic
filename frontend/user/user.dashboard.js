@@ -26,7 +26,7 @@ localStorage.removeItem("accessToken")
             populateViseosContainer(shuffledData)
 
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -82,7 +82,7 @@ localStorage.removeItem("accessToken")
 
         
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -133,8 +133,8 @@ localStorage.removeItem("accessToken")
             </div> 
         `;
         window.scrollTo({
-            top: 0, // Устанавливаем прокрутку на верх страницы
-            behavior: "smooth" // Добавляем плавную прокрутку
+            top: 0, 
+            behavior: "smooth" 
         });
     
         setupVideoControls();
@@ -257,12 +257,10 @@ localStorage.removeItem("accessToken")
 
 
         document.addEventListener("keydown", (event) => {
-            // Для пробела
+
             if (event.code === "Enter") {
-                event.preventDefault(); // Предотвращаем стандартное поведение (прокрутку)
+                event.preventDefault();
         
-        
-                // Пауза/Воспроизведение видео
                 if (video.paused) {
                     video.play();
                     document.querySelector(".play").classList.add("hide");
@@ -274,14 +272,12 @@ localStorage.removeItem("accessToken")
                 }
             }
         
-            // Стрелка влево
             if (event.code === "ArrowLeft") {
-                video.currentTime -= 1 / 30; // Перемещение на 1 кадр назад
+                video.currentTime -= 1 / 30; 
             }
-        
-            // Стрелка вправо
+    
             if (event.code === "ArrowRight") {
-                video.currentTime += 1 / 30; // Перемещение на 1 кадр вперед
+                video.currentTime += 1 / 30; 
             }
         });
     }

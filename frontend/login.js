@@ -12,13 +12,13 @@ function showMessage(messageText) {
     }, 2000); 
 }
 
-// Переключение форм
+
 function toggleForm(formId) {
     document.querySelectorAll('.form').forEach(form => form.style.display = 'none');
     document.getElementById(formId).style.display = 'block';
 }
 
-// Обработчики переключения форм
+
 document.getElementById('showLogin').addEventListener('click', e => {
     e.preventDefault();
     toggleForm('loginForm');
@@ -230,7 +230,7 @@ confirmButton.addEventListener('click', async function () {
         });
         const data = await response.json();
         if (!data.success) {
-            showMessage("Only 6-digit numbers.");
+            showMessage(data.errors);
         }else if (!data.status) {
             showMessage(data.message);
         }else{

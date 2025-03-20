@@ -18,7 +18,7 @@ async function fetchUsers() {
         const users = await response.json();
         populateTable(users);
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -326,7 +326,7 @@ try {
 }
 
 function closePopup() {
-document.body.classList.remove('overlay-active'); // Убираем класс, чтобы скрыть попап и вернуть активность
+document.body.classList.remove('overlay-active');
 const popup = document.querySelector('.upgradePopup')
 popup.classList.add('hide')
 }

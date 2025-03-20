@@ -18,7 +18,7 @@ async function fetchLibraryData() {
         const data = await response.json();
         populateReferenceTable(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -39,7 +39,7 @@ localStorage.removeItem("accessToken")
         const data = await response.json();
         populateWishTable(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -155,7 +155,7 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
         const title = newRow.querySelector('.title-input');
 
         if (!file) {
-            alert('Пожалуйста, выберите видео перед сохранением!');
+            alert('Please select a video before saving');
             return;
         }
         const fileNameWithoutExtension = file.name.replace(".mp4", "");
@@ -184,7 +184,7 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
                 showMessage(data.message)
 
         } catch (error) {
-            console.error("Не удалось удалить видео из избранного листа:", error);
+            console.error("Failed to remove video from the favorites list", error);
         }
         
 
@@ -221,7 +221,7 @@ async function deleteWishlistVideo(elem) {
             showMessage(data.message)
     
         } catch (error) {
-            console.error("Не удалось удалить видео из избранного листа:", error);
+            console.error("Failed to remove video from the favorites list", error);
         }
     
 }

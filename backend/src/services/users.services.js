@@ -130,14 +130,13 @@ try {
     const trx = await pg.transaction();
     try {
       const emailOptions = {
-        code: Math.floor(100000 + Math.random() * 900000),
-        title: "Восстановление пароля",
-        subject: "",
-        text: "Ваш проверочный код: ",
-        user: "уважаемый пользователь",
-        content1: "Вы пытаетесь восстановить свой пароль.",
-        content2:"Если вы не инициировали данное действие, возможно вас хотят взломать. Никому не сообщайте данный код и обратитесь в службу поддержки.",
-        content3: "Больше не забывайте свой пароль.",
+        "title": "Password Recovery",
+        "subject": "",
+        "text": "Your verification code: ",
+        "user": "Dear user",
+        "content1": "You are trying to recover your password.",
+        "content2": "If you did not initiate this action, you might be a target of an attack. Do not share this code with anyone and contact support.",
+        "content3": "Don't forget your password anymore."
       };
       const userData = await UsersModel.getUserByEmail(email, trx);
       if (userData.length !== 0) {
@@ -192,7 +191,7 @@ try {
       (value) => value === undefined
     );
     if (isAllUndefined) {
-      return { message: "Заполните хотя бы одно поле" };
+      return { message: "Please fill in at least one field" };
     } else {
       await UsersModel.saveProfileData(newData, userId);
       return { message: "Data saved successfully" };
@@ -356,16 +355,16 @@ try {
         }
         const emailOptions = {
           email: user[0].email,
-          title: "Приобретение пакета",
-          subject: "Покупка платёжного пакета",
-          text: "Данные платёжного пакета: ",
+          title: "Package Purchase",
+          subject: "Payment Package Purchase",
+          text: "Payment package details: ",
           user: user[0].name,
-          content1:"Вы инициировали оплату для приобретения платёжного пакета.",
+          content1: "You initiated payment for the purchase of a payment package.",
           paymentPackage: packageForUpgrade,
           packagePeriod: period,
           packagePrice: price,
-          content2:"Об изменениях статуса транзакции Вы получите дополнительное оповещение.",
-          content3: "Не отвечайте на данное письмо.",
+          content2: "You will receive an additional notification regarding the transaction status changes.",
+          content3: "Do not reply to this email."
         };
         const data = await PaymentService.createPayment(
           price,
@@ -404,16 +403,16 @@ try {
         }
         const emailOptions = {
           email: user[0].email,
-          title: "Приобретение пакета",
-          subject: "Покупка платёжного пакета",
-          text: "Данные платёжного пакета: ",
+          title: "Package Purchase",
+          subject: "Payment Package Purchase",
+          text: "Payment package details: ",
           user: user[0].name,
-          content1:"Вы инициировали оплату для приобретения платёжного пакета.",
+          content1: "You initiated payment for the purchase of a payment package.",
           paymentPackage: packageForUpgrade,
           packagePeriod: period,
           packagePrice: price,
-          content2:"Об изменениях статуса транзакции Вы получите дополнительное оповещение.",
-          content3: "Не отвечайте на данное письмо.",
+          content2: "You will receive an additional notification regarding the transaction status changes.",
+          content3: "Do not reply to this email.",
         };
         const data = await PaymentService.createPayment(
           price,

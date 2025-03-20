@@ -18,7 +18,7 @@ localStorage.removeItem("accessToken")
         populateTable(data)
         fetchVideosCount(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -115,7 +115,7 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
         const title = newRow.querySelector('.title-input');
 
         if (!videoFile || !gifFile) {
-            alert('Пожалуйста, выберите файл перед сохранением!');
+            alert('Please select a file before saving');
             return;
         }
         const videoFileNameWithoutExtension = videoFile.name.replace(".mp4", "");
@@ -205,9 +205,8 @@ document.querySelector('.video-bulk-upload-button').addEventListener('click', fu
     });
 
     saveButton.addEventListener('click', async function () {
-        // Проверка на наличие файлов
         if (!formData.has('videos') && !formData.has('gifs')) {
-            alert("Выберите файлы перед сохранением!");
+            alert("Please select files before saving");
             return;
         }
 

@@ -4,7 +4,6 @@ import bcrypt from "bcryptjs";
 import config from "../src/config/variables.config";
 const { ADMIN_PASSWORD } = config;
 async function seed(pg) {
-  // Inserts seed entries
   try {
     await pg("users").insert([
       {
@@ -40,7 +39,7 @@ async function seed(pg) {
 
     await pg("team").insert([
       {
-        photo: "",
+        photo: ".../frontend/icons/developer.png",
         role: "Developer",
         name: "K. Hayrapetyan",
         fb_link: "https://www.facebook.com/",
@@ -49,7 +48,7 @@ async function seed(pg) {
         tg_link: "https://web.telegram.org/",
       },
       {
-        photo: "",
+        photo: ".../frontend/icons/marketolog.png",
         role: "Marketing specialist",
         name: "P. Pogosyan",
         fb_link: "https://www.facebook.com/",
@@ -58,7 +57,7 @@ async function seed(pg) {
         tg_link: "https://web.telegram.org/",
       },
       {
-        photo: "",
+        photo: ".../frontend/icons/superadmin.png",
         role: "Administrator",
         name: "G. Hakobyan",
         fb_link: "https://www.facebook.com/",
@@ -99,8 +98,7 @@ async function seed(pg) {
     await pg("users_profile").insert([
       {
         user_id: "1",
-        picture:
-          "C:/Users/User/Desktop/JS/Gevor site 27.03 v2.0/Gevor site 07.03 v2.0/27.03/frontend/icons/avatar.jpg",
+        picture:".../frontend/icons/avatar.png",
         name: "Gevorg",
         surname: "Hakobyan",
         phone: "Set your phone number",
@@ -128,7 +126,6 @@ async function init() {
 
     await seed(pg);
 
-    // Close the database connection
     await pg.destroy();
 
     console.log("Successfully inserted all data.");

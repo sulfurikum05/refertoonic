@@ -16,7 +16,7 @@ async function fetchNotificatoinsData() {
         const data = await response.json();    
         populateNotificatoinsTable(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 

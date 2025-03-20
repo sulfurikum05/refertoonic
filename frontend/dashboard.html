@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="ключевое слово 1, ключевое слово 2, ключевое слово 3">
+    <meta name="keywords" content="keywords">
     <title>Refertoonic</title>
     <link rel="stylesheet" href="main_style.css">
 </head>
+
 <body>
     <header class="dashboard-header">
 
-    <div class="login_btnContainer">
-        <button class="btn_login">Login or Register</button>
-    </div>           
+        <div class="login_btnContainer">
+            <button class="btn_login">Login or Register</button>
+        </div>
     </header>
 
     <div class="video-container1">
@@ -20,125 +22,123 @@
     </div>
 
 
-       
-        <div class="form-div">
-            <div class="form-container">
-                <button class="close_btn_login_form"><span>&times;</span></button>
-                <!-- Login Form -->
-                <form class="form" id="loginForm" style="display: block;">
-                    <h2>Login</h2>
-                    <div class="input-group">
-                        <label for="loginEmail">Email:</label>
-                        <input type="text" id="loginEmail" name="loginEmail" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="loginPassword">Password:</label>
-                        <input type="password" id="loginPassword" name="loginPassword" required>
-                    </div>
-                    <button type="submit" class="form-button loginButton">Login</button>
-                    <p>
-                        <a href="#" id="showRegister">Register</a> |
-                        <a href="#" id="showResetPassword">Forgot password?</a>
-                        <a href="#" id="showEmailconfirmation">Confirm email</a>
-                    </p>
-                </form>
-    
-                <!-- Registration Form -->
-                <form class="form" id="registerForm" style="display: none;">
-                    <h2>Register</h2>
-                    <div class="input-group">
-                        <label for="registerName">Name:</label>
-                        <input type="text" id="registerName" name="registerName" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="registerSurname">Surname:</label>
-                        <input type="text" id="registerSurname" name="registerSurname">
-                    </div>
-                    <div class="input-group">
-                        <label for="registerEmail">Email:</label>
-                        <input type="email" id="registerEmail" name="registerEmail" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="registerPassword">Password:</label>
-                        <input type="password" id="registerPassword" name="registerPassword" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="confirmPassword">Confirm password:</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" required>
-                    </div>
-                    <button type="submit" class="form-button registerFormButton">Register</button>
-                    <p>
-                        <a href="#" id="showLogin">Already have account? Login</a>
-                    </p>
-                </form>
-    
-                <!-- Reset Password Form -->
-                <form class="form" id="resetPasswordForm" style="display: none;">
-                    <h2>Reset password</h2>
-                    <div class="input-group">
-                        <label for="resetEmail">Email:</label>
-                        <input type="email" id="resetEmail" name="resetEmail" required>
-                    </div>
-                    <button type="button" class="form-button" id="sendResetCode">Get code</button>
-                    <div class="input-group">
-                        <label for="resetCode">Code:</label>
-                        <input type="text" id="resetCode" name="resetCode" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="newPassword">New password:</label>
-                        <input type="password" id="newPassword" name="newPassword" required>
-                    </div>
-                    <button type="submit" class="form-button" id="resetPassword">Reset password</button>
-                    <p>
-                        <a href="#" id="showLoginFromReset">Back to login</a>
-                    </p>
-                </form>
-                <!-- Email confirmation Form -->
-                <form class="form" id="emailConfirmationForm"  style="display: none;">
-                    <h2>Email confirmation</h2>
-                    <div class="input-group code">
-                        <label for="resetEmail">Code:</label>
-                        <input type="text" id="code" name="code" required>
-                    </div>
-                    <button type="button" class="form-button" id="confirm">Confirm</button>
-                    <div class="input-group email hide">
-                        <label for="Email">Email:</label>
-                        <input type="text" id="email" name="email" required>
-                    </div>
-                    <button type="button" class="form-button" id="sendCode">Get another code</button>
-                    <button type="button" class="form-button hide" id="send">Send</button>
-                    <p>
-                        <a href="#" id="showLoginFromConfirm">Back to login</a>
-                    </p>
-                </form>
 
-    
+    <div class="form-div">
+        <div class="form-container">
+            <button class="close_btn_login_form"><span>&times;</span></button>
+            <!-- Login Form -->
+            <form class="form" id="loginForm" style="display: block;">
+                <h2>Login</h2>
+                <div class="input-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="text" id="loginEmail" name="loginEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" name="loginPassword" required>
+                </div>
+                <button type="submit" class="form-button loginButton">Login</button>
+                <p>
+                    <a href="#" id="showRegister">Register</a> |
+                    <a href="#" id="showResetPassword">Forgot password?</a> |
+                    <a href="#" id="showEmailconfirmation">Confirm email</a>
+                </p>
+            </form>
+
+            <!-- Registration Form -->
+            <form class="form" id="registerForm" style="display: none;">
+                <h2>Register</h2>
+                <div class="input-group">
+                    <label for="registerName">Name:</label>
+                    <input type="text" id="registerName" name="registerName" required>
+                </div>
+                <div class="input-group">
+                    <label for="registerSurname">Surname:</label>
+                    <input type="text" id="registerSurname" name="registerSurname">
+                </div>
+                <div class="input-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" name="registerEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="registerPassword">Password:</label>
+                    <input type="password" id="registerPassword" name="registerPassword" required>
+                </div>
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm password:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="form-button registerFormButton">Register</button>
+                <p>
+                    <a href="#" id="showLogin">Already have account? Login</a>
+                </p>
+            </form>
+
+            <!-- Reset Password Form -->
+            <form class="form" id="resetPasswordForm" style="display: none;">
+                <h2>Reset password</h2>
+                <div class="input-group">
+                    <label for="resetEmail">Email:</label>
+                    <input type="email" id="resetEmail" name="resetEmail" required>
+                </div>
+                <button type="button" class="form-button" id="sendResetCode">Get code</button>
+                <div class="input-group">
+                    <label for="resetCode">Code:</label>
+                    <input type="text" id="resetCode" name="resetCode" required>
+                </div>
+                <div class="input-group">
+                    <label for="newPassword">New password:</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                </div>
+                <button type="submit" class="form-button" id="resetPassword">Reset password</button>
+                <p>
+                    <a href="#" id="showLoginFromReset">Back to login</a>
+                </p>
+            </form>
+            <!-- Email confirmation Form -->
+            <form class="form" id="emailConfirmationForm" style="display: none;">
+                <h2>Email confirmation</h2>
+                <div class="input-group code">
+                    <label for="resetEmail">Code:</label>
+                    <input type="text" id="code" name="code" required>
+                </div>
+                <button type="button" class="form-button" id="confirm">Confirm</button>
+                <div class="input-group email hide">
+                    <label for="Email">Email:</label>
+                    <input type="text" id="email" name="email" required>
+                </div>
+                <button type="button" class="form-button" id="sendCode">Get another code</button>
+                <button type="button" class="form-button hide" id="send">Send</button>
+                <p>
+                    <a href="#" id="showLoginFromConfirm">Back to login</a>
+                </p>
+            </form>
+
+
+        </div>
+    </div>
+    <div class="main-text"></div>
+    <section class="pricing-header"></section>
+    <div class="payment-packages"></div>
+    <div class="demo-section"></div>
+    <div class="team-section demo-section"></div>
+    <div class="contact-section">
+        <div class="contact-form">
+            <h2 class="contact-form-title">CONTACT US</h2>
+            <div class="form-group">
+                <input type="email" id="email" name="email" class="form-control" placeholder="Input your Email *"
+                    required />
+                <input type="text" id="name" name="name" class="form-control" placeholder="Input your name" />
+                <textarea class="form-control" id="message" name="subject" rows="5" placeholder="Input your message*"
+                    required></textarea>
+
+                <button type="submit" onclick="sendUnauthMessage()" class="btn" id="sendMessage">Send</button>
             </div>
         </div>
-            <div class="main-text"></div>
-            <section class="pricing-header"></section>
-            <div class="payment-packages"></div>
-            <div class="demo-section"></div>
-            <div class="team-section demo-section"></div>
-            <div class="contact-section">
-            <div class="contact-form">
-                <h2 class="contact-form-title">CONTACT US</h2>
-                <div class="form-group">
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Input your Email *" required/>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Input your name" />
-                        <textarea class="form-control" id="message" name="subject" rows="5" placeholder="Input your message*" required></textarea>
-                    
-                        <button type="submit" onclick="sendUnauthMessage()" class="btn" id="sendMessage">Send</button>
-                    </div>
-            </div>
-        </div>
+    </div>
     <script src="dashboard.js"></script>
     <script src="login.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.4.0/fabric.min.js"></script>
 </body>
+
 </html>
-
-
-
-
-

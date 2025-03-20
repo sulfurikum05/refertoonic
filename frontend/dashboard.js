@@ -13,7 +13,7 @@ function showMessage(messageText) {
 }
 
 
-// Dashboard Fetch START //
+
 
 const paymentPackagesDiv = document.querySelector(".payment-packages")
 const dashboardMainText = document.querySelector(".main-text")
@@ -45,7 +45,7 @@ async function fetchDashboard() {
         const {texts,packages, team, video} = data
         populateDashboard(texts, packages, team, video)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -177,7 +177,7 @@ function populateDashboard(texts, packages, team, video){
 
    
 
-// Dashboard Fetch END //
+
 
 
 function monthlyToggleButtonFunction(){
@@ -214,11 +214,6 @@ function yearlyToggleButtonFunction(){
     monthlyButton.classList.add('show')
 }
 
-
-
-
-
-
     async function sendUnauthMessage() {
         try {
 
@@ -234,13 +229,13 @@ function yearlyToggleButtonFunction(){
             })
                 const data = await response.json()
                 showMessage(data.message)
+                email.value = ""
+                name.value = ""
+                text.value = ""
 
-                setTimeout(() => {
-                    window.location.reload()
-                }, 2000);
             
         } catch (error) {
-            console.error("Не удалось получить данные:", error);
+            console.error("Failed to retrieve data", error);
         }
     }
 

@@ -8,7 +8,7 @@ export class DeleteFiles {
                 fs.unlinkSync(cleanGifPath);
             }
         } catch (err) {
-            console.log(`Ошибка при удалении файла: ${err.message}`);
+            console.log(`Error deleting the file ${err.message}`);
         }
     }
 }

@@ -306,7 +306,7 @@ export class SuperadminController {
           }
       }, (err) => {
           if (err) {
-              res.status(404).send('Видео не найдено');
+              res.status(404).send('Video not found');
           }
       });
       }

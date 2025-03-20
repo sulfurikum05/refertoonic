@@ -1,4 +1,4 @@
-// Local Modules
+
 
 import { VipModel } from "../models/vip.model";
 import { PaymentService } from "../services/paymentService";
@@ -138,16 +138,16 @@ export class VipServices {
         }
         const emailOptions = {
           email: user[0].email,
-          title: "Приобретение пакета",
-          subject: "Покупка платёжного пакета",
-          text: "Данные платёжного пакета: ",
+          title: "Package Purchase",
+          subject: "Payment Package Purchase",
+          text: "Payment package details: ",
           user: user[0].name,
-          content1:"Вы инициировали оплату для приобретения платёжного пакета.",
+          content1: "You initiated a payment for purchasing a payment package.",
           paymentPackage: packageForUpgrade,
           packagePeriod: period,
           packagePrice: price,
-          content2:"Об изменениях статуса транзакции Вы получите дополнительное оповещение.",
-          content3: "Не отвечайте на данное письмо.",
+          content2: "You will receive an additional notification regarding the status change of the transaction.",
+          content3: "Do not reply to this email.",
         };
         const data = await PaymentService.createPayment(
           price,
@@ -201,16 +201,16 @@ export class VipServices {
         }
         const emailOptions = {
           email: user[0].email,
-          title: "Приобретение пакета",
-          subject: "Покупка платёжного пакета",
-          text: "Данные платёжного пакета: ",
+          title: "Package Purchase",
+          subject: "Payment Package Purchase",
+          text: "Payment package details: ",
           user: user[0].name,
-          content1:"Вы инициировали оплату для приобретения платёжного пакета.",
+          content1: "You initiated a payment to purchase a payment package.",
           paymentPackage: packageForExtend,
           packagePeriod: period,
           packagePrice: price,
-          content2:"Об изменениях статуса транзакции Вы получите дополнительное оповещение.",
-          content3: "Не отвечайте на данное письмо.",
+          content2: "You will receive an additional notification regarding the status change of the transaction.",
+          content3: "Do not reply to this email.",
         };
         const data = await PaymentService.createPayment(
           price,

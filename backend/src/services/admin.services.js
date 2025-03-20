@@ -1,4 +1,4 @@
-// Local Modules
+
 
 import { AdminModel } from "../models/admin.model";
 import { UsersModel } from "../models";
@@ -28,14 +28,14 @@ export class AdminServices {
         await trx.commit();
         return {
           message:
-            "Вы достигли лимита на создание пользователей. Для увеличения лимита приобретите доп. пакет.",
+            "You have reached the user creation limit. To increase the limit, purchase an additional package",
         };
       } else {
         const user = await UsersModel.getUserByEmail(email, trx);
         if (user.length !== 0) {
           if (user[0].payment_package == "vipPro") {
             await trx.commit();
-            return { message: "Пользователь уже состоит в организации" };
+            return { message: "The user is already a member of the organization" };
           } else if (user[0].role == "vip") {
             const data = { payment_package: "vipPro", admin_id: userId };
             await AdminModel.updateVipUserPaymentPackageToVipPro(
@@ -53,7 +53,7 @@ export class AdminServices {
           } else if (user[0].role == "admin" || user[0].role == "superadmin") {
             await trx.commit();
             return {
-              message: "Данного пользователя невозможно добавить в организацию",
+              message: "This user cannot be added to the organization",
             };
           }
         } else {

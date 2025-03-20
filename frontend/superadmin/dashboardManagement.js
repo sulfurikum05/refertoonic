@@ -22,7 +22,7 @@
 
             populateSliderVideosTable(data)
         } catch (error) {
-            console.error("Не удалось получить данные:", error);
+            console.error("Failed to retrieve data", error);
         }
     }
     async function getDashboardTextsData() {
@@ -42,7 +42,7 @@
             const data = await response.json();
             populateDashboardTextsTable(data)
         } catch (error) {
-            console.error("Не удалось получить данные:", error);
+            console.error("Failed to retrieve data", error);
         }
     }
     async function getTeamData() {
@@ -62,7 +62,7 @@
             const data = await response.json();
             populateTeamTable(data)
         } catch (error) {
-            console.error("Не удалось получить данные:", error);
+            console.error("Failed to retrieve data", error);
         }
     }
     async function getPaymentPackagesData() {
@@ -83,7 +83,7 @@
              
             populatePaymentPackagesTable(data)
         } catch (error) {
-            console.error("Не удалось получить данные:", error);
+            console.error("Failed to retrieve data", error);
         }
     }
 
@@ -186,7 +186,6 @@
     getPaymentPackagesData();
 
 
-    //CREATE VIDEO START//
     document.querySelector('.videos-create-button').addEventListener('click', function () {
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
@@ -225,7 +224,7 @@
             const file = videoInput.files[0];
     
             if (!file) {
-                alert('Пожалуйста, выберите видео перед сохранением!');
+                alert('Please select a video before saving');
                 return;
             }
     
@@ -255,11 +254,6 @@
         
                 });
 
-//CREATE VIDEO END//
-
-
-//DELETE VIDEO START//
-
 async function deleteSliderVideo(elem) {
 
         const row = elem.closest("tr");
@@ -287,11 +281,6 @@ localStorage.removeItem("accessToken")
 
 }
 
-//DELETE VIDEO END//
-
-
-
-//EDIT TEXT START//
 
 function editTextFunction(elem) {
             const row = elem.closest("tr"); 
@@ -347,10 +336,6 @@ function editTextFunction(elem) {
 }
 
 
-//EDIT TEXT END//
-
-
-//EDIT TEAM START//
 function editTeamfunction(elem) {
         const row = elem.closest('tr');
         const saveButton = row.querySelector(".save-team");
@@ -370,17 +355,15 @@ function editTeamfunction(elem) {
                 const photoInput = document.createElement('input');
                 photoInput.type = 'file';
                 photoInput.style = "display: none;";
-                photoInput.className = 'photo-input'; // Добавляем класс для поиска
+                photoInput.className = 'photo-input';
                 cell.innerHTML = '';
                 cell.appendChild(photoInput);
                 
-                // Создаём кнопку для выбора фото
                 const photoInputButton = document.createElement('button');
                 photoInputButton.className = 'choosePhotoButton';
                 photoInputButton.textContent = "Photo";
                 cell.appendChild(photoInputButton);
         
-                // Добавляем обработчик клика для открытия диалога выбора файла
                 photoInputButton.addEventListener('click', function () {
                     photoInput.click();
                 });
@@ -434,10 +417,6 @@ function editTeamfunction(elem) {
 
 }
 
-//EDIT TEAM END//
-
-
-//CREATE PP START//
 document.querySelector('.payment-packages-create-button').addEventListener('click', function () {
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
@@ -481,10 +460,7 @@ document.querySelector('.payment-packages-create-button').addEventListener('clic
                 });
     
             });
-//CREATE PP END//
 
-
-//EDIT PP START//
 function editPpFunction(elem) {
             const row = elem.closest("tr"); 
             const cells = Array.from(row.querySelectorAll("td"));
@@ -534,10 +510,6 @@ function editPpFunction(elem) {
                     showMessage(data.message)
             }, { once: true });
 }
-//EDIT PP END//
-
-
-//DELETE PP START//
 
 async function deletePpFunction(elem) {
         const row = elem.closest("tr");

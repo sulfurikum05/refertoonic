@@ -14,7 +14,7 @@ async function fetchModerationVideos() {
         
         populateTable(data)
     } catch (error) {
-        console.error("Не удалось получить данные:", error);
+        console.error("Failed to retrieve data", error);
     }
 }
 
@@ -59,7 +59,6 @@ function populateTable(data) {
 
 fetchModerationVideos()
 
-//DELETE VIDEO START//
 
 async function deleteVideo(elem) {
         const row = elem.closest("tr");
@@ -82,9 +81,6 @@ async function deleteVideo(elem) {
             showMessage(data.message)
 }
 
-//DELETE VIDEO END//
-
-//REJECT VIDEO START//
 
 async function rejectVideo(elem) {
         const row = elem.closest("tr");
@@ -109,8 +105,6 @@ async function rejectVideo(elem) {
 
 
 }
-
-//REJECT VIDEO END//
 
 
 async function sendVideoToModeration(elem){

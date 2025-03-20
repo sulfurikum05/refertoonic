@@ -1,4 +1,4 @@
-// NPM Modules
+
 import express from "express";
 
 import AuthController from "../auth/auth.controller";

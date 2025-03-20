@@ -1,4 +1,4 @@
-// Local Modules
+
 import { VipServices } from "../services/vip.services";
 import { SuccessHandlerUtil } from "../utils";
 
@@ -31,7 +31,7 @@ export class VipController {
         const { uploadDir, title, keywords } = req.body;
         const videoObject = req.files?.["video"]?.[0] || null;
         if (!videoObject) {
-          return res.status(400).json({ error: "Видео не загружено" });
+          return res.status(400).json({ error: "Video not uploaded" });
         }
         const videoName = videoObject?.filename;
         const videoPath = `${uploadDir}${videoName} `;
