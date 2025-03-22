@@ -214,8 +214,13 @@ function yearlyToggleButtonFunction(){
     monthlyButton.classList.add('show')
 }
 
-    async function sendUnauthMessage() {
+    async function sendUnauthMessage(elem) {
         try {
+            elem.disabled = true;
+            const loader = document.createElement('span');
+            loader.className = 'loader';
+            elem.textContent = ""
+            elem.appendChild(loader);
 
             const email = document.getElementById("email").value
             const name = document.getElementById("name").value
@@ -228,12 +233,17 @@ function yearlyToggleButtonFunction(){
                 body: JSON.stringify({email, name, text})
             })
                 const data = await response.json()
-                showMessage(data.message)
+                if (!data.success) {
+                    showMessage(data.errors)
+                } else {
+                    showMessage(data.message)
+                }
+                elem.disabled = false;
+                loader.remove();
+                elem.textContent = "Send"
                 email.value = ""
                 name.value = ""
                 text.value = ""
-
-            
         } catch (error) {
             console.error("Failed to retrieve data", error);
         }

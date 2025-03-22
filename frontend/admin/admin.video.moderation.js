@@ -77,8 +77,11 @@ async function deleteVideo(elem) {
             window.open("../dashboard.html");
           }
             const data = await response.json()
-            fetchModerationVideos()
-            showMessage(data.message)
+            if (data.success) {
+                fetchModerationVideos()
+                showMessage(data.message)
+            }
+
 }
 
 
@@ -99,8 +102,11 @@ async function rejectVideo(elem) {
             window.open("../dashboard.html");
           }
             const data = await response.json()
-            fetchModerationVideos()
-            showMessage(data.message)
+            if (data.success) {
+                fetchModerationVideos()
+                showMessage(data.message)
+            }
+
 
 
 
@@ -124,8 +130,11 @@ async function sendVideoToModeration(elem){
                 window.open("../dashboard.html");
               }
                 const data = await response.json()
-                fetchModerationVideos()
-                showMessage(data.message)
+                if (data.success) {
+                    fetchModerationVideos()
+                    showMessage(data.message)
+                }
+
 
 }
 

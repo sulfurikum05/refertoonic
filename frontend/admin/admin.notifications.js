@@ -8,7 +8,7 @@ async function fetchNotificatoinsData() {
             headers: {"Authorization": `Bearer ${token}`},
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         const data = await response.json();
@@ -69,26 +69,29 @@ document.querySelector('.notifications-create-button').addEventListener('click',
         const message = inputs.find(input => input.placeholder === "Message")?.value || "";
     
         const newData = {
-            
             title,
             message,
             status: "publish",
         };
-    const token = localStorage.getItem("accessToken");
-    const response = await fetch('http://localhost:3030/api/v1/admin/sendNotification', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json',
-                      "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(newData)
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch('http://localhost:3030/api/v1/admin/sendNotification', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(newData)
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
-          }
-          const data = await response.json()
-          showMessage(data.message)
-          fetcSenthNotificatoinsData()
+        }
+        const data = await response.json()
+        if (!data.success) {
+            showMessage(data.errors)
+        }else{
+            showMessage(data.message)
+            fetcSenthNotificatoinsData()
+        }
     });
     
             });

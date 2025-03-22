@@ -1,10 +1,12 @@
 
 
 import { AdminModel } from "../models/admin.model";
-import { UsersModel } from "../models";
+import { UsersModel }  from "../models/users.model";
 import { PaymentService } from "../services/paymentService";
 import { CryptoUtil } from "../utils";
 import { DeleteFiles } from "../services/delete.file";
+import SendEmail from "../middlewares/nodemailer";
+import path  from "path";
 import knex from "knex";
 import knexConfigs from "../../knex.configs";
 const pg = knex(knexConfigs.development);
@@ -12,7 +14,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export class AdminServices {
-  
+
   static async getUsers(userId) {
     return await AdminModel.getUsers(userId);
   }
@@ -26,16 +28,13 @@ export class AdminServices {
       const currentUsersCount = currentUsers.length;
       if (usersCountAll <= currentUsersCount) {
         await trx.commit();
-        return {
-          message:
-            "You have reached the user creation limit. To increase the limit, purchase an additional package",
-        };
+        return { success: true, message:"You have reached the user creation limit. To increase the limit, purchase an additional package"};
       } else {
         const user = await UsersModel.getUserByEmail(email, trx);
         if (user.length !== 0) {
           if (user[0].payment_package == "vipPro") {
             await trx.commit();
-            return { message: "The user is already a member of the organization" };
+            return { success: true, message: "The user is already a member of the organization" };
           } else if (user[0].role == "vip") {
             const data = { payment_package: "vipPro", admin_id: userId };
             await AdminModel.updateVipUserPaymentPackageToVipPro(
@@ -52,13 +51,11 @@ export class AdminServices {
             await AdminModel.updateUserPaymentPackageToVipPro(data, email, trx);
           } else if (user[0].role == "admin" || user[0].role == "superadmin") {
             await trx.commit();
-            return {
-              message: "This user cannot be added to the organization",
-            };
+            return { success: true, message: "This user cannot be added to the organization",};
           }
         } else {
           const chars =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()_\-=+";
           let length = 8;
           let password = "";
           for (let i = 0; i < length; i++) {
@@ -78,15 +75,45 @@ export class AdminServices {
             created_at: new Date().toISOString(),
           };
           await AdminModel.createNewUser(data, trx);
+          const newUser = await AdminModel.getUserByEmail(email, trx)
+          const avatarPath = path.join(__dirname, '..', '..', '..', 'frontend', 'icons', 'avatar.png');
+          const userProfileData = {
+            user_id: newUser[0].id,
+            picture: avatarPath,
+            name: newUser[0].name,
+            surname: newUser[0].surname,
+            phone: "Set your phone number",
+            address: "Set your address",
+            email: newUser[0].email,
+            website: "Set your website",
+            birthday: "Set your birthday",
+            gender: "Set your gender",
+            about: "Tell us about yourself",
+          };
+          await UsersModel.createUserProfileData(userProfileData, trx);
+          const emailOptions = {
+            email: newUser[0].email,
+            title: "Welcome to Refertoonic",
+            user: "user",
+            adminName: admin[0].name,
+            adminSurname: admin[0].surname,
+            content1: "You have successfully registered in the Refertoonic system as a VIP user.",
+            login: newUser[0].email,
+            password: password,
+            content2: "Do not share your password with anyone.",
+          };
+          await SendEmail.sendUserLoginPassword(emailOptions)
           await trx.commit();
-          return { message: "User created successfully" };
+          return { success: true, message: "User created successfully" };
         }
       }
       await trx.commit();
-      return { message: "User created successfully" };
+      return { success: true, message: "User created successfully" };
 
     } catch (error) {
       await trx.rollback();
+      console.log(error);
+      
     }
   }
 
@@ -106,12 +133,12 @@ export class AdminServices {
 
   static async blockUser(email) {
     await AdminModel.blockUser(email);
-    return { message: "User blocked successfully" };
+    return { success: true, message: "User blocked successfully" };
   }
 
   static async unblockUser(email) {
     await AdminModel.unblockUser(email);
-    return { message: "User unblocked successfully" };
+    return { success: true, message: "User unblocked successfully" };
   }
 
   static async getMessagesData(userId) {
@@ -145,18 +172,18 @@ export class AdminServices {
       const user = await AdminModel.getUserByEmail(userEmail, trx)
       if (user.length == 0) {
         await trx.commit();
-        return { message: "User not exist" };
+        return { success: true, message: "User not exist" };
       }
       if (Number(user[0].admin_id) !== Number(adminId)) {
         await trx.commit();
-        return { message: "You dont have permitions to delete this user" };
-      }else{
+        return { success: true, message: "You dont have permitions to delete this user" };
+      } else {
         if (user[0].status == "block") {
           data.status = "unblock"
         }
         await AdminModel.deleteUser(userEmail, data, trx)
         await trx.commit();
-        return { message: "User deleted successfully" };
+        return { success: true, message: "User deleted successfully" };
       }
     } catch (error) {
       await trx.rollback();
@@ -186,9 +213,9 @@ export class AdminServices {
   static async changeModerationVideoStatus(videoId) {
     const data = { status: 0 };
     await AdminModel.changeModerationVideoStatus(data, videoId);
-    return { message: "Video successfully sent to moderator" };
-    }
-  
+    return { success: true, message: "Video successfully sent to moderator" };
+  }
+
   static async deleteModerationVideo(id) {
     const trx = await pg.transaction();
     try {
@@ -198,22 +225,16 @@ export class AdminServices {
       await DeleteFiles.deleteFileFromStorage(cleanPath);
       await AdminModel.deleteModerationVideoById(id, trx);
       await trx.commit();
-      return { message: "Video deleted successfully" };
+      return { success: true, message: "Video deleted successfully" };
     } catch (error) {
       await trx.rollback();
     }
   }
 
-  static async publishModerationVideo(id) {
-    const data = { status: 1 };
-    await AdminModel.publishModerationVideo(data, id);
-    return { message: "Video published successfully" };
-  }
-
   static async rejectModerationVideo(id) {
     const data = { status: -1 };
     await AdminModel.rejectModerationVideo(data, id);
-    return { message: "Video rejected successfully" };
+    return { success: true, message: "Video rejected successfully" };
   }
 
   static async getNotificationsData(userId) {
@@ -247,7 +268,7 @@ export class AdminServices {
       sender: adminId,
     };
     await AdminModel.sendNotification(data, adminId);
-    return { message: "Notification sent successfully" };
+    return { success: true, message: "Notification sent successfully" };
   }
 
   static async getSentNotificationsData(adminId) {

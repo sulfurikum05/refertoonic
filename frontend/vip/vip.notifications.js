@@ -10,7 +10,7 @@ async function fetchNotificatoinsData() {
              }
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         const data = await response.json();
@@ -24,8 +24,6 @@ fetchNotificatoinsData()
 
 
 function populateNotificatoinsTable(data) {
-    
-
     notificationsTableBody.innerHTML = ""; 
     data.forEach(item => {
         const date = new Date(item.send_at);
@@ -43,6 +41,5 @@ if (item.sender !== "superadmin") {
             <td>${item.status}</td>
         `;
         notificationsTableBody.insertBefore(row, notificationsTableBody.firstChild);
-        
     });
 }

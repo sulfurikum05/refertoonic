@@ -14,7 +14,6 @@ async function fetchUsers() {
         const users = await response.json();
         if(response.status == 401){
             localStorage.removeItem("accessToken")
-         
             window.open("../dashboard.html");
           }
         populateTable(users);
@@ -175,9 +174,7 @@ async function showUserInfo(elem){
          },
     });
     const data = await response.json()
-
     const usersTable = document.querySelector('.users-table')
-
     if (usersTable.querySelector(".userPopup")) {
         const deletedPopup = document.querySelector(".userPopup")
         deletedPopup.remove()
@@ -224,7 +221,6 @@ async function showUserPayments(elem) {
          },
     });
     const data = await response.json()
-
     const paymentsTableBody = document.querySelector('.payments-table tbody')
     const paymentsTable = document.querySelector('.payments-table')
     paymentsTable.classList.remove('hide')
@@ -235,15 +231,13 @@ async function showUserPayments(elem) {
         let expireDate
         let formattedexpireDate
         if (payment.expire_at !== null) {
+            console.log(payment.expire_at);
+            
             expireDate = new Date(payment.expire_at);
             formattedexpireDate = `${expireDate.getDate().toString().padStart(2, '0')}.${(expireDate.getMonth() + 1).toString().padStart(2, '0')}.${expireDate.getFullYear()} ${expireDate.getHours().toString().padStart(2, '0')}:${expireDate.getMinutes().toString().padStart(2, '0')}:${expireDate.getSeconds().toString().padStart(2, '0')}`;
-
         }
         
-    
-    
     const formattedcreateDate = `${createDate.getDate().toString().padStart(2, '0')}.${(createDate.getMonth() + 1).toString().padStart(2, '0')}.${createDate.getFullYear()} ${createDate.getHours().toString().padStart(2, '0')}:${createDate.getMinutes().toString().padStart(2, '0')}:${createDate.getSeconds().toString().padStart(2, '0')}`;
-
     const paymentRow = document.createElement("tr");
     paymentRow.dataset.id = payment.order_id
     paymentRow.innerHTML = `
@@ -284,10 +278,15 @@ function editPaymentStatus(elem){
     saveButton.classList.remove('hide')
     cells.forEach(cell => {
         let cellId = cell.dataset.id
-        if (cellId == 1 || cellId == 2) {
+        if (cellId == 1) {
             cell.innerHTML = `
             <input type="text" class="input" value="${cell.textContent}" data-id="${cellId}">
         `
+        }
+        if (cellId == 2) {
+            cell.innerHTML = `
+            <input type="date" class="input" value="${cell.textContent}" data-id="${cellId}"></input>
+            `
         }
                 
     })
@@ -313,10 +312,15 @@ function editPaymentStatus(elem){
                 window.open("../dashboard.html");
             }
             const data = await response.json()
-            showMessage(data.message)
-            setTimeout(() => {
-                window.location.reload()
-            }, 2000);
+            if (!data.success) {
+                showMessage(data.errors)
+            }else{
+                showMessage(data.message)
+                setTimeout(() => {
+                    window.location.reload()
+                }, 2000);
+            }
+
             })
 }
 
@@ -380,10 +384,15 @@ function editUserPackage(elem) {
                 window.open("../dashboard.html");
             }
             const data = await response.json()
-            const infoDiv = document.querySelector('.infoDiv')
-            infoDiv.remove()
-            fetchUsers()
-            showMessage(data.message)
+            if (!data.success) {
+                showMessage(data.errors)
+            }else{
+                const infoDiv = document.querySelector('.infoDiv')
+                infoDiv.remove()
+                fetchUsers()
+                showMessage(data.message)
+            }
+            
 
             })
 

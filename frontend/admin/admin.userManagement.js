@@ -12,7 +12,6 @@ async function fetchUsers() {
         });
         if(response.status == 401){
             localStorage.removeItem("accessToken")
-         
             window.open("../dashboard.html");
           }
         const users = await response.json();
@@ -65,7 +64,6 @@ async function getAvailableUsersCount(){
         })
         if(response.status == 401){
             localStorage.removeItem("accessToken")
-         
             window.open("../dashboard.html");
           }
         const data = await response.json()
@@ -134,16 +132,20 @@ const data = {
             })
             if(response.status == 401){
                 localStorage.removeItem("accessToken")
-             
                 window.open("../dashboard.html");
               }
                 const resData = await response.json()
-                fetchUsers()
-                getAvailableUsersCount()
-                showMessage(resData.message)
+                if (!resData.success) {
+                    showMessage(resData.errors)
+                }else{
+                    fetchUsers()
+                    getAvailableUsersCount()
+                    showMessage(resData.message)
+                }
+
                 
         } catch (error) {
-            console.error('Error sending data:', error);
+            console.error('Server error:');
         }
 
 }
@@ -175,9 +177,12 @@ async function deleteUser(elem) {
             window.open("../dashboard.html");
           }
             const data = await response.json()
-            showMessage(data.message)
-            fetchUsers();
-            getAvailableUsersCount()
+            if (data.success) { 
+                fetchUsers();
+                getAvailableUsersCount()
+                showMessage(data.message)
+            }
+
     
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -213,13 +218,17 @@ try {
         window.open("../dashboard.html");
       }
         const data = await response.json()
-        elem.classList.add("hide")
-        cells.forEach(cell => {
-            cell.style.color = "red"
-        });
-        const unblockUserButton = row.querySelector('.unblock-user')
-        unblockUserButton.classList.remove('hide')
-        showMessage(data.message)
+        if (data.success) { 
+            showMessage(data.message)
+            elem.classList.add("hide")
+            cells.forEach(cell => {
+                cell.style.color = "red"
+            });
+            const unblockUserButton = row.querySelector('.unblock-user')
+            unblockUserButton.classList.remove('hide')
+        }
+
+        
 
 } catch (error) {
     console.error('Error sending data:', error);
@@ -255,13 +264,17 @@ localStorage.removeItem("accessToken")
         window.open("../dashboard.html");
       }
         const data = await response.json()
-        elem.classList.add("hide")
-        cells.forEach(cell => {
+        if (data.success) { 
+            showMessage(data.message)
+            elem.classList.add("hide")
+            cells.forEach(cell => {
             cell.style.color = ""
         });
         const blockUserButton = row.querySelector('.block-user')
         blockUserButton.classList.remove('hide')
-        showMessage(data.message)
+        }
+        
+        
 
 } catch (error) {
     console.error('Error sending data:', error);
@@ -313,12 +326,11 @@ try {
         window.open("../dashboard.html");
       }
       const data = await response.json()
-        if (data.success == false) {
+        if (!data.success) {
             showMessage(data.errors)
         }else{
             window.open(data, '_blank');
             window.location.reload()
-
         }
 }catch (error) {
         console.error('Error:', error);

@@ -7,13 +7,10 @@ async function fetchMessagesData(){
             headers: {"Authorization": `Bearer ${token}`},
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
-
         const data = await response.json();
-
-        
         if (data.length !== 0) {
             const sentMessagesBody = document.querySelector('.sent-messages-table tbody')
             sentMessagesBody.innerHTML = "";
@@ -65,7 +62,7 @@ async function sendHelpMessage(){
         window.open("../dashboard.html");
         }
         const data = await response.json()
-        if (data.success == false) {   
+        if (!data.success) {   
             showMessage(data.errors)
         }else{
             subject.value = ""

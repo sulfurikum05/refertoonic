@@ -33,12 +33,19 @@
             </ul>
         </div>
         <div class="table-container file-library-table-container">
-            <div class="info-container">
+            <div class="search-container main-container">
+                <div class="info-container">
+                    <div>
+                        <span class="videosCountInfo" onClick="showVideosCount()" title="Users statistic"><img
+                                src="../icons/info.png"></span>
+                    </div>
+                </div>
                 <div>
-                    <span class="videosCountInfo" onClick="showVideosCount()" title="Users statistic"><img
-                            src="../icons/info.png"></span>
+                    <label for="searchInput">Search:</label>
+                    <input type="text" id="searchInput" placeholder="Enter search text">
                 </div>
             </div>
+
 
             <h2 class="videos-header header table-header">
                 References

@@ -10,11 +10,10 @@ async function fetchNotificatoinsData() {
              },
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
         const data = await response.json();
-        
         populateNotificatoinsTable(data)
     } catch (error) {
         console.error("Failed to retrieve data", error);
@@ -103,12 +102,17 @@ document.querySelector('.notifications-create-button').addEventListener('click',
             body: JSON.stringify(newData)
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
         const data = await response.json()
-        fetchNotificatoinsData()
-        showMessage(data.message)
+        if (!data.success) {
+            showMessage(data.errors)
+        }else{
+            fetchNotificatoinsData()
+            showMessage(data.message)
+        }
+
 
             });
     
@@ -133,8 +137,10 @@ localStorage.removeItem("accessToken")
                 window.open("../dashboard.html");
             }
             const data = await response.json()
-            fetchNotificatoinsData()
-            showMessage(data.message)
+            if (data.success) {
+                fetchNotificatoinsData()
+                showMessage(data.message)
+            }
         }
 
 

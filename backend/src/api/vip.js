@@ -17,6 +17,7 @@ const router = express.Router();
   router.get("/getWishlistData", AuthService.validateAccessToken, VipController.getWishlistData);
   router.post("/addVideoToWishlist", AuthService.validateAccessToken, VipController.addVideoToWishlist);
   router.post("/removeVideoFromWishlist", AuthService.validateAccessToken, VipController.removeVideoFromWishlist);
+  router.post("/getVideosBySearch/:searchValue", AuthService.validateAccessToken, VipController.getVideosBySearch);
   router.post("/upgrade", Validation.upgradeValidate, AuthService.validateAccessToken, VipController.upgrade);
   router.post("/extend", Validation.upgradeValidate, AuthService.validateAccessToken, VipController.extend);
 

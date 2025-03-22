@@ -2,27 +2,18 @@ import knex from "knex";
 import knexConfigs from "../../knex.configs";
 const pg = knex(knexConfigs.development);
 
-class UsersModel {
+export class UsersModel {
   
   static async getAdminByAdminId(adminId, trx) {
-    return await pg("users")
-      .select("*")
-      .where({ id: adminId })
-      .transacting(trx);
+    return await pg("users").select("*").where({ id: adminId }).transacting(trx);
   }
 
   static async updateUserPackage(userId, userNewData, trx) {
-    return await pg("users")
-      .update(userNewData)
-      .where({ id: userId })
-      .transacting(trx);
+    await pg("users").update(userNewData).where({ id: userId }).transacting(trx);
   }
 
   static async getUserByEmail(email, trx) {
-    return await pg("users")
-      .select("*")
-      .where({ email: email })
-      .transacting(trx);
+    return await pg("users").select("*").where({ email: email }).transacting(trx);
   }
 
   static async createUser(data, trx) {
@@ -34,37 +25,23 @@ class UsersModel {
   }
 
   static async findByEmail(email, trx) {
-    return await pg("users")
-      .select("*")
-      .where({ email: email })
-      .transacting(trx);
+    return await pg("users").select("*").where({ email: email }).transacting(trx);
   }
 
   static async getUserByCode(code, trx) {
-    return await pg("users")
-      .select("*")
-      .where({ status: code })
-      .transacting(trx);
+    return await pg("users").select("*").where({ status: code }).transacting(trx);
   }
   
   static async confirmEmail(code,data, trx) {
-    await pg("users")
-      .update(data)
-      .where({ status: code })
-      .transacting(trx);
+    await pg("users").update(data).where({ status: code }).transacting(trx);
   }
   
   static async updatePassword(email, code, trx) {
-    await pg("users")
-      .update({ password: code })
-      .where({ email: email })
-      .transacting(trx);
+    await pg("users").update({ password: code }).where({ email: email }).transacting(trx);
   }
 
   static async resetPassword(code, newPassword) {
-    await pg("users")
-      .update({ password: newPassword })
-      .where({ password: code });
+    await pg("users").update({ password: newPassword }).where({ password: code });
   }
 
   static async sendUnauthMessage(data) {
@@ -92,10 +69,7 @@ class UsersModel {
   }
 
   static async changePassword(hashedPassword, userId, trx) {
-    await pg("users")
-      .update({ password: hashedPassword })
-      .where({ id: userId })
-      .transacting(trx);
+    await pg("users").update({ password: hashedPassword }).where({ id: userId }).transacting(trx);
   }
 
   static async sendHelpMessage(data) {
@@ -111,20 +85,11 @@ class UsersModel {
   }
 
   static async getVideos() {
-    return await pg("videos")
-      .select("*")
-      .whereIn("id", [1,2,3,4,5,6,7,8,9,10]);
-  }
-
-  static async getVideosBySearch() {
-    return await pg("videos").select("*");
+    return await pg("videos").select("*").where({status: "1"}).limit(9)
   }
 
   static async getNotificationsData(trx) {
-    return await pg("notifications")
-      .select("*")
-      .where({ reciever_user: "1" })
-      .transacting(trx);
+    return await pg("notifications").select("*").where({ reciever_user: "1" }).transacting(trx);
   }
 
   static async getUserById(userId, trx) {
@@ -136,32 +101,19 @@ class UsersModel {
   }
 
   static async getPaymentHistoryData(userId, trx) {
-    return await pg("payments")
-      .select("*")
-      .where({ user_id: userId })
-      .transacting(trx);
+    return await pg("payments").select("*").where({ user_id: userId }).transacting(trx);
   }
 
   static async resetUsersByAdminId(adminId, data, trx) {
-    await pg("users")
-      .where({ admin_id: adminId })
-      .update(data)
-      .transacting(trx);
+    await pg("users").where({ admin_id: adminId }).update(data).transacting(trx);
   }
 
   static async resetPackage(userId, data, trx) {
-    await pg("users")
-      .update(data)
-      .where({ id: userId })
-      .transacting(trx);
+    await pg("users").update(data).where({ id: userId }).transacting(trx);
   }
 
   static async upgradeUsersByAdminId(userId, vipProData, trx) {
-    await pg("users")
-      .update(vipProData)
-      .where({ admin_id: userId })
-      .transacting(trx);
+    await pg("users").update(vipProData).where({ admin_id: userId }).transacting(trx);
   }
 }
 
-export default UsersModel;

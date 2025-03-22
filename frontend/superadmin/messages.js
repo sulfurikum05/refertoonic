@@ -12,7 +12,7 @@ async function fetchMessagesData() {
         });
         const data = await response.json();
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         populateTable(data)
@@ -88,12 +88,15 @@ async function deleteMessage(elem) {
             body: JSON.stringify({ id: rowId })
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
-                const data = await response.json()
-            fetchMessagesData()
-            showMessage(data.message)
+            const data = await response.json()
+            if (data.success) {
+                fetchMessagesData()
+                showMessage(data.message)
+            }
+
 }
 
 
@@ -150,9 +153,14 @@ async function sendMessage(elem) {
             window.open("../dashboard.html");
         }
             const data = await response.json()
-            const createButton = document.querySelector('.message-create-button')
-            createButton.classList.remove('hide')
-            fetchMessagesData()
-            showMessage(data.message)
+            if (!data.success) {
+                showMessage(data.errors)
+            }else{
+                const createButton = document.querySelector('.message-create-button')
+                createButton.classList.remove('hide')
+                fetchMessagesData()
+                showMessage(data.message)
+            }
+
 
 }

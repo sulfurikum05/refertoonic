@@ -5,9 +5,7 @@ const pg = knex(knexConfigs.development);
 export class AdminModel {
   
   static async getUsers(userId) {
-    return await pg("users")
-      .select("*")
-      .where({ payment_package: "vipPro", admin_id: userId });
+    return await pg("users").select("*").where({ payment_package: "vipPro", admin_id: userId });
   }
 
   static async updateVipUserPaymentPackageToVipPro(data, email, trx) {
@@ -39,7 +37,7 @@ export class AdminModel {
   }
 
   static async getAllMessages(trx) {
-    await pg("messages").select("*").transacting(trx);
+    return await pg("messages").select("*").transacting(trx);
   }
 
   static async getVideosById(id, trx) {
@@ -50,38 +48,23 @@ export class AdminModel {
     await pg("videos").where({ id: id }).delete().transacting(trx);
   }
 
-  static async publishModerationVideo(data, id) {
-    await pg("videos").update(data).where({ id: id });
-  }
-
   static async rejectModerationVideo(data, id) {
     await pg("videos").update(data).where({ id: id });
   }
 
   static async getUsersByAdminId(adminId, trx) {
-    return await pg("users")
-      .select("*")
-      .where({ admin_id: adminId })
-      .transacting(trx);
+    return await pg("users").select("*").where({ admin_id: adminId }).transacting(trx);
   }
 
   static async getModerationVideosByUsersId(usersId, trx) {
-    return await pg("videos")
-      .select("*")
-      .where("status", -2)
-      .whereIn("user_id", usersId)
-      .transacting(trx);
+    return await pg("videos").select("*").where("status", -2).whereIn("user_id", usersId).transacting(trx);
   }
   static async changeModerationVideoStatus(data, videoId) {
     await pg("videos").update(data).where({ id: videoId });
   }
 
-  
   static async getNotificationsData(trx) {
-    return await pg("notifications")
-      .select("*")
-      .where({ reciever_admin: "1", sender: "superadmin" })
-      .transacting(trx);
+    return await pg("notifications").select("*").where({ reciever_admin: "1", sender: "superadmin" }).transacting(trx);
   }
 
   static async getAdminById(userId, trx) {

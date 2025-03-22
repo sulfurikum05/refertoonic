@@ -1,4 +1,4 @@
-import { UsersModel } from "../models";
+import  {UsersModel}  from "../models/users.model";
 import { PaymentService } from "../services/paymentService";
 import { CryptoUtil } from "../utils";
 import SendEmail from "../middlewares/nodemailer";
@@ -55,7 +55,7 @@ export default class UsersServices {
           text: "Code: ",
           user: userProfileData.name,
           content1: "You have successfully registered in the Refertoonic system.",
-          content2:"To get started, please confirm your email. Enter the confirmation code in the browser window that opened.",
+          content2: "To get started, please confirm your email. Enter the confirmation code in the browser window that opened.",
           content4: "Dont reply to this message"
         };
         await SendEmail.sendEmailConfirmation(emailOptions)
@@ -81,79 +81,87 @@ export default class UsersServices {
       if (status[0]) {
         await UsersModel.confirmEmail(code, data, trx);
         await trx.commit();
-        return { success: true, status: true, message: "Email confirmed successfully", page: "./dashboard.html"};
-      }else{
-        await trx.commit();  
-        return { success: true, status: false, message: "Wrong code" };
+        return { success: true, message: "Email confirmed successfully", page: "./dashboard.html" };
+      } else {
+        await trx.commit();
+        return { success: true, message: "Wrong code" };
       }
     } catch (error) {
       await trx.rollback();
     }
   }
-  
+
   static async getConfirmationCode(email) {
     const trx = await pg.transaction();
-try {
-  const user = await UsersModel.getUserByEmail(email, trx)
-  const emailOptions = {
-    code: user[0].status,
-    email: email,
-    title: "Email confirmation",
-    subject: "",
-    text: "Code: ",
-    user: user[0].name,
-    content1: "You have successfully registered in the Refertoonic system.",
-    content2:"To get started, please confirm your email. Enter the confirmation code in the browser window that opened.",
-    content4: "Dont reply to this message"
-  };
-  
-  if (!user[0]) {
-    await trx.commit();  
-    return { success: true, status: false, message: "User not registered" };
-  }else{
-    if (user[0].status == "block" || user[0].status == "unblock") {
-      await trx.commit();  
-      return { success: true, status: false, message: "Email already confirmed" };
-    }else{
-      await SendEmail.sendEmailConfirmation(emailOptions)
-      await trx.commit();  
-      return { success: true, status: true, message: "Code sent successfully" };
+    try {
+      const user = await UsersModel.getUserByEmail(email, trx)
+      const emailOptions = {
+        code: user[0].status,
+        email: email,
+        title: "Email confirmation",
+        subject: "",
+        text: "Code: ",
+        user: user[0].name,
+        content1: "You have successfully registered in the Refertoonic system.",
+        content2: "To get started, please confirm your email. Enter the confirmation code in the browser window that opened.",
+        content4: "Dont reply to this message"
+      };
+
+      if (!user[0]) {
+        await trx.commit();
+        return { success: true, message: "User not registered" };
+      } else {
+        if (user[0].status == "block" || user[0].status == "unblock") {
+          await trx.commit();
+          return { success: true, message: "Email already confirmed" };
+        } else {
+          await SendEmail.sendEmailConfirmation(emailOptions)
+          await trx.commit();
+          return { success: true, message: "Code sent successfully" };
+        }
+      }
+    } catch (error) {
+      await trx.rollback();
     }
-  }
-} catch (error) {
-  await trx.rollback();
-}
 
   }
 
   static async getResetCode(email) {
     const trx = await pg.transaction();
     try {
+      const code = Math.floor(100000 + Math.random() * 900000);
       const emailOptions = {
-        "title": "Password Recovery",
-        "subject": "",
-        "text": "Your verification code: ",
-        "user": "Dear user",
-        "content1": "You are trying to recover your password.",
-        "content2": "If you did not initiate this action, you might be a target of an attack. Do not share this code with anyone and contact support.",
-        "content3": "Don't forget your password anymore."
+        email:email,
+        title: "Password Recovery",
+        subject: "",
+        text: "Your verification code: ",
+        user: "Dear user",
+        code: code,
+        content1: "You are trying to recover your password.",
+        content2: "If you did not initiate this action, you might be a target of an attack. Do not share this code with anyone and contact support.",
+        content3: "Don't forget your password anymore."
       };
       const userData = await UsersModel.getUserByEmail(email, trx);
       if (userData.length !== 0) {
         await UsersModel.updatePassword(email, code, trx);
         await SendEmail.sendResetCode(emailOptions);
+      }else{
+        await trx.commit();
+        return { success: true, message: "User is not exist" };
       }
       await trx.commit();
-      return { message: "Code successfully sent to your email" };
+      return { success: true, message: "Code successfully sent to your email" };
     } catch (error) {
       await trx.rollback();
+      console.log(error);
+      
     }
   }
 
   static async resetPassword(code, newPassword) {
     const password = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(10), null);
     await UsersModel.resetPassword(code, password);
-    return { message: "Password reset successfully" };
+    return { success: true, message: "Password reset successfully" };
   }
 
   static async sendUnauthMessage(email, name, text) {
@@ -164,7 +172,7 @@ try {
       text: text,
     };
     await UsersModel.sendUnauthMessage(data);
-    return { message: "Message sent successfully" };
+    return { success: true, message: "Message sent successfully" };
   }
 
   static async getDashboard() {
@@ -191,10 +199,10 @@ try {
       (value) => value === undefined
     );
     if (isAllUndefined) {
-      return { message: "Please fill in at least one field" };
+      return { success: true, message: "Please fill in at least one field" };
     } else {
       await UsersModel.saveProfileData(newData, userId);
-      return { message: "Data saved successfully" };
+      return { success: true, message: "Data saved successfully" };
     }
   }
 
@@ -237,7 +245,7 @@ try {
       text: message,
     };
     await UsersModel.sendHelpMessage(data);
-    return { message: "Message sent successfully" };
+    return { success: true, message: "Message sent successfully" };
   }
 
   static async getSentMessages(id) {
@@ -287,34 +295,6 @@ try {
       delete item.user_id;
     });
     return data;
-  }
-
-  static async getVideosBySearch(role, keyword) {
-    const data = await UsersModel.getVideosBySearch(role, keyword);
-    const filterdData = [];
-    const userDataThreeItems = [];
-    if (role == "user") {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].keywords.includes(keyword)) {
-          filterdData.push(data[i]);
-        }
-      }
-      if (filterdData.length > 3) {
-        userDataThreeItems.push(filterdData[0]);
-        userDataThreeItems.push(filterdData[1]);
-        userDataThreeItems.push(filterdData[2]);
-        return userDataThreeItems;
-      } else {
-        return filterdData;
-      }
-    } else {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].keywords.includes(keyword)) {
-          filterdData.push(data[i]);
-        }
-      }
-      return filterdData;
-    }
   }
 
   static async getNotificationsData(userId) {

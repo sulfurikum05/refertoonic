@@ -1,38 +1,45 @@
 const videosTableBody = document.querySelector(".videos-table tbody");
-
+let page = 0;
+const limit = 10;
+let isLoading = false;
 async function fetchLibraryData() {
+    if (isLoading) return;
+    isLoading = true;
     try {
-
          const token = localStorage.getItem("accessToken");
-        const response = await fetch("http://localhost:3030/api/v1/superadmin/getfileLibraryData", {
+        const response = await fetch(`http://localhost:3030/api/v1/superadmin/getfileLibraryData?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: { 
                 "Authorization": `Bearer ${token}`
              },
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
         const data = await response.json();
-        populateTable(data)
+        if (data.length > 0) {
+            populateTable(data)
+            page++;
+        }
         fetchVideosCount(data)
     } catch (error) {
         console.error("Failed to retrieve data", error);
+    } finally {
+        isLoading = false;
     }
 }
 
 
 function populateTable(data) {
-    videosTableBody.innerHTML = "";
+
     data.forEach(item => {
         const date = new Date(item.upload_at);
         const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-
         const row = document.createElement("tr");
         row.dataset.id = `${item.id}`
         row.innerHTML = `
-            <td><img src="${item.gif_url}" alt="" class="library-gif"></td>
+            <td><img src="${item.gif_url}" alt="Video" class="library-gif"></td>
             <td>${item.title}</td>
             <td>${item.keywords}</td>
             <td>${item.user_id}</td>
@@ -40,6 +47,7 @@ function populateTable(data) {
             <td>
                 <div class="actions_col">
                     <button class="delete-video action-button" onClick="deleteLibraryVideo(this)" title="Delete"><img src="../icons/delete.gif" class="icon" alt="delete_icon"></button>
+                    <button class="unpublish action-button" onClick="unpublishVideo(this)" title="Unpublish"><img src="../icons/unpublish.png" class="icon" alt="unpublish_icon"></button>
                 </div>
             </td>
         `;
@@ -48,6 +56,11 @@ function populateTable(data) {
     });        
 }       
 
+window.addEventListener("scroll", () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) {
+        fetchLibraryData();
+    }
+});
 
 function fetchVideosCount(data) {
     const infoContainer = document.querySelector(".info-container");
@@ -137,8 +150,14 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
             window.open("../dashboard.html");
         }
         const data = await response.json();
-        fetchLibraryData();
-        showMessage(data.message);
+        if (!data.success) {
+            showMessage(data.errors);
+        }else{
+            fetchLibraryData();
+            showMessage(data.message);
+            newRow.remove()
+        }
+
     });
 });
 
@@ -156,10 +175,8 @@ document.querySelector('.video-bulk-upload-button').addEventListener('click', fu
             <input type="file" class="gif-input" accept="gif/*" multiple style="display: none;">
             <div class="actions_col">
                 <button class="bulk-upload-gif action-button" title="Upload gif"><img src="../icons/upload.gif" class="icon" alt="upload_icon">
-                <button class="bulk-upload-video action-button" title="Upload mp4"><img src="../icons/upload.gif" class="icon" alt="upload_icon">
-                </button>
-                <button class="save-video action-button" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon">
-                </button>
+                <button class="bulk-upload-video action-button" title="Upload mp4"><img src="../icons/upload.gif" class="icon" alt="upload_icon"></button>
+                <button class="save-video action-button" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
             </div>
         </td>
     `;
@@ -222,13 +239,15 @@ document.querySelector('.video-bulk-upload-button').addEventListener('click', fu
 
         if (response.status == 401) {
             localStorage.removeItem("accessToken");
-         ;
             window.open("../dashboard.html");
         }
 
         const data = await response.json();
-        fetchLibraryData();
-        showMessage(data.message);
+        if (data.success) {
+            fetchLibraryData();
+            showMessage(data.message);
+            newRow.remove()
+        }
     });
 });
 
@@ -252,21 +271,16 @@ async function deleteLibraryVideo(elem) {
             body: JSON.stringify({ id: rowId })
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
         const data = await response.json()
+            if (data.success) {
+                fetchLibraryData()
+                showMessage(data.message)
+            }
             
-            
-            fetchLibraryData()
-            showMessage(data.message)
-
-
-
-
 }
-
-//DELETE LIBRARY VIDEO END//
 
 
 function showVideosCount(){
@@ -279,6 +293,60 @@ function showVideosCount(){
     }
 }
 
+
+async function unpublishVideo(elem) {
+    const row = elem.closest('tr')
+    const video_id = row.dataset.id
+    const token = localStorage.getItem("accessToken");
+    const response = await fetch('http://localhost:3030/api/v1/superadmin/unpublishVideo', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+         },
+        body: JSON.stringify({ id: video_id })
+    })
+    if(response.status == 401){
+        localStorage.removeItem("accessToken")
+        window.open("../dashboard.html");
+    }
+    const data = await response.json()
+        if (data.success) {
+            fetchLibraryData()
+            showMessage(data.message)
+        }
+}
+
+const searchInput  = document.getElementById('searchInput');
+searchInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        getReferencesBySearch()
+    }
+  });
+
+async function getReferencesBySearch() {
+    try {
+        const searchValue = searchInput.value
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch(`http://localhost:3030/api/v1/superadmin/getReferencesBySearch/${searchValue}`, {
+            method: 'GET',
+            headers: { 
+                "Authorization": `Bearer ${token}`
+             },
+        });
+        if(response.status == 401){
+            localStorage.removeItem("accessToken")
+            window.open("../dashboard.html");
+        }
+        const data = await response.json();
+        const videoTableBody = document.querySelector('.videos-table tbody')
+        videoTableBody.innerHTML = "";
+        populateTable(data)
+    } catch (error) {
+        console.error("Failed to retrieve data", error);
+    }
+}
 
 function showMessage(messageText) {
 

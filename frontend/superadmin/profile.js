@@ -15,7 +15,6 @@ async function fetchProfileData() {
             window.open("../dashboard.html");
         }
         const data = await response.json();
-        
         populateUserPersonalInfo(data)
     } catch (error) {
         console.error("Failed to retrieve data", error);
@@ -152,19 +151,20 @@ function changeInfo() {
                      },
                     body: formData
                 })
+                const data = await response.json();
                 if(response.status == 401){
                     localStorage.removeItem("accessToken")
                     window.open("../dashboard.html");
                 }
-                const data = await response.json();
+                if (!data.success) {
+                    showMessage(data.errors)
+                }else{
+                    fetchProfileData()
+                    showMessage(data.message)
+                }
                 saveInfoButton.disabled = false;
                 loader.remove();
                 saveInfoButton.textContent = "Save"
-                fetchProfileData()
-                showMessage(data.message)
-
-                
-
             } catch (error) {
                 console.error('Error sending data:', error);
             }
@@ -218,12 +218,15 @@ function changePassword() {
             window.open("../dashboard.html");
         }
         const data = await response.json();
+        if (!data.success) {
+            showMessage(data.errors)
+        }else{
+            fetchProfileData()
+            showMessage(data.message)
+        }
         elem.disabled = false;
         loader.remove();
         elem.textContent = "Save"
-        fetchProfileData()
-        showMessage(data.message)
-
     } catch (error) {
         console.error('Error sending data:', error);
     }

@@ -7,7 +7,7 @@ async function fetchpaymentPackagesData(){
             headers: {"Authorization": `Bearer ${token}`},
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
 
@@ -153,9 +153,14 @@ async function pay(package) {
             window.open("../dashboard.html");
           }
             const paymentUrl = await response.json()
+            if (!dataLength.success) {
+                showMessage(dataLength.errors)
+            } else {
+                window.open(paymentUrl, '_blank');
+            }
             button.disabled = false;
             loader.remove();
-            window.open(paymentUrl, '_blank');
+
 }
 
 

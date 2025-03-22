@@ -9,7 +9,6 @@ async function fetchLibraryData() {
             headers: { 
                 "Authorization": `Bearer ${token}`
              },
-             
         });
         if(response.status == 401){
             localStorage.removeItem("accessToken")
@@ -30,10 +29,9 @@ async function fetchWishlistData() {
             headers: { 
                 "Authorization": `Bearer ${token}`
              },
-             
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         const data = await response.json();
@@ -178,10 +176,15 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
             window.open("../dashboard.html");
           }
                 const data = await response.json()
-                fetchLibraryData()
-                const actionTh = document.getElementById('action-th')
-                actionTh.classList.add('hide')
-                showMessage(data.message)
+                if (!data.success) {
+                    showMessage(data.errors)
+                } else {
+                    fetchLibraryData()
+                    const actionTh = document.getElementById('action-th')
+                    actionTh.classList.add('hide')
+                    showMessage(data.message)
+                }
+
 
         } catch (error) {
             console.error("Failed to remove video from the favorites list", error);
@@ -217,8 +220,11 @@ async function deleteWishlistVideo(elem) {
                 window.open("../dashboard.html");
               }
             const data = await response.json()
-            fetchWishlistData()
-            showMessage(data.message)
+            if (data.success) {
+                fetchWishlistData()
+                showMessage(data.message)
+            }
+
     
         } catch (error) {
             console.error("Failed to remove video from the favorites list", error);

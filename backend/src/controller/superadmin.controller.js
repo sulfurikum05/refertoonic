@@ -156,20 +156,20 @@ export class SuperadminController {
     }
   }
 
-  static async createPaymentPackage(req, res, next) {
-    try {
-      const role = req.role;
-      if (role !== "superadmin") {
-        return res.status(401).json({ message: "Unauthorized" });
-      } else {
-        const newData = req.body.newData;
-        const data = await SuperadminService.createPaymentPackage(newData);
-        SuccessHandlerUtil.handleList(res, next, data);
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
+  // static async createPaymentPackage(req, res, next) {
+  //   try {
+  //     const role = req.role;
+  //     if (role !== "superadmin") {
+  //       return res.status(401).json({ message: "Unauthorized" });
+  //     } else {
+  //       const newData = req.body.newData;
+  //       const data = await SuperadminService.createPaymentPackage(newData);
+  //       SuccessHandlerUtil.handleList(res, next, data);
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
   static async updatePaymentPackage(req, res, next) {
     try {
@@ -229,7 +229,10 @@ export class SuperadminController {
       if (role !== "superadmin") {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
-        const data = await SuperadminService.getfileLibraryData();
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = page * limit;
+        const data = await SuperadminService.getfileLibraryData(limit, offset);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {
@@ -273,10 +276,10 @@ export class SuperadminController {
       const { uploadDir } = req.body;
       const { videos, gifs } = req.files;
       if (!videos || videos.length === 0) {
-        return res.status(400).json({ message: "No video files uploaded" });
+        return res.status(400).json({ success: true, message: "No video files uploaded" });
       }
       if (!gifs || gifs.length === 0) {
-        return res.status(400).json({ message: "No gif files uploaded" });
+        return res.status(400).json({ success: true, message: "No gif files uploaded" });
       }
       const data = await SuperadminService.bulkUploadLibraryVideo(
         videos,
@@ -330,6 +333,47 @@ export class SuperadminController {
     }
   }
 
+  static async unpublishVideo(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "superadmin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const id = req.body.id;
+        const data = await SuperadminService.unpublishVideo(id);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+    static async getReferencesBySearch(req, res, next) {
+      try {
+        const keyword = req.params.searchValue;
+        console.log(keyword);
+        const data = await SuperadminService.getReferencesBySearch(keyword);
+        SuccessHandlerUtil.handleList(res, next, data);
+      } catch (error) {
+        next(error);
+      }
+    }
+  
+  static async publishSuperadminUploadedVideo(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "superadmin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const id = req.body.id;
+        const data = await SuperadminService.publishSuperadminUploadedVideo(id);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   static async getModerationVideos(req, res, next) {
     try {
       const role = req.role;
@@ -490,8 +534,9 @@ export class SuperadminController {
       } else {
         const status = req.body[1];
         const expire_at = req.body[2];
+        const date = new Date(expire_at)
         const order_id = req.body.order_id;
-        const data = await SuperadminService.updatePaymentSuperadmin(status, expire_at, order_id);
+        const data = await SuperadminService.updatePaymentSuperadmin(status, date, order_id);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {

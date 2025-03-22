@@ -49,10 +49,11 @@ if (item.status == 0) {
             <td>${item.status}</td>
             <td>
                 <div class="actions_col">
-                <button class="publish-video action-button hide" onClick="publishVideo(this)" title="Publish"><img src="../icons/publish.gif" class="icon" alt="publish_icon"></button>
-                <button class="reject-video action-button" onClick="rejectVideo(this)" title="Reject"><img src="../icons/reject.gif" class="icon ${item.status == "Rejected" ? "hide" : ""}" alt="reject_icon"></button>
-                <button class="edit-video action-button" onClick="editVideo(this)" title="Edit"><img src="../icons/edit.gif" class="icon" alt="edit_icon"></button>
-                <button class="download-video action-button" onClick="downloadVideo(this)" title="Download"><img src="../icons/download.gif" class="icon" alt="download_icon"></button>
+                <button class="publish-video action-button hide" onClick="publishVideo(this)" title="Publish"><img src="../icons/publish.gif" class="icon"alt="publish_icon"></button>
+                <button class="reject-video action-button" onClick="rejectVideo(this)" title="Reject"><img src="../icons/reject.gif" class="icon ${item.status == "Rejected" ? "hide" : ""} ${item.user_id == "1" ? "hide" : ""}" alt="reject_icon"></button>
+                <button class="edit-video action-button" onClick="editVideo(this)" title="Edit"><img src="../icons/edit.gif" class="icon ${item.user_id == "1" ? "hide" : ""}" alt="edit_icon"></button>
+                <button class="download-video action-button" onClick="downloadVideo(this)" title="Download"><img src="../icons/download.gif" class="icon ${item.user_id == "1" ? "hide" : ""}" alt="download_icon"></button>
+                <button class="publish-video action-button" onClick="publishSuperadminUploadedVideo(this)" title="Publish"><img src="../icons/publish.gif" class="icon ${item.user_id !== "1" ? "hide" : ""}" alt="publish_icon"></button>
                 <button class="delete-video action-button" onClick="deleteVideo(this)" title="Delete"><img src="../icons/delete.gif" class="icon" alt="delete_icon"></button>
                 </div>
             </td>
@@ -82,28 +83,24 @@ async function deleteVideo(elem) {
             body: JSON.stringify({ id: rowId })
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
             const data = await response.json()
-            fetchModerationVideos()
-            showMessage(data.message) 
-
-
-
-
+            if (data.success) {
+                fetchModerationVideos()
+                showMessage(data.message) 
+            }
 }
 
 
 async function publishVideo(elem) {
 
-         
         const row = elem.closest("tr");
         const rowId = row.dataset.id
-
         const formData = new FormData();
         const gifInput = row.querySelector(".gif-input");
-            const file = gifInput.files[0]
+        const file = gifInput.files[0]
 
             if (file !== null) {
                 formData.append('gif', file);
@@ -134,18 +131,40 @@ async function publishVideo(elem) {
             window.open("../dashboard.html");
           }
             const data = await response.json() 
+            if (data.success) {
+                fetchModerationVideos()
+                showMessage(data.message)
+            }
+}
+
+async function publishSuperadminUploadedVideo(elem) {
+
+    const row = elem.closest("tr");
+    const video_id = row.dataset.id
+   
+    const token = localStorage.getItem("accessToken");
+    const response = await fetch('http://localhost:3030/api/v1/superadmin/publishSuperadminUploadedVideo', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+         },
+        body: JSON.stringify({id: video_id})
+    })
+    if(response.status == 401){
+        localStorage.removeItem("accessToken")
+        window.open("../dashboard.html");
+      }
+        const data = await response.json() 
+        if (data.success) {
             fetchModerationVideos()
             showMessage(data.message)
-            
-
-
-
+        }
 }
 
 
 async function rejectVideo(elem) {
 
-         
         const row = elem.closest("tr");
         const rowId = row.dataset.id
         const token = localStorage.getItem("accessToken");
@@ -162,13 +181,10 @@ async function rejectVideo(elem) {
             window.open("../dashboard.html");
           }
             const data = await response.json()
-            fetchModerationVideos()
-            showMessage(data.message)
-            
-            
-
-
-
+            if (data.success) {
+                fetchModerationVideos()
+                showMessage(data.message)
+            }
 }
 
 
@@ -241,7 +257,6 @@ async function downloadVideo(elem) {
 
 function openVideoInPlayer(elem) {
 
-        
     const videoplayerContainer = document.createElement('div');
     videoplayerContainer.classList.add('moderationVideoShowContainer')
     videoplayerContainer.classList.add('userPopup')

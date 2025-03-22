@@ -2,7 +2,7 @@
 
 import { VipModel } from "../models/vip.model";
 import { PaymentService } from "../services/paymentService";
-import { UsersModel } from "../models";
+import  {UsersModel}  from "../models/users.model";
 import SendEmail from "../middlewares/nodemailer";
 import knex from "knex";
 import knexConfigs from "../../knex.configs";
@@ -10,7 +10,7 @@ import { toLower } from "lodash";
 const pg = knex(knexConfigs.development);
 
 export class VipServices {
-  
+
   static async getVideos(limit, offset, userId) {
     const trx = await pg.transaction();
     try {
@@ -49,9 +49,9 @@ export class VipServices {
     if (paymentPackage == "vipPro") {
       video.status = -2
     }
-    
+
     await VipModel.uploadLibraryVideo(video);
-    return { message: "Video uploaded successfully" };
+    return { success: true, message: "Video uploaded successfully" };
   }
 
   static async getFileLibraryData(userId) {
@@ -75,14 +75,25 @@ export class VipServices {
 
   static async addVideoToWishlist(userId, videoId) {
     await VipModel.addVideoToWishlist(userId, videoId);
-    return { message: "Video added to wishlist" };
+    return { success: true, message: "Video added to wishlist" };
   }
 
   static async removeVideoFromWishlist(userId, videoId) {
     await VipModel.removeVideoFromWishlist(userId, videoId);
-    return { message: "Video removed from wishlist" };
+    return { success: true, message: "Video removed from wishlist" };
   }
 
+  static async getVideosBySearch(keyword) {
+    const videos = await VipModel.getVideosBySearch();
+    const filteredData = []
+    videos.forEach((video)=>{
+      if (videos.keywords.includes(keyword) || videos.title.includes(keyword)) {
+        filteredData.push(video)
+      }
+    })
+    return filteredData
+  }
+  
   static async getNotificationsData(userId) {
     const trx = await pg.transaction();
     try {
@@ -174,7 +185,7 @@ export class VipServices {
         await SendEmail.sendTransactionCreatingNotification(emailOptions);
       } else {
         await trx.commit();
-        return { message: "Dont have permitions" };
+        return { success: true, message: "Dont have permitions" };
       }
       await trx.commit();
       return invoice_url;
@@ -237,7 +248,7 @@ export class VipServices {
         await SendEmail.sendTransactionCreatingNotification(emailOptions);
       } else {
         await trx.commit();
-        return { message: "Dont have permitions" };
+        return { success: true, message: "Dont have permitions" };
       }
       await trx.commit();
       return invoice_url;

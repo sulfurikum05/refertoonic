@@ -1,5 +1,6 @@
 
 const data = [
+    ["statusChange", "menu-item-status-change"],
     ["dashboard.", "menu-item-dashboard"],
     ["dashboardManagement", "menu-item-dashManagement"],
     ["userManagement", "menu-item-userManagement"],

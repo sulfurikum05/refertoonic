@@ -98,6 +98,21 @@ export class VipController {
     }
   }
 
+  static async getVideosBySearch(req, res, next) {
+    try {
+      const role = req.role
+      if (role == "vip" || role == "admin" || role == "superadmin") {
+        const keyword = req.params.keyword
+        const data = await VipServices.getVideosBySearch(keyword);
+        SuccessHandlerUtil.handleList(res, next, data);
+      } else {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+  
   static async getNotificationsData(req, res, next) {
     try {
       const role = req.role;

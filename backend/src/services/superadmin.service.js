@@ -1,6 +1,6 @@
-import path from'path';
+import path from 'path';
 import { SuperadminModel } from "../models/superadmin.model";
-import UsersModel from "../models/users.model";
+import { UsersModel } from "../models/users.model";
 import SendEmail from "../middlewares/nodemailer";
 import { DeleteFiles } from "../services/delete.file";
 import knex from "knex";
@@ -33,7 +33,7 @@ export class SuperadminService {
       video: videoPath,
     };
     await SuperadminModel.uploadSliderVideo(video);
-    return { message: "Video uploaded successfully" };
+    return { success: true, message: "Video uploaded successfully" };
   }
 
   static async updateText(header, title, text, id) {
@@ -43,7 +43,7 @@ export class SuperadminService {
       text: text,
     };
     await SuperadminModel.updateText(newData, id);
-    return { message: "Text uploaded successfully" };
+    return { success: true, message: "Text uploaded successfully" };
   }
 
   static async deleteSliderVideo(id) {
@@ -55,25 +55,25 @@ export class SuperadminService {
       await DeleteFiles.deleteFileFromStorage(cleanPath);
       await SuperadminModel.deleteSliderVideo(id, trx);
       await trx.commit();
-      return { message: "Video deleted successfully" };
+      return { success: true, message: "Video deleted successfully" };
     } catch (error) {
       await trx.rollback();
     }
   }
 
-  static async createPaymentPackage(newData) {
-    const data = {
-      title: newData[0].element,
-      price: newData[1].element,
-      text: newData[2].element,
-    };
-    await SuperadminModel.createPaymentPackage(data);
-    return { message: "Payment package created successfully" };
-  }
+  // static async createPaymentPackage(newData) {
+  //   const data = {
+  //     title: newData[0].element,
+  //     price: newData[1].element,
+  //     text: newData[2].element,
+  //   };
+  //   await SuperadminModel.createPaymentPackage(data);
+  //   return { success: true, message: "Payment package created successfully" };
+  // }
 
   static async updateTeam(data, id) {
     await SuperadminModel.updateTeam(data, id);
-    return { message: "Team updated successfully" };
+    return { success: true, message: "Team updated successfully" };
   }
 
   static async updatePaymentPackage(title, price, text, id) {
@@ -83,20 +83,20 @@ export class SuperadminService {
       text: text,
     };
     await SuperadminModel.updatePaymentPackage(newData, id);
-    return { message: "Payment package updated successfully" };
+    return { success: true, message: "Payment package updated successfully" };
   }
 
   static async deletePaymentPackage(id) {
     await SuperadminModel.deletePaymentPackage(id);
-    return { message: "Payment package deleted successfully" };
+    return { success: true, message: "Payment package deleted successfully" };
   }
 
   static async getPaymentHistoryData() {
     return await SuperadminModel.getPaymentHistoryData();
   }
 
-  static async getfileLibraryData() {
-    return await SuperadminModel.getfileLibraryData();
+  static async getfileLibraryData(limit, offset) {
+    return await SuperadminModel.getfileLibraryData(limit, offset);
   }
 
   static async uploadLibraryVideo(videoPath, gifPath, title, keywords, userId) {
@@ -109,11 +109,13 @@ export class SuperadminService {
       status: 1,
     };
     await SuperadminModel.uploadLibraryVideo(video);
-    return { message: "Video uploaded successfully" };
+    return { success: true, message: "Video uploaded successfully" };
   }
 
   static async bulkUploadLibraryVideo(videos, gifs, uploadDir, userId) {
-    const videoArray = [];
+    const trx = await pg.transaction()
+    try {
+      const videoArray = [];
     const gifArray = [];
 
     if (videos && videos.length > 0) {
@@ -156,8 +158,13 @@ export class SuperadminService {
         }
       }
     }
-    await SuperadminModel.bulkUploadLibraryVideo(videoArray);
-    return { message: "Files uploaded successfully" };
+    await SuperadminModel.bulkUploadLibraryVideo(videoArray, trx);
+    await trx.commit()
+    return { success: true, message: "Files uploaded successfully" };
+    } catch (error) {
+      await trx.rollback();
+    }
+    
   }
 
   static async downloadVideo(filename) {
@@ -168,7 +175,7 @@ export class SuperadminService {
       return filePath
     } catch (error) {
       console.log(error);
-      
+
     }
   }
 
@@ -183,12 +190,47 @@ export class SuperadminService {
       await DeleteFiles.deleteFileFromStorage(cleanVideoPath, cleanGifPath);
       await SuperadminModel.deleteLibraryVideo(id, trx);
       await trx.commit();
-      return { message: "Video deleted successfully" };
+      return { success: true, message: "Video deleted successfully" };
     } catch (error) {
       await trx.rollback();
     }
   }
 
+  static async unpublishVideo(id) {
+    try {
+      const data = {
+        status: 0
+      }
+      await SuperadminModel.unpublishVideo(id, data);
+      return { success: true, message: "Video unpublised successfully" };
+    } catch (error) {
+
+    }
+  }
+
+  static async getReferencesBySearch(keyword)  {
+    const data = await SuperadminModel.getReferencesBySearch();
+    const filterdData = [];
+    data.forEach((video)=>{
+      if (video.keywords.includes(keyword) || video.title.includes(keyword)) {
+        filterdData.push(video)
+      }
+    })
+    return filterdData
+  }
+ 
+  static async publishSuperadminUploadedVideo(id) {
+    try {
+      const data = {
+        status: 1
+      }
+      await SuperadminModel.publishSuperadminUploadedVideo(id, data);
+      return { success: true, message: "Video publised successfully" };
+    } catch (error) {
+
+    }
+  }
+  
   static async getModerationVideos() {
     return await SuperadminModel.getModerationVideos();
   }
@@ -202,7 +244,7 @@ export class SuperadminService {
       await DeleteFiles.deleteFileFromStorage(cleanPath);
       await SuperadminModel.deleteModerationVideo(id, trx);
       await trx.commit();
-      return { message: "Video deleted successfully" };
+      return { success: true, message: "Video deleted successfully" };
     } catch (error) {
       await trx.rollback();
     }
@@ -216,7 +258,7 @@ export class SuperadminService {
       status: 1,
     };
     await SuperadminModel.publishModerationVideo(id, data);
-    return { message: "Video published successfully" };
+    return { success: true, message: "Video published successfully" };
   }
 
   static async rejectModerationVideo(id) {
@@ -224,7 +266,7 @@ export class SuperadminService {
       status: -1,
     };
     await SuperadminModel.rejectModerationVideo(id, data);
-    return { message: "Video rejected successfully" };
+    return { success: true, message: "Video rejected successfully" };
   }
 
   static async getMessagesData() {
@@ -260,7 +302,7 @@ export class SuperadminService {
       const user = await SuperadminModel.getUserByEmail(email, trx);
       if (!user[0]) {
         await trx.commit();
-        return { message: "User not found" };
+        return { success: true, message: "User not found" };
       }
       const emailOptions = {
         user: user[0].name,
@@ -270,7 +312,7 @@ export class SuperadminService {
       };
       await SendEmail.sendMessage(emailOptions);
       await trx.commit();
-      return { message: "Message sent successfully" };
+      return { success: true, message: "Message sent successfully" };
     } catch (error) {
       await trx.rollback();
     }
@@ -278,7 +320,7 @@ export class SuperadminService {
 
   static async deleteMessage(id) {
     await SuperadminModel.deleteMessage(id);
-    return { message: "Message deleted successfully" };
+    return { success: true, message: "Message deleted successfully" };
   }
 
   static async getUserPersonalInfo(id) {
@@ -299,7 +341,7 @@ export class SuperadminService {
       expire_at: expire_at
     }
     await SuperadminModel.updatePaymentSuperadmin(data, order_id);
-    return { message: "Payment updated successfully" };
+    return { success: true, message: "Payment updated successfully" };
   }
 
   static async editUserPackage(role, payment_package, id) {
@@ -308,7 +350,7 @@ export class SuperadminService {
       payment_package: payment_package
     }
     await SuperadminModel.editUserPackage(data, id);
-    return { message: "Package updated successfully" };
+    return { success: true, message: "Package updated successfully" };
   }
 
   static async getNotificationsData() {
@@ -326,12 +368,12 @@ export class SuperadminService {
     data.reciever_vip = vip ? "1" : "0";
     data.reciever_admin = admin ? "1" : "0";
     await SuperadminModel.sendNotification(data);
-    return { message: "Notification sent successfully" };
+    return { success: true, message: "Notification sent successfully" };
   }
 
   static async deleteNotification(id) {
     await SuperadminModel.deleteNotification(id);
-    return { message: "Notification deleted successfully" };
+    return { success: true, message: "Notification deleted successfully" };
   }
 
   static async ipnPaymentStatus(payment_status, order_id, logs) {
@@ -341,7 +383,7 @@ export class SuperadminService {
         payment: logs
       }
       await SuperadminModel.writePaymentLogs(logData, trx)
-      const userPayment = await SuperadminModel.getOrderByOrderId(order_id,trx);
+      const userPayment = await SuperadminModel.getOrderByOrderId(order_id, trx);
       const userId = userPayment[0].user_id;
       const user = await SuperadminModel.getUserById(userId, trx)
       const userEmail = user[0].email
@@ -355,24 +397,24 @@ export class SuperadminService {
         const newPaymentData = {
           status: payment_status
         }
-        if (payment_status !== "finished") { 
-          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
-        }else{
-          const usersCount =  Number(userPayment[0].price)
+        if (payment_status !== "finished") {
+          await SuperadminModel.updatePayment(order_id, newPaymentData, trx);
+        } else {
+          const usersCount = Number(userPayment[0].price)
           const availableUsersCount = Number(user[0].new_or_existing) * 10
           const new_or_existing = (usersCount + availableUsersCount) / 10
           const usersNewCountData = {
             new_or_existing: new_or_existing
           }
-          await SuperadminModel.upgradeAdminAvailableUsersCount(userId, usersNewCountData, trx); 
-          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+          await SuperadminModel.upgradeAdminAvailableUsersCount(userId, usersNewCountData, trx);
+          await SuperadminModel.updatePayment(order_id, newPaymentData, trx);
         }
-      }else{
+      } else {
         if (payment_status !== "finished") {
           const newPaymentData = {
             status: payment_status
-          } 
-          await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
+          }
+          await SuperadminModel.updatePayment(order_id, newPaymentData, trx);
         } else {
           const newUserData = {};
           const newPaymentData = {};
@@ -384,7 +426,7 @@ export class SuperadminService {
             if (userPayment[0].period == "monthly") {
               if (userPayment[0].method == "upgrade") {
                 newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
-              }else{
+              } else {
                 const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
                 const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
                 const userSecondLastPayment = sortedPayments[1];
@@ -395,7 +437,7 @@ export class SuperadminService {
             if (userPayment[0].period == "yearly") {
               if (userPayment[0].method == "upgrade") {
                 newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
-              }else{
+              } else {
                 const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
                 const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
                 const userSecondLastPayment = sortedPayments[1];
@@ -407,42 +449,42 @@ export class SuperadminService {
               role: "vip",
               payment_package: "vipPro",
             };
-            await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
-            await SuperadminModel.updateUserPackage(userId,newUserData,trx);
+            await SuperadminModel.updatePayment(order_id, newPaymentData, trx);
+            await SuperadminModel.updateUserPackage(userId, newUserData, trx);
             await UsersModel.upgradeUsersByAdminId(userId, vipProData, trx);
           }
           if (userPayment[0].package == "vip") {
-            
-              newUserData.payment_package = "vip";
-              newUserData.role = "vip";
-              newPaymentData.expire_at = new Date();
-              newPaymentData.status = payment_status
-              if (userPayment[0].period == "monthly") {
-                if (userPayment[0].method == "upgrade") {
-                  newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
-                }else{
-                  const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
-                  const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
-                  const userSecondLastPayment = sortedPayments[1];
-                  newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
-                  newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
-                }
+
+            newUserData.payment_package = "vip";
+            newUserData.role = "vip";
+            newPaymentData.expire_at = new Date();
+            newPaymentData.status = payment_status
+            if (userPayment[0].period == "monthly") {
+              if (userPayment[0].method == "upgrade") {
+                newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
+              } else {
+                const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+                const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+                const userSecondLastPayment = sortedPayments[1];
+                newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+                newPaymentData.expire_at.setMonth(newPaymentData.expire_at.getMonth() + 1);
               }
-              if (userPayment[0].period == "yearly") {
-                if (userPayment[0].method == "upgrade") {
-                  newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
-                }else{
-                  const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
-                  const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
-                  const userSecondLastPayment = sortedPayments[1];
-                  newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
-                  newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
-                }
-              } 
-              await SuperadminModel.updatePayment(order_id, newPaymentData, trx); 
-              await SuperadminModel.updateUserPackage(userId,newUserData,trx);
+            }
+            if (userPayment[0].period == "yearly") {
+              if (userPayment[0].method == "upgrade") {
+                newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+              } else {
+                const userAllPayments = await SuperadminModel.getUserAllPayments(userId, trx)
+                const sortedPayments = userAllPayments.sort((a, b) => b.id - a.id);
+                const userSecondLastPayment = sortedPayments[1];
+                newPaymentData.expire_at = new Date(userSecondLastPayment.expire_at);
+                newPaymentData.expire_at.setFullYear(newPaymentData.expire_at.getFullYear() + 1);
+              }
+            }
+            await SuperadminModel.updatePayment(order_id, newPaymentData, trx);
+            await SuperadminModel.updateUserPackage(userId, newUserData, trx);
           }
-  
+
         }
       }
       await SendEmail.sendTransactionStatusChangeNotification(emailOptions)

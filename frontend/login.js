@@ -85,18 +85,15 @@ loginButton.addEventListener('click', async (event) => {
             body: JSON.stringify({ email, password })
         });
         const data = await response.json();
-
             if (data.page) {                
                 localStorage.setItem("accessToken", data.accessToken)
                 window.location.href = data.page
             }else{
-                if (!data.status) {
-                    if (data.message) {
-                        showMessage(data.message)
-                    }else{
-                        showMessage(data.errors)
-                    }
-                } 
+                if (!data.success) {
+                    showMessage(data.errors)
+                }else{
+                    showMessage(data.message)
+                }
             }
             loginButton.disabled = false;
             loader.remove();
@@ -133,18 +130,15 @@ registerFormButton.addEventListener('click', async (event) => {
             body: JSON.stringify({ name, surname, email, password })
         });
         const data = await response.json();
-        if (data.success == false) {   
+        if (!data.success) {   
             showMessage(data.errors)
         }else{
             showMessage(data.message);
             toggleForm('emailConfirmationForm');
-            
         }
         registerFormButton.disabled = false;
         loader.remove();
         registerFormButton.textContent = "Register"
-
-        
     } catch (error) {
         showMessage("Server error!");
     }
@@ -164,10 +158,14 @@ getResetPAsswordCodeButton.addEventListener('click', async (event) => {
         const response = await fetch('http://localhost:3030/api/v1/users/getResetCode', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email: email})
         });
         const data = await response.json();
-        showMessage(data.message);
+        if (!data.success) {
+            showMessage(data.errors);
+        } else {
+            showMessage(data.message);
+        }
         getResetPAsswordCodeButton.disabled = false;
         loader.remove();
         getResetPAsswordCodeButton.textContent = "Get code"
@@ -193,12 +191,15 @@ resetPasswordButton.addEventListener('click', async (event) => {
             body: JSON.stringify({ code, newPassword })
         });
         const data = await response.json();
+        if (!data.success) {
+            showMessage(data.errors);
+        } else {
             showMessage(data.message);
             toggleForm('loginForm');
-            resetPasswordButton.disabled = false;
-            loader.remove();
-            resetPasswordButton.textContent = "Reset password"
-
+        }
+        resetPasswordButton.disabled = false;
+        loader.remove();
+        resetPasswordButton.textContent = "Reset password"
     } catch (error) {
         showMessage("Server error!");
     }
@@ -231,8 +232,6 @@ confirmButton.addEventListener('click', async function () {
         const data = await response.json();
         if (!data.success) {
             showMessage(data.errors);
-        }else if (!data.status) {
-            showMessage(data.message);
         }else{
             showMessage(data.message);
             toggleForm('loginForm');
@@ -240,11 +239,9 @@ confirmButton.addEventListener('click', async function () {
         confirmButton.disabled = false;
         loader.remove();
         confirmButton.textContent = "Confirm"
-        
     } catch (error) {
-
+        
     }
-
 })
 
 

@@ -59,7 +59,7 @@ export default class Validation {
   }
 
   static userCountUpgradeValidate(req, res, next) {
-    const { error } = schemes.userCountUpgradeScheme.validate(req.body, { abortEarly: false });
+    const { error } = schemes.UserCountUpgradeScheme.validate(req.body, { abortEarly: false });
     if (error) {
       return res
         .status(400)
@@ -72,7 +72,7 @@ export default class Validation {
   }
 
   static confirmEmailValidate(req, res, next) {
-    const { error } = schemes.confirmEmailScheme.validate(req.body, { abortEarly: false });
+    const { error } = schemes.ConfirmEmailScheme.validate(req.body, { abortEarly: false });
     if (error) {
       return res
         .status(400)
@@ -111,7 +111,7 @@ export default class Validation {
   }
   
   static changePasswordValidate(req, res, next) {
-    const { error } = schemes.changePasswordScheme.validate(req.body, { abortEarly: false });
+    const { error } = schemes.ChangePasswordScheme.validate(req.body, { abortEarly: false });
     if (error) {
       return res
         .status(400)
@@ -124,7 +124,7 @@ export default class Validation {
   }
   
   static changeInfoValidate(req, res, next) {
-    const { error } = schemes.changeInfoScheme.validate(req.body, { abortEarly: false });
+    const { error } = schemes.ChangeInfoScheme.validate(req.body, { abortEarly: false });
     if (error) {
       return res
         .status(400)
@@ -187,5 +187,83 @@ export default class Validation {
     }
     next();
   }
-  
+
+  static updateTextValidate(req, res, next) {
+    const { error } = schemes.UpdateTextScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static uploadLibraryVideoValidate(req, res, next) {
+    const { error } = schemes.UploadLibraryVideoScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static sendMessageValidate(req, res, next) {
+    const { error } = schemes.SendMessageScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static sendNotificationSuperadminValidate(req, res, next) {
+    const { error } = schemes.SendNotificationSuperadminScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static updatePaymentSuperadminValidate(req, res, next) {
+    const { error } = schemes.UpdatePaymentSuperadminScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+
+  static editUserPackageValidate(req, res, next) {
+    const { error } = schemes.EditUserPackageScheme.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          errors: error.details.map((err) => err.message),
+        });
+    }
+    next();
+  }
+    
 }

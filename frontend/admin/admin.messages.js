@@ -60,8 +60,11 @@ async function deleteMessage(elem) {
         window.open("../dashboard.html");
       }
         const data = await response.json()
-        fetchMessagesData()
-        showMessage(data.message)
+        if (data.success) {
+            fetchMessagesData()
+            showMessage(data.message)
+        }
+
         
 }
 

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { UsersModel } from "../models";
+import  {UsersModel}  from "../models/users.model";
 import { CryptoUtil } from "../utils";
 import knex from "knex";
 import knexConfigs from "../../knex.configs";
@@ -48,10 +48,10 @@ export default class AuthService {
     const trx = await pg.transaction();
     try {
       const user = await UsersModel.findByEmail(email, trx);
-      if (!user[0]) return { status: false, message: "Invalid email or password!" };
-      if (!CryptoUtil.isValidPassword(password, user[0].password)) return { status: false, message: "Invalid email or password!" };
-      if (user[0].status == "block") return { status: false, message: "User is blocked. Please contact the organization's administrator!" };
-      if (user[0].status !== "block" && user[0].status !== "unblock") return { status: false, message: "Please, confirm your email!" };
+      if (!user[0]) return { success: true, message: "Invalid email or password!" };
+      if (!CryptoUtil.isValidPassword(password, user[0].password)) return { success: true, message: "Invalid email or password!" };
+      if (user[0].status == "block") return { success: true, message: "User is blocked. Please contact the organization's administrator!" };
+      if (user[0].status !== "block" && user[0].status !== "unblock") return { success: true, message: "Please, confirm your email!" };
       delete user[0].password;
       const payload = {
         name: user[0].name,
@@ -487,3 +487,4 @@ export default class AuthService {
 
 
 }
+

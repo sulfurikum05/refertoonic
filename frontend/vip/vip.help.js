@@ -7,17 +7,13 @@ async function fetchMessagesData(){
             headers: {"Authorization": `Bearer ${token}`},
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
-
         const data = await response.json();
-
-        
         if (data.length !== 0) {
             const sentMessagesBody = document.querySelector('.sent-messages-table tbody')
             sentMessagesBody.innerHTML = "";
-
             data.forEach(element => {
                 const date = new Date(element.created_at);
                 const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
@@ -28,16 +24,12 @@ localStorage.removeItem("accessToken")
             <td>${element.text}</td>
             <td>${formattedDate}</td>
             `;
-
             sentMessagesBody.insertBefore(row, sentMessagesBody.firstChild)
-            
         });
-        
         }
     } catch (error) {
         console.error("Failed to retrieve data", error);
     }
-    
 }
 
 fetchMessagesData()
@@ -66,7 +58,7 @@ async function sendHelpMessage(){
         window.open("../dashboard.html");
       }
       const data = await response.json()
-        if (data.success == false) {   
+        if (!data.success) {   
             showMessage(data.errors)
         }else{
             subject.value = ""
@@ -74,9 +66,6 @@ async function sendHelpMessage(){
             fetchMessagesData()
             showMessage(data.message)
         }
-
-
-
 }
 
 function showMessage(messageText) {

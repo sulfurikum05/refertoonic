@@ -21,7 +21,6 @@ const router = express.Router();
   router.post("/sendHelpMessage", Validation.helpMessageValidate, AuthService.validateAccessToken, UsersController.sendHelpMessage);
   router.get("/getPaymentPackages", AuthService.validateAccessToken, UsersController.getPaymentPackages);
   router.get("/getVideos", AuthService.validateAccessToken, UsersController.getVideos);
-  router.get("/getVideosBySearch", AuthService.validateAccessToken, UsersController.getVideosBySearch);
   router.get("/getNotificationsData", AuthService.validateAccessToken, UsersController.getNotificationsData);
   router.post("/upgrade", Validation.upgradeValidate, AuthService.validateAccessToken, UsersController.upgrade);
   router.get("/getPaymentHistoryData", AuthService.validateAccessToken, UsersController.getPaymentHistoryData);

@@ -53,14 +53,11 @@ async function fetchpaymentPackagesData(){
                     </div>
                     <button class="${status} ${upgradeButton} currentUpgradeButton" data-package="${item.title}" onClick="upgradeOrExtend(this)">${status}</button>
             `;
-
                 ppSecondDiv.appendChild(package);
         })
-
     } catch (error) {
         console.error("Failed to retrieve data", error);
-    }
-    
+    } 
 }
 
 fetchpaymentPackagesData()
@@ -128,9 +125,13 @@ async function upgradeOrExtend(elem) {
             window.open("../dashboard.html");
           }
         const paymentUrl = await response.json()
+        if (!paymentUrl.success) {
+            showMessage(paymentUrl.errors)
+        } else {
+            window.open(paymentUrl, '_blank');
+        }
         elem.disabled = false;
         loader.remove();
-        window.open(paymentUrl, '_blank');
     }
     if (elem.classList.contains("Extend")) {
         elem.disabled = true;
@@ -162,9 +163,15 @@ async function upgradeOrExtend(elem) {
             window.open("../dashboard.html");
           }
         const paymentUrl = await response.json()
-        elem.disabled = false;
-        loader.remove();
-        window.open(paymentUrl, '_blank');
+        if (!paymentUrl.success) {
+            showMessage(paymentUrl.errors)
+            elem.disabled = false;
+            loader.remove();
+        } else {
+            elem.disabled = false;
+            loader.remove();
+            window.open(paymentUrl, '_blank');
+        }
     }
 }
 

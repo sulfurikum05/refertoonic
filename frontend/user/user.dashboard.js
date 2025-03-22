@@ -16,15 +16,13 @@ async function fetchVideos() {
                 "Authorization": `Bearer ${token}`
              },
         });
-        
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
             const data = await response.json();
             const shuffledData = shuffleArray(data);
             populateViseosContainer(shuffledData)
-
     } catch (error) {
         console.error("Failed to retrieve data", error);
     }
@@ -51,41 +49,6 @@ function populateViseosContainer(shuffledData){
     });
 }
 
-
-  const searchInput  = document.querySelector('.serachText');
-searchInput.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        getVideosBySearch()
-    }
-  });
-async function getVideosBySearch() {
-    
-    try {
-        const searchValue = searchInput.value.trim();
-        
-        const token = localStorage.getItem("accessToken");
-        const response = await fetch(`http://localhost:3030/api/v1/users/getVideosBySearch?searchValue=${encodeURIComponent(searchValue)}`, {
-            method: 'GET',
-            headers: { 
-                "Authorization": `Bearer ${token}`
-             },
-        });
-        if(response.status == 401){
-localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-        }
-        const data = await response.json();
-        const videoContainer = document.querySelector('.video-container')
-        videoContainer.innerHTML = "";
-        populateVideosDiv(data)
-
-        
-    } catch (error) {
-        console.error("Failed to retrieve data", error);
-    }
-}
-
     function populateVideosDiv(data) {
         const videoContainer = document.querySelector('.video-container')
         videoContainer.innerHTML=`<div class="videoplayer-container"></div>`;
@@ -103,10 +66,7 @@ localStorage.removeItem("accessToken")
                     
                 `;
                 videoContainer.appendChild(videosDiv);
-        
         });
-       
-
     }
 
     function openVideoInPlayer(data) {

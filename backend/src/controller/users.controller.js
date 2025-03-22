@@ -171,17 +171,6 @@ export default class UsersController {
     }
   }
 
-  static async getVideosBySearch(req, res, next) {
-    try {
-      const role = req.role;
-      const keyword = req.query.searchValue;
-      const data = await UsersServices.getVideosBySearch(role, keyword);
-      SuccessHandlerUtil.handleList(res, next, data);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   static async getNotificationsData(req, res, next) {
     try {
       const userId = req.userId;

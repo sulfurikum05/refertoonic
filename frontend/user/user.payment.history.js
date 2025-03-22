@@ -14,7 +14,6 @@ async function fetcPaymentHistoryData() {
             window.open("../dashboard.html");
           }
         const data = await response.json();
-        
         populatePaymentHistoryTable(data)
     } catch (error) {
         console.error("Failed to retrieve data", error);
@@ -26,7 +25,6 @@ fetcPaymentHistoryData()
 
 function populatePaymentHistoryTable(data) {
     
-
     paymentHistoryTableBody.innerHTML = ""; 
     data.forEach(item => {
         let expire = ''

@@ -99,7 +99,7 @@ export class AdminController {
       next(error);
     }
   }
-  
+
   static async getModerationVideos(req, res, next) {
     try {
       const role = req.role;
@@ -129,7 +129,7 @@ export class AdminController {
       next(error);
     }
   }
-  
+
   static async deleteModerationVideo(req, res, next) {
     try {
       const role = req.role;
@@ -138,21 +138,6 @@ export class AdminController {
       } else {
         const id = req.body.id;
         const data = await AdminServices.deleteModerationVideo(id);
-        SuccessHandlerUtil.handleList(res, next, data);
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  static async publishModerationVideo(req, res, next) {
-    try {
-      const role = req.role;
-      if (role !== "admin") {
-        return res.status(401).json({ message: "Unauthorized" });
-      } else {
-        const id = req.body.id;
-        const data = await AdminServices.publishModerationVideo(id, role);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {

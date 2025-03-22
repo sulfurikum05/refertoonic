@@ -15,11 +15,9 @@
             });
             if(response.status == 401){
                 localStorage.removeItem("accessToken")
-             
                 window.open("../dashboard.html");
             }
             const data = await response.json();
-
             populateSliderVideosTable(data)
         } catch (error) {
             console.error("Failed to retrieve data", error);
@@ -36,7 +34,6 @@
             });
             if(response.status == 401){
                 localStorage.removeItem("accessToken")
-             
                 window.open("../dashboard.html");
             }
             const data = await response.json();
@@ -56,7 +53,6 @@
             });
             if(response.status == 401){
                 localStorage.removeItem("accessToken")
-             
                 window.open("../dashboard.html");
             }
             const data = await response.json();
@@ -76,11 +72,9 @@
             });
             if(response.status == 401){
                 localStorage.removeItem("accessToken")
-             
                 window.open("../dashboard.html");
             }
             const data = await response.json();
-             
             populatePaymentPackagesTable(data)
         } catch (error) {
             console.error("Failed to retrieve data", error);
@@ -88,8 +82,6 @@
     }
 
 
-
-   
     function populateSliderVideosTable(data) {
         videosTableBody.innerHTML = ""; 
         data.forEach(item => {
@@ -241,24 +233,22 @@
                         })
                         if(response.status == 401){
                             localStorage.removeItem("accessToken")
-                         
                             window.open("../dashboard.html");
                         }
                         const data = await response.json()
-
-                                getSliderVideosData()
-                                showMessage(data.message)
-
-
+                        if (!data.success) {
+                            showMessage(data.errors)
+                        }else{
+                            showMessage(data.message)
+                            getSliderVideosData()
+                        }
                     });
-        
                 });
 
 async function deleteSliderVideo(elem) {
 
         const row = elem.closest("tr");
         const rowId = row.dataset.id
-
          const token = localStorage.getItem("accessToken");
          const response = await fetch('http://localhost:3030/api/v1/superadmin/deleteSliderVideo', {
             method: 'DELETE',
@@ -269,13 +259,16 @@ async function deleteSliderVideo(elem) {
             body: JSON.stringify({ id: rowId })
         })
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
         }
         const data = await response.json()
-
-                getSliderVideosData()
-                showMessage(data.message)
+        if (data.success) {
+            showMessage(data.message)
+            getSliderVideosData()
+        }
+        
+                
 
 
 
@@ -320,19 +313,18 @@ function editTextFunction(elem) {
                 })
                 if(response.status == 401){
                     localStorage.removeItem("accessToken")
-                 
                     window.open("../dashboard.html");
                 }
                 const data = await response.json()
-
-
-
+                if (!data.success) {
+                    showMessage(data.errors)
+                }else{
+                    showMessage(data.message)
                     elem.classList.remove("hide");
                     saveButton.classList.add("hide");
                     getDashboardTextsData();
-                    showMessage(data.message)
-
-            }, { once: true });
+                }
+}, { once: true });
 }
 
 
@@ -400,66 +392,70 @@ function editTeamfunction(elem) {
             })
             if(response.status == 401){
                 localStorage.removeItem("accessToken")
-             
                 window.open("../dashboard.html");
             }
             const data = await response.json()
-                        saveButton.classList.add("hide");
-                        elem.classList.remove("hide");
-                        document.querySelectorAll(".edit-team").forEach(button => {
-                        button.style.pointerEvents = "all";
+            if (!data.success) {
+                showMessage(data.errors)
+            }else{
+                showMessage(data.message)
+                saveButton.classList.add("hide");
+                elem.classList.remove("hide");
+                document.querySelectorAll(".edit-team").forEach(button => {
+                button.style.pointerEvents = "all";
                 })
                 getTeamData();
-                showMessage(data.message)
-
-
+            }
         }, { once: true });
 
 }
 
-document.querySelector('.payment-packages-create-button').addEventListener('click', function () {
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td><input type="text" class="input"></td>
-        <td><input type="text" class="input"></td>
-        <td><input type="text" class="input"></td>
-         <td>
-                <div class="actions_col">
-                    <button class="save-payment-package action-button" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
-                </div>
-            </td> 
-    `;
-    paymentPackagesTableBody.insertBefore(newRow, paymentPackagesTableBody.firstChild);
+// document.querySelector('.payment-packages-create-button').addEventListener('click', function () {
+//     const newRow = document.createElement('tr');
+//     newRow.innerHTML = `
+//         <td><input type="text" class="input"></td>
+//         <td><input type="text" class="input"></td>
+//         <td><input type="text" class="input"></td>
+//          <td>
+//                 <div class="actions_col">
+//                     <button class="save-payment-package action-button" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
+//                 </div>
+//             </td> 
+//     `;
+//     paymentPackagesTableBody.insertBefore(newRow, paymentPackagesTableBody.firstChild);
     
-                newRow.querySelector('.save-payment-package').addEventListener('click', async function () {
-                        const inputs = Array.from(newRow.querySelectorAll(".input"));
-                        const newData = inputs.map(input => {
-                            return {element: input.value} 
+//                 newRow.querySelector('.save-payment-package').addEventListener('click', async function () {
+//                         const inputs = Array.from(newRow.querySelectorAll(".input"));
+//                         const newData = inputs.map(input => {
+//                             return {element: input.value} 
                             
-                        });
+//                         });
        
-                         const token = localStorage.getItem("accessToken");
-                         const response = await fetch('http://localhost:3030/api/v1/superadmin/createPaymentPackage', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            "Authorization": `Bearer ${token}`
-                        },
+//                          const token = localStorage.getItem("accessToken");
+//                          const response = await fetch('http://localhost:3030/api/v1/superadmin/createPaymentPackage', {
+//                         method: 'POST',
+//                         headers: {
+//                             'Content-Type': 'application/json',
+//                             "Authorization": `Bearer ${token}`
+//                         },
 
-                        body: JSON.stringify({newData: newData})
-                    })
-                    if(response.status == 401){
-                        localStorage.removeItem("accessToken")
+//                         body: JSON.stringify({newData: newData})
+//                     })
+//                     if(response.status == 401){
+//                         localStorage.removeItem("accessToken")
                      
-                        window.open("../dashboard.html");
-                    }
-                    const data = await response.json()
-                            getPaymentPackagesData()
-                            showMessage(data.message)
-
-                });
+//                         window.open("../dashboard.html");
+//                     }
+//                     const data = await response.json()
+//                     if (!data.success) {
+//                         showMessage(data.errors)
+//                     }else{
+//                         getPaymentPackagesData()
+//                         showMessage(data.message)
+//                     }
+//                 });
     
-            });
+//             });
 
 function editPpFunction(elem) {
             const row = elem.closest("tr"); 
@@ -503,11 +499,15 @@ function editPpFunction(elem) {
                     window.open("../dashboard.html");
                 }
                 const data = await response.json()
-                    elem.classList.remove("hide");
-                    saveButton.classList.add("hide");
-                    deleteButton.classList.add("hide");
-                    getPaymentPackagesData();
-                    showMessage(data.message)
+                    if (!data.success) {
+                        showMessage(data.errors)
+                    }else{
+                        elem.classList.remove("hide");
+                        saveButton.classList.add("hide");
+                        deleteButton.classList.add("hide");
+                        getPaymentPackagesData()
+                        showMessage(data.message)
+                    }
             }, { once: true });
 }
 
@@ -529,10 +529,10 @@ async function deletePpFunction(elem) {
             window.open("../dashboard.html");
         }
         const data = await response.json()
-
+        if (data.success) {
                 getPaymentPackagesData()
                 showMessage(data.message)
-
+        }
 
 }
 //DELETE PP END//

@@ -1,5 +1,3 @@
-
-
 let page = 0;
 const limit = 16;
 let isLoading = false;
@@ -7,7 +5,6 @@ let isLoading = false;
 async function fetchVideos() {
     if (isLoading) return;
     isLoading = true;
-
     try {
         const token = localStorage.getItem("accessToken");
         const response = await fetch(`http://localhost:3030/api/v1/vip/getVideos?page=${page}&limit=${limit}`, {
@@ -21,7 +18,6 @@ async function fetchVideos() {
             window.open("../dashboard.html");
           }
         const data = await response.json();
-
         if (data.length > 0) {
             populateViseosContainer(data);
             page++;
@@ -32,7 +28,6 @@ async function fetchVideos() {
         isLoading = false;
     }
 }
-
 
 
 function populateViseosContainer(data){
@@ -62,9 +57,6 @@ window.addEventListener("scroll", () => {
 
 fetchVideos()
 
-
-
-
   const searchInput  = document.querySelector('.serachText');
 searchInput.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
@@ -75,17 +67,17 @@ searchInput.addEventListener("keydown", function(event) {
 async function getVideosBySearch() {
     
     try {
-        const searchValue = searchInput.value.trim();
+        const searchValue = searchInput.value
         
         const token = localStorage.getItem("accessToken");
-        const response = await fetch(`http://localhost:3030/api/v1/users/getVideosBySearch?searchValue=${encodeURIComponent(searchValue)}`, {
+        const response = await fetch(`http://localhost:3030/api/v1/vip/getVideosBySearch/${searchValue}`, {
             method: 'GET',
             headers: { 
                 "Authorization": `Bearer ${token}`
              },
         });
         if(response.status == 401){
-localStorage.removeItem("accessToken")
+            localStorage.removeItem("accessToken")
             window.open("../dashboard.html");
           }
         const data = await response.json();
@@ -113,23 +105,17 @@ localStorage.removeItem("accessToken")
                     <img src="${item.gif_url}" class="video" data-id="${item.id}" data-video="${item.video_url}" data-favorite="${item.wish}" onclick="openVideoInPlayer(this)">
                     <span>${item.keywords}</span>
                     </div>
-                    
                 `;
                 videoContainer.appendChild(videosDiv);
-        
         });
-
     }
 
     function openVideoInPlayer(data) {
-        
         const videoplayerContainer = document.querySelector('.videoplayer-container');
-        
         let favoriteData
         if (data.dataset.favorite !== "undefined") {
             favoriteData = JSON.parse(data.dataset.favorite)
         }
-        
         videoplayerContainer.innerHTML = `
             <div class="v-player">
                 <div id="pan-container">
@@ -352,12 +338,13 @@ localStorage.removeItem("accessToken")
                 window.open("../dashboard.html");
               }
             const data = await response.json()
-            elem.classList.add('hide')
-            const removeButton = document.querySelector('.removeFromWishlist')
-            removeButton.classList.remove('hide')
-            showMessage(data.message)
-
-    
+            if (data.success) {
+                elem.classList.add('hide')
+                const removeButton = document.querySelector('.removeFromWishlist')
+                removeButton.classList.remove('hide')
+                showMessage(data.message)
+            }
+            
         } catch (error) {
             console.error("Failed to add video to the favorites list", error);
         }
@@ -379,10 +366,12 @@ localStorage.removeItem("accessToken")
                 window.open("../dashboard.html");
               }
             const data = await response.json()
+            if (data.success) {
             elem.classList.add('hide')
             const addButton = document.querySelector('.addToWishlist')
             addButton.classList.remove('hide')
             showMessage(data.message)
+            }
     
         } catch (error) {
             console.error("Failed to remove video from the favorites list", error);

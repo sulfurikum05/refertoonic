@@ -14,7 +14,6 @@
             const users = await response.json();
             if(response.status == 401){
                 localStorage.removeItem("accessToken")
-             
                 window.open("../dashboard.html");
               }
             populateTable(users);
