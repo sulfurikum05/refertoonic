@@ -11,7 +11,7 @@ async function fetchModerationVideos() {
             },
         });
         const data = await response.json();
-        
+
         populateTable(data)
     } catch (error) {
         console.error("Failed to retrieve data", error);
@@ -26,7 +26,7 @@ function populateTable(data) {
         const date = new Date(item.upload_at);
         const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
 
-    item.status = "Moderation"
+        item.status = "Moderation"
 
 
         const row = document.createElement("tr");
@@ -44,16 +44,16 @@ function populateTable(data) {
             <td>${item.status}</td>
             <td>
                 <div class="actions_col">
-                <button class="send-video action-button" onClick="sendVideoToModeration(this)" title="Send"><img src="../icons/send.gif" class="icon" alt="send_icon"></button>
-                <button class="reject-video action-button" onClick="rejectVideo(this)" title="Reject"><img src="../icons/reject.gif" class="icon ${item.status == "Rejected" ? "hide" : ""}" alt="reject_icon"></button>
-                <button class="delete-video action-button" onClick="deleteVideo(this)" title="Delete"><img src="../icons/delete.gif" class="icon" alt="delete_icon"></button>
+                <button class="send-video action-button" onClick="sendVideoToModeration(this)" title="Send"><img src="../icons/send.png" class="icon" alt="send_icon"></button>
+                <button class="reject-video action-button" onClick="rejectVideo(this)" title="Reject"><img src="../icons/reject.png" class="icon ${item.status == "Rejected" ? "hide" : ""}" alt="reject_icon"></button>
+                <button class="delete-video action-button" onClick="deleteVideo(this)" title="Delete"><img src="../icons/delete.png" class="icon" alt="delete_icon"></button>
                 </div>
             </td>
         `;
         videosTableBody.insertBefore(row, videosTableBody.firstChild);
-        
+
     });
-}            
+}
 
 
 
@@ -61,87 +61,106 @@ fetchModerationVideos()
 
 
 async function deleteVideo(elem) {
-        const row = elem.closest("tr");
-        const rowId = row.dataset.id
-        const token = localStorage.getItem("accessToken");
-        const response = await fetch('http://localhost:3030/api/v1/admin/deleteModerationVideo', {
-            method: 'DELETE',
-            headers: { 
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-             },
-            body: JSON.stringify({ id: rowId })
-        })
-        if(response.status == 401){
-            localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
-            const data = await response.json()
-            if (data.success) {
-                fetchModerationVideos()
-                showMessage(data.message)
-            }
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
+    const row = elem.closest("tr");
+    const rowId = row.dataset.id
+    const token = localStorage.getItem("accessToken");
+    const response = await fetch('http://localhost:3030/api/v1/admin/deleteModerationVideo', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: rowId })
+    })
+    if (response.status == 401) {
+        localStorage.removeItem("accessToken")
+        window.location.href = "../dashboard.html";
+    }
+    const data = await response.json()
+    if (data.success) {
+        fetchModerationVideos()
+        showMessage(data.message)
+    }
+    elem.disabled = false;
+    loader.remove();
 
 }
 
 
 async function rejectVideo(elem) {
-        const row = elem.closest("tr");
-        const rowId = row.dataset.id
-        const token = localStorage.getItem("accessToken");
-        const response = await fetch('http://localhost:3030/api/v1/admin/rejectModerationVideo', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-             },
-            body: JSON.stringify({ id: rowId })
-        })
-        if(response.status == 401){
-            localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
-            const data = await response.json()
-            if (data.success) {
-                fetchModerationVideos()
-                showMessage(data.message)
-            }
-
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
+    const row = elem.closest("tr");
+    const rowId = row.dataset.id
+    const token = localStorage.getItem("accessToken");
+    const response = await fetch('http://localhost:3030/api/v1/admin/rejectModerationVideo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: rowId })
+    })
+    if (response.status == 401) {
+        localStorage.removeItem("accessToken")
+        window.location.href = "../dashboard.html";
+    }
+    const data = await response.json()
+    if (data.success) {
+        fetchModerationVideos()
+        showMessage(data.message)
+    }
+    elem.disabled = false;
+    loader.remove();
 
 
 
 }
 
 
-async function sendVideoToModeration(elem){
+async function sendVideoToModeration(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const row = elem.closest('tr')
     const videoId = row.dataset.id
     const token = localStorage.getItem("accessToken");
-            const response = await fetch('http://localhost:3030/api/v1/admin/changeModerationVideoStatus', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ id: videoId })
-            })
-            if(response.status == 401){
-                localStorage.removeItem("accessToken")
-                window.open("../dashboard.html");
-              }
-                const data = await response.json()
-                if (data.success) {
-                    fetchModerationVideos()
-                    showMessage(data.message)
-                }
-
+    const response = await fetch('http://localhost:3030/api/v1/admin/changeModerationVideoStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: videoId })
+    })
+    if (response.status == 401) {
+        localStorage.removeItem("accessToken")
+        window.location.href = "../dashboard.html";
+    }
+    const data = await response.json()
+    if (data.success) {
+        fetchModerationVideos()
+        showMessage(data.message)
+    }
+    elem.disabled = false;
+    loader.remove();
 
 }
 
 
 function openVideoInPlayer(elem) {
 
-        
+
     const videoplayerContainer = document.createElement('div');
     videoplayerContainer.classList.add('moderationVideoShowContainer')
     videoplayerContainer.classList.add('userPopup')
@@ -180,7 +199,7 @@ function setupVideoControls() {
     const video = document.getElementById("video");
     const timeDisplay = document.querySelector(".time");
     const timeline = document.getElementById("timeline");
-    
+
     let isLooping = false;
 
     document.querySelector(".play").addEventListener("click", () => {
@@ -258,14 +277,14 @@ function setupVideoControls() {
             timeDisplay.textContent = `${frame}`;
         }
     });
-    
+
     timeline.parentElement.addEventListener("click", (event) => {
         const rect = timeline.parentElement.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
         const percent = offsetX / rect.width;
         video.currentTime = percent * video.duration;
     });
-    
+
     let isDragging = false;
     let startX = 0;
     let startTime = 0;
@@ -273,9 +292,9 @@ function setupVideoControls() {
     timeline.parentElement.addEventListener("mousedown", (event) => {
         isDragging = true;
         startX = event.clientX;
-        startTime = video.currentTime; 
+        startTime = video.currentTime;
     });
-            
+
     document.addEventListener("mousemove", (event) => {
         if (isDragging) {
 
@@ -285,7 +304,7 @@ function setupVideoControls() {
             timeline.style.width = `${percent * 100}%`;
         }
     });
-            
+
     document.addEventListener("mouseup", () => {
         if (isDragging) {
 
@@ -296,10 +315,10 @@ function setupVideoControls() {
             isDragging = false;
         }
     });
-    
+
     let lastMoveTime = 0;
     const debounceDelay = 20;
-    
+
     document.addEventListener("mousemove", (event) => {
         const currentTime = new Date().getTime();
         if (currentTime - lastMoveTime >= debounceDelay) {
@@ -307,11 +326,11 @@ function setupVideoControls() {
             lastMoveTime = currentTime;
         }
     });
-    
+
     document.addEventListener("mouseup", () => {
         isDragging = false;
     });
-    
+
     function seek(event) {
         const rect = timeline.parentElement.getBoundingClientRect();
         const offsetX = event.clientX - rect.left;
@@ -323,8 +342,8 @@ function setupVideoControls() {
     document.addEventListener("keydown", (event) => {
 
         if (event.code === "Space") {
-            event.preventDefault(); 
-    
+            event.preventDefault();
+
 
             if (video.paused) {
                 video.play();
@@ -336,20 +355,20 @@ function setupVideoControls() {
                 document.querySelector(".play").classList.remove("hide");
             }
         }
-    
+
 
         if (event.code === "ArrowLeft") {
-            video.currentTime -= 1 / 30; 
+            video.currentTime -= 1 / 30;
         }
 
         if (event.code === "ArrowRight") {
-            video.currentTime += 1 / 30; 
+            video.currentTime += 1 / 30;
         }
     });
 }
 
 
-function closeModeVideoPlayer(){
+function closeModeVideoPlayer() {
     const moderationVideoShowContainer = document.querySelector('.moderationVideoShowContainer')
     moderationVideoShowContainer.remove()
 }
@@ -365,5 +384,5 @@ function showMessage(messageText) {
     messageContainer.classList.add('showMessageContainer');
     setTimeout(() => {
         messageContainer.classList.remove('showMessageContainer');
-    }, 2000); 
+    }, 2000);
 }

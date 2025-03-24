@@ -1,8 +1,27 @@
 
 import { AdminServices } from "../services/admin.services";
 import { SuccessHandlerUtil } from "../utils";
+import { VipServices } from "../services/vip.services";
 
 export class AdminController {
+  static async getVideos(req, res, next) {
+      try {
+        const role = req.role;
+        if (role !== "admin") {
+          return res.status(401).json({ message: "Unauthorized" });
+        } else {
+          const userId = req.userId;
+          const page = parseInt(req.query.page) || 0;
+          const limit = parseInt(req.query.limit) || 16;
+          const offset = page * limit;
+          const data = await VipServices.getVideos(limit, offset, userId);
+          SuccessHandlerUtil.handleList(res, next, data);
+        }
+      } catch (error) {
+        next(error);
+      }
+    }
+
   static async getUsers(req, res, next) {
     try {
       const role = req.role;
@@ -51,7 +70,8 @@ export class AdminController {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
         const email = req.body.email;
-        const data = await AdminServices.blockUser(email);
+        const adminId = req.userId
+        const data = await AdminServices.blockUser(email, adminId);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {
@@ -66,11 +86,12 @@ export class AdminController {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
         const email = req.body.email;
-        const data = await AdminServices.unblockUser(email);
+        const adminId = req.userId
+        const data = await AdminServices.unblockUser(email, adminId);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {
-      next(error);
+      next(error); 
     }
   }
 
@@ -122,7 +143,8 @@ export class AdminController {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
         const videoId = req.body.id;
-        const data = await AdminServices.changeModerationVideoStatus(videoId);
+        const adminId = req.userId;
+        const data = await AdminServices.changeModerationVideoStatus(videoId, adminId);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {
@@ -136,8 +158,9 @@ export class AdminController {
       if (role !== "admin") {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
-        const id = req.body.id;
-        const data = await AdminServices.deleteModerationVideo(id);
+        const videoId = req.body.id;
+        const adminId = req.userId;
+        const data = await AdminServices.deleteModerationVideo(videoId, adminId);
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {
@@ -151,8 +174,38 @@ export class AdminController {
       if (role !== "admin") {
         return res.status(401).json({ message: "Unauthorized" });
       } else {
-        const id = req.body.id;
-        const data = await AdminServices.rejectModerationVideo(id);
+        const videoId = req.body.id;
+        const adminId = req.userId;
+        const data = await AdminServices.rejectModerationVideo(videoId, adminId);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getFileLibraryData(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "admin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const userId = req.userId;
+        const data = await VipServices.getFileLibraryData(userId);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getPaymentPackages(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "admin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const data = await AdminServices.getPaymentPackages();
         SuccessHandlerUtil.handleList(res, next, data);
       }
     } catch (error) {

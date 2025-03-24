@@ -4,7 +4,7 @@ const wishlistTableBody = document.querySelector(".wishlist-table tbody");
 async function fetchLibraryData() {
     try {
         const token = localStorage.getItem("accessToken");
-        const response = await fetch("http://localhost:3030/api/v1/vip/getFileLibraryData", {
+        const response = await fetch("http://localhost:3030/api/v1/admin/getFileLibraryData", {
             method: 'GET',
             headers: {
                 "Authorization": `Bearer ${token}`

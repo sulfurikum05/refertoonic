@@ -20,12 +20,12 @@ export class AdminModel {
     await pg("users").insert(data).transacting(trx);
   }
 
-  static async blockUser(email) {
-    await pg("users").update({ status: "block" }).where({ email: email });
+  static async blockUser(email, trx) {
+    await pg("users").update({ status: "block" }).where({ email: email }).transacting(trx);
   }
 
-  static async unblockUser(email) {
-    await pg("users").update({ status: "unblock" }).where({ email: email });
+  static async unblockUser(email, trx) {
+    await pg("users").update({ status: "unblock" }).where({ email: email }).transacting(trx);
   }
 
   static async getUserByEmail(userEmail, trx) {
@@ -44,12 +44,16 @@ export class AdminModel {
     return await pg("videos").select("*").where({ id: id }).transacting(trx);
   }
 
+  static async getUsersById(userId, trx) {
+    return await pg("users").select("*").where({ id: userId }).transacting(trx);
+  }
+  
   static async deleteModerationVideoById(id, trx) {
     await pg("videos").where({ id: id }).delete().transacting(trx);
   }
 
-  static async rejectModerationVideo(data, id) {
-    await pg("videos").update(data).where({ id: id });
+  static async rejectModerationVideo(data, id, trx) {
+    await pg("videos").update(data).where({ id: id }).transacting(trx);
   }
 
   static async getUsersByAdminId(adminId, trx) {
@@ -59,8 +63,8 @@ export class AdminModel {
   static async getModerationVideosByUsersId(usersId, trx) {
     return await pg("videos").select("*").where("status", -2).whereIn("user_id", usersId).transacting(trx);
   }
-  static async changeModerationVideoStatus(data, videoId) {
-    await pg("videos").update(data).where({ id: videoId });
+  static async changeModerationVideoStatus(data, videoId, trx) {
+    await pg("videos").update(data).where({ id: videoId }).transacting(trx);
   }
 
   static async getNotificationsData(trx) {

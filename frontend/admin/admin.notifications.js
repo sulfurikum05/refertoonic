@@ -9,7 +9,7 @@ async function fetchNotificatoinsData() {
         });
         if(response.status == 401){
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
           }
         const data = await response.json();
         populateNotificatoinsTable(data)
@@ -57,12 +57,19 @@ document.querySelector('.notifications-create-button').addEventListener('click',
         <td></td>
          <td>
                 <div class="actions_col">
-                    <button class="send-notification action-button" title="Send"><img src="../icons/send.gif" class="icon" alt="send_icon"></button>
+                    <button class="send-notification action-button" title="Send"><img src="../icons/send.png" class="icon" alt="send_icon"></button>
                 </div>
             </td> 
     `;
     sentNotificationsTableBody.insertBefore(newRow, sentNotificationsTableBody.firstChild);
-    newRow.querySelector('.send-notification').addEventListener('click', async function () {
+
+    const sendNotificationButton =  newRow.querySelector('.send-notification')
+    sendNotificationButton.addEventListener('click', async function () {
+        sendNotificationButton.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        sendNotificationButton.textContent = ""
+        sendNotificationButton.appendChild(loader);
         const inputs = Array.from(newRow.querySelectorAll(".input"));
     
         const title = inputs.find(input => input.placeholder === "Title")?.value || "";
@@ -83,7 +90,7 @@ document.querySelector('.notifications-create-button').addEventListener('click',
         })
         if(response.status == 401){
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
         }
         const data = await response.json()
         if (!data.success) {
@@ -92,6 +99,9 @@ document.querySelector('.notifications-create-button').addEventListener('click',
             showMessage(data.message)
             fetcSenthNotificatoinsData()
         }
+        sendNotificationButton.disabled = false;
+        loader.remove();
+
     });
     
             });
@@ -106,7 +116,7 @@ document.querySelector('.notifications-create-button').addEventListener('click',
                     });
                     if(response.status == 401){
                         localStorage.removeItem("accessToken")
-                        window.open("../dashboard.html");
+                        window.location.href = "../dashboard.html";
                       }
                     const data = await response.json();
                     

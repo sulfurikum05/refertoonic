@@ -94,6 +94,30 @@ export class VipServices {
     return filteredData
   }
   
+    static async getPaymentPackages(pp) {
+      const trx = await pg.transaction();
+      try {
+        const ppData = await UsersModel.getPaymentPackages(trx);
+        ppData.sort((a, b) => a.id - b.id);
+        if (pp !== "vipPro") {
+          ppData[0].status = "hide";
+          ppData[1].status = "Extend";
+          ppData[2].status = "Upgrade";
+          ppData[1].color = "color";
+        }else{
+          ppData[0].status = "hide";
+          ppData[1].status = "hide";
+          ppData[2].status = "hide";
+          ppData[1].color = "color";
+        }
+  
+        await trx.commit();
+        return ppData;
+      } catch (error) {
+        await trx.rollback();
+      }
+    }
+
   static async getNotificationsData(userId) {
     const trx = await pg.transaction();
     try {

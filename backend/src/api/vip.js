@@ -13,6 +13,7 @@ const router = express.Router();
   router.get("/getVideos", AuthService.validateAccessToken, VipController.getVideos);
   router.post("/uploadLibraryVideo", Validation.videoUploadValidate, AuthService.validateAccessToken, upload.fields([{ name: 'video', maxCount: 1 }]), VipController.uploadLibraryVideo);
   router.get("/getFileLibraryData", AuthService.validateAccessToken, VipController.getFileLibraryData);
+  router.get("/getPaymentPackages", AuthService.validateAccessToken, VipController.getPaymentPackages);
   router.get("/getNotificationsData", AuthService.validateAccessToken, VipController.getNotificationsData);
   router.get("/getWishlistData", AuthService.validateAccessToken, VipController.getWishlistData);
   router.post("/addVideoToWishlist", AuthService.validateAccessToken, VipController.addVideoToWishlist);

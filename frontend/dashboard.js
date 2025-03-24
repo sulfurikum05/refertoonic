@@ -18,7 +18,6 @@ function showMessage(messageText) {
 const paymentPackagesDiv = document.querySelector(".payment-packages")
 const dashboardMainText = document.querySelector(".main-text")
 const pricingHeader = document.querySelector(".pricing-header")
-const demoSection = document.querySelector(".demo-section")
 const teamSection = document.querySelector(".team-section")
 const demoContent = document.createElement("div")
 demoContent.classList.add("demo-content")
@@ -68,42 +67,7 @@ function populateDashboard(texts, packages, team, video){
                 <button class="toggle-btn yearly" onclick="yearlyToggleButtonFunction()">Yearly: Save 20%</span></button>
             </div>
             `;
-        }
-        if (elem.id == 3) {
-
-            demoSection.innerHTML = `
-                <div>
-                    <h2>${elem.header}</h2>
-                </div>
-            `;
-
-            demoContent.innerHTML += `
-                <div>
-                    <h3>${elem.title}</h3>
-                    <p>${elem.text}</p>
-                </div>
-            `;
-        }
-        if (elem.id == 4) {
-            demoContent.innerHTML += `
-            <div>
-                <h3>${elem.title}</h3>
-                <p>${elem.text}</p>
-            </div>
-        `;
-        }
-        if (elem.id == 5) {
-            demoContent.innerHTML += `
-            <div>
-                <h3>${elem.title}</h3>
-                <p>${elem.text}</p>
-            </div>
-            
-        `;
-        }
-        
-        demoSection.appendChild(demoContent)
-        
+        } 
     })
     
     packages.sort((a, b) => a.id - b.id);
@@ -221,16 +185,20 @@ function yearlyToggleButtonFunction(){
             loader.className = 'loader';
             elem.textContent = ""
             elem.appendChild(loader);
-
-            const email = document.getElementById("email").value
-            const name = document.getElementById("name").value
-            const text = document.getElementById("message").value
+            const email = document.querySelector(".sendMessageEmail")
+            const name = document.querySelector(".sendMessageName")
+            const text = document.querySelector(".sendMessageMessage")
             
-
-            const response = await fetch("http://localhost:3030/api/v1/users/sendUnauthMessage", {
+            const body = {
+                email: email.value,
+                name: name.value,
+                text: text.value
+            }
+            
+                const response = await fetch("http://localhost:3030/api/v1/users/sendUnauthMessage", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({email, name, text})
+                body: JSON.stringify(body)
             })
                 const data = await response.json()
                 if (!data.success) {

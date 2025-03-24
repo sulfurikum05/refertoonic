@@ -6,13 +6,13 @@ async function fetchProfileData() {
         const token = localStorage.getItem("accessToken");
         const response = await fetch("http://localhost:3030/api/v1/superadmin/getUserPersonalInfo", {
             method: 'GET',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
-             },
+            },
         });
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
         }
         const data = await response.json();
         populateUserPersonalInfo(data)
@@ -24,19 +24,19 @@ fetchProfileData()
 
 function populateUserPersonalInfo(data) {
     const userRole = data[0].role
-    profileFirstDiv.innerHTML = ""; 
+    profileFirstDiv.innerHTML = "";
 
-        const picture = document.createElement("div");
-        picture.classList.add('picture')
-        picture.innerHTML = `
+    const picture = document.createElement("div");
+    picture.classList.add('picture')
+    picture.innerHTML = `
         <h1>${userRole}</h1>
            <img src="${data[0].picture}" alt="profilePicture">
         `;
-        profileFirstDiv.appendChild(picture);
+    profileFirstDiv.appendChild(picture);
 
-        const personalInfo = document.createElement("div");
-        personalInfo.classList.add('personalInfo')
-        personalInfo.innerHTML = `
+    const personalInfo = document.createElement("div");
+    personalInfo.classList.add('personalInfo')
+    personalInfo.innerHTML = `
                     <h1>${data[0].name} ${data[0].surname}</h1>
                     <span class="phone"><b>Phone:</b> ${data[0].phone}</span>
                     <span class="address"><b>Address:</b> ${data[0].address}</span>
@@ -47,20 +47,20 @@ function populateUserPersonalInfo(data) {
                     <button class="changePasswordButton" onClick="changePassword()">Change password</button>
                     <button class="changeInfoButton" onClick="changeInfo()">Change information</button>
      `;
-        profileFirstDiv.appendChild(personalInfo);
-        
+    profileFirstDiv.appendChild(personalInfo);
 
-        profileSecondDiv.innerHTML = "";
-        const aboutText = document.createElement("div");
-        aboutText.classList.add('aboutText')
 
-        aboutText.innerHTML = `
+    profileSecondDiv.innerHTML = "";
+    const aboutText = document.createElement("div");
+    aboutText.classList.add('aboutText')
+
+    aboutText.innerHTML = `
         <h3>Tell us about yourself</h3>
         <span class="about-text">${data[0].about}</span>
         `;
 
-        profileSecondDiv.appendChild(aboutText);
-        
+    profileSecondDiv.appendChild(aboutText);
+
 
 }
 
@@ -68,39 +68,39 @@ function populateUserPersonalInfo(data) {
 
 function changeInfo() {
 
-        profileFirstDiv.innerHTML = ""; 
-        profileSecondDiv.innerHTML = `
+    profileFirstDiv.innerHTML = "";
+    profileSecondDiv.innerHTML = `
         <h3>Tell us about yourself</h3>
         <input name="about" type="text" class="input profileInput" placeholder="Tell us about yourself"> 
         
-        `; 
-    
-    
-        const pictureDiv = document.createElement('div')
-        const personalInfoDiv = document.createElement('div')
-        pictureDiv.classList.add('picture')
-        personalInfoDiv.classList.add('personalInfo')
-    
-        
-        pictureDiv.innerHTML = `
+        `;
+
+
+    const pictureDiv = document.createElement('div')
+    const personalInfoDiv = document.createElement('div')
+    pictureDiv.classList.add('picture')
+    personalInfoDiv.classList.add('personalInfo')
+
+
+    pictureDiv.innerHTML = `
             <div class="custom-file-input">
                 <label for="file-upload" class="custom-label">Select an avatar</label>
                 <input id="file-upload" type="file" class="input profileInputFile">
                 <span id="file-name" class="file-name">File not selected</span>
             </div>
         `;
-        profileFirstDiv.appendChild(pictureDiv)
+    profileFirstDiv.appendChild(pictureDiv)
 
-        const fileInput = document.getElementById("file-upload");
-        const fileNameDisplay = document.getElementById("file-name");
+    const fileInput = document.getElementById("file-upload");
+    const fileNameDisplay = document.getElementById("file-name");
 
-        fileInput.addEventListener("change", () => {
+    fileInput.addEventListener("change", () => {
         const fileName = fileInput.files[0]?.name || "File not selected";
         fileNameDisplay.textContent = fileName;
-});
+    });
 
 
-        personalInfoDiv.innerHTML = `
+    personalInfoDiv.innerHTML = `
             <input name="name" type="text" class="input profileInput" placeholder="Enter your name"> 
             <input name="surname" type="text" class="input profileInput" placeholder="Enter your surname">
             <input name="phone" type="text" class="input profileInput" placeholder="Enter your phone">
@@ -118,58 +118,58 @@ function changeInfo() {
             <button class="saveInfoButton">Save</button>
     
         `;
-        profileFirstDiv.appendChild(personalInfoDiv)
+    profileFirstDiv.appendChild(personalInfoDiv)
 
-            const saveInfoButton = document.querySelector('.saveInfoButton')
-            saveInfoButton.addEventListener('click', async () => {
-            saveInfoButton.disabled = true;
-            const loader = document.createElement('span');
-            loader.className = 'loader';
-            saveInfoButton.textContent = ""
-            saveInfoButton.appendChild(loader);
-            const inputs = document.querySelectorAll('.profileInput');
-            const fileInput = document.querySelector('#file-upload');
-            const formData = new FormData();
-        
-            inputs.forEach(input => {
-                const value = input.value.trim();
-                if (value) {
-                    const key = input.name;
-                    formData.append(key, value);
-                }
-            });
-            if (fileInput.files.length > 0) {
-                formData.append('photo', fileInput.files[0]);
-            }
-            try {
+    const saveInfoButton = document.querySelector('.saveInfoButton')
+    saveInfoButton.addEventListener('click', async () => {
+        saveInfoButton.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        saveInfoButton.textContent = ""
+        saveInfoButton.appendChild(loader);
+        const inputs = document.querySelectorAll('.profileInput');
+        const fileInput = document.querySelector('#file-upload');
+        const formData = new FormData();
 
-                 const token = localStorage.getItem("accessToken");
-                const response = await fetch('http://localhost:3030/api/v1/users/saveProfileData', {
-                    method: 'POST',
-                    headers: { 
-                        "Authorization": `Bearer ${token}`
-                     },
-                    body: formData
-                })
-                const data = await response.json();
-                if(response.status == 401){
-                    localStorage.removeItem("accessToken")
-                    window.open("../dashboard.html");
-                }
-                if (!data.success) {
-                    showMessage(data.errors)
-                }else{
-                    fetchProfileData()
-                    showMessage(data.message)
-                }
-                saveInfoButton.disabled = false;
-                loader.remove();
-                saveInfoButton.textContent = "Save"
-            } catch (error) {
-                console.error('Error sending data:', error);
+        inputs.forEach(input => {
+            const value = input.value.trim();
+            if (value) {
+                const key = input.name;
+                formData.append(key, value);
             }
         });
-        
+        if (fileInput.files.length > 0) {
+            formData.append('photo', fileInput.files[0]);
+        }
+        try {
+
+            const token = localStorage.getItem("accessToken");
+            const response = await fetch('http://localhost:3030/api/v1/users/saveProfileData', {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                },
+                body: formData
+            })
+            const data = await response.json();
+            if (response.status == 401) {
+                localStorage.removeItem("accessToken")
+                window.location.href = "../dashboard.html";
+            }
+            if (!data.success) {
+                showMessage(data.errors)
+            } else {
+                fetchProfileData()
+                showMessage(data.message)
+            }
+            saveInfoButton.disabled = false;
+            loader.remove();
+            saveInfoButton.textContent = "Save"
+        } catch (error) {
+            console.error('Error sending data:', error);
+        }
+    });
+
 
 }
 
@@ -186,10 +186,10 @@ function changePassword() {
     <input name="newPasswordConfirm" id="newPasswordConfirm" type="password" class="input profileInput" placeholder="Confirm new password">
     <button class="setNewPasswordButton" onClick="setNewPassword(this)">Save</button>
     `;
-    
+
 }
 
- async function setNewPassword(elem) {
+async function setNewPassword(elem) {
     elem.disabled = true;
     const loader = document.createElement('span');
     loader.className = 'loader';
@@ -204,23 +204,23 @@ function changePassword() {
         newPasswordConfirm: newPasswordConfirm.value,
     }
     try {
-         const token = localStorage.getItem("accessToken");
-         const response = await fetch('http://localhost:3030/api/v1/users/changePassword', {
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch('http://localhost:3030/api/v1/users/changePassword', {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body)
-        })                
-        if(response.status == 401){
+        })
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
         }
         const data = await response.json();
         if (!data.success) {
             showMessage(data.errors)
-        }else{
+        } else {
             fetchProfileData()
             showMessage(data.message)
         }
@@ -246,5 +246,5 @@ function showMessage(messageText) {
     messageContainer.classList.add('showMessageContainer');
     setTimeout(() => {
         messageContainer.classList.remove('showMessageContainer');
-    }, 2000); 
+    }, 2000);
 }

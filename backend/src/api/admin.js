@@ -5,6 +5,7 @@ import Validation from '../middlewares/validation/validation';
 
 const router = express.Router();
 
+  router.get("/getVideos", AuthService.validateAccessToken, AdminController.getVideos);
   router.get("/getUsers", AuthService.validateAccessToken, AdminController.getUsers);
   router.post("/createVipProUser", Validation.createVipProUserValidate, AuthService.validateAccessToken, AdminController.createVipProUser);
   router.get("/getAvailableUsersCount", AuthService.validateAccessToken, AdminController.getAvailableUsersCount);
@@ -12,6 +13,8 @@ const router = express.Router();
   router.post("/unblockUser", AuthService.validateAccessToken, AdminController.unblockUser);
   router.get("/getMessagesData", AuthService.validateAccessToken, AdminController.getMessagesData);
   router.post("/deleteUser", AuthService.validateAccessToken, AdminController.deleteUser);
+  router.get("/getFileLibraryData", AuthService.validateAccessToken, AdminController.getFileLibraryData);
+  router.get("/getPaymentPackages", AuthService.validateAccessToken, AdminController.getPaymentPackages);
   router.get("/getNotificationsData", AuthService.validateAccessToken, AdminController.getNotificationsData);
   router.post("/sendNotification", Validation.sendNotificationValidate, AuthService.validateAccessToken, AdminController.sendNotification);
   router.get("/getSentNotificationsData", AuthService.validateAccessToken, AdminController.getSentNotificationsData);

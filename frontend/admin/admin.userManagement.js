@@ -6,14 +6,14 @@ async function fetchUsers() {
         const token = localStorage.getItem("accessToken");
         const response = await fetch("http://localhost:3030/api/v1/admin/getUsers", {
             method: 'GET',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
-             },
+            },
         });
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
+            window.location.href = "../dashboard.html";
+        }
         const users = await response.json();
         populateTable(users);
     } catch (error) {
@@ -44,28 +44,28 @@ function populateTable(users) {
             <td style="color: ${color}">${user.email}</td>
             <td style="color: ${color}">${formattedDate}</td>
             <td>
-                <button class="block-user action-button ${buttonClass1}" onClick="blockUser(this)" title="Block"><img src="../icons/block.gif" class="icon" alt="block_icon"></button>
-                <button class="unblock-user action-button ${buttonClass2}" onClick="unblockUser(this)" title="Unblock"><img src="../icons/unblock.gif" class="icon" alt="unblock_icon"></button>
-                <button class="delete-user action-button" onClick="deleteUser(this)" title="Delete"><img src="../icons/delete.gif" class="icon" alt="delete_icon"></button>
+                <button class="block-user action-button ${buttonClass1}" onClick="blockUser(this)" title="Block"><img src="../icons/block.png" class="icon" alt="block_icon"></button>
+                <button class="unblock-user action-button ${buttonClass2}" onClick="unblockUser(this)" title="Unblock"><img src="../icons/unblock.png" class="icon" alt="unblock_icon"></button>
+                <button class="delete-user action-button" onClick="deleteUser(this)" title="Delete"><img src="../icons/delete.png" class="icon" alt="delete_icon"></button>
             </td>
         `;
         tableBody.insertBefore(row, tableBody.firstChild);
     });
 }
 
-async function getAvailableUsersCount(){
+async function getAvailableUsersCount() {
     try {
         const token = localStorage.getItem("accessToken");
         const response = await fetch('http://localhost:3030/api/v1/admin/getAvailableUsersCount', {
             method: 'GET',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
-             },
+            },
         })
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
+            window.location.href = "../dashboard.html";
+        }
         const data = await response.json()
         const availableUsersSpan = document.querySelector('.available-users')
         availableUsersSpan.textContent = `Remaning: ${data} users`
@@ -93,66 +93,78 @@ document.getElementById("searchInput").addEventListener("input", function () {
 });
 
 
-    const userCreateButton = document.querySelector('.users-create-button')
-    userCreateButton.addEventListener('click', function () {
-        const tableBody = document.querySelector(".users-table tbody");
-        const row = document.createElement("tr");
-        row.innerHTML = `
+const userCreateButton = document.querySelector('.users-create-button')
+userCreateButton.addEventListener('click', function () {
+    const tableBody = document.querySelector(".users-table tbody");
+    const row = document.createElement("tr");
+    row.innerHTML = `
             <td></td>
             <td></td>
             <td><input type="text" name="email" class="userEmail input" placeholder="Enter user email"></td>
             <td></td>
             <td>
-            <button class="save-user action-button" title="Save" onClick="saveUser(this)"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
-            <button class="cancel action-button" title="Cancel" onClick="cancelUserRow(this)"><img src="../icons/cancel.gif" class="icon" alt="cancel_icon"></button>
+            <button class="save-user action-button" title="Save" onClick="saveUser(this)"><img src="../icons/save.png" class="icon" alt="save_icon"></button>
+            <button class="cancel action-button" title="Cancel" onClick="cancelUserRow(this)"><img src="../icons/cancel.png" class="icon" alt="cancel_icon"></button>
             </td>
 
         `;
-        tableBody.insertBefore(row, tableBody.firstChild);
+    tableBody.insertBefore(row, tableBody.firstChild);
 
-    })
+})
 
-async function saveUser() {
-const input = document.querySelector('.userEmail')
-const key = input.name; 
-const value = input.value.trim(); 
-const data = {
-    [key]: value
-}
+async function saveUser(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
+    const input = document.querySelector('.userEmail')
+    const key = input.name;
+    const value = input.value.trim();
+    const data = {
+        [key]: value
+    }
 
-        const token = localStorage.getItem("accessToken");
-        try {
-            const response = await fetch('http://localhost:3030/api/v1/admin/createVipProUser', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
-                 },
-                body: JSON.stringify(data)
-            })
-            if(response.status == 401){
-                localStorage.removeItem("accessToken")
-                window.open("../dashboard.html");
-              }
-                const resData = await response.json()
-                if (!resData.success) {
-                    showMessage(resData.errors)
-                }else{
-                    fetchUsers()
-                    getAvailableUsersCount()
-                    showMessage(resData.message)
-                }
-
-                
-        } catch (error) {
-            console.error('Server error:');
+    const token = localStorage.getItem("accessToken");
+    try {
+        const response = await fetch('http://localhost:3030/api/v1/admin/createVipProUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+        if (response.status == 401) {
+            localStorage.removeItem("accessToken")
+            window.location.href = "../dashboard.html";
         }
+        const resData = await response.json()
+        if (!resData.success) {
+            showMessage(resData.errors)
+        } else {
+            fetchUsers()
+            getAvailableUsersCount()
+            showMessage(resData.message)
+        }
+        elem.disabled = false;
+        loader.remove();
+
+
+
+    } catch (error) {
+        console.error('Server error:');
+    }
 
 }
 
 
 async function deleteUser(elem) {
-
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const row = elem.closest('tr')
     const cells = row.querySelectorAll("td");
     let email = '';
@@ -166,24 +178,27 @@ async function deleteUser(elem) {
         const token = localStorage.getItem("accessToken");
         const response = await fetch('http://localhost:3030/api/v1/admin/deleteUser', {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 "Authorization": `Bearer ${token}`
-             },
-            body: JSON.stringify({email: email})
+            },
+            body: JSON.stringify({ email: email })
         })
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
-            const data = await response.json()
-            if (data.success) { 
-                fetchUsers();
-                getAvailableUsersCount()
-                showMessage(data.message)
-            }
+            window.location.href = "../dashboard.html";
+        }
+        const data = await response.json()
+        if (data.success) {
+            fetchUsers();
+            getAvailableUsersCount()
+            showMessage(data.message)
+        }
+        elem.disabled = false;
+        loader.remove();
 
-    
+
+
     } catch (error) {
         console.error('Error deleting user:', error);
     }
@@ -193,32 +208,36 @@ async function deleteUser(elem) {
 
 
 async function blockUser(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
+    const row = elem.closest("tr")
+    const cells = row.querySelectorAll("td");
+    let email = '';
+    cells.forEach(cell => {
+        if (cell.textContent.includes("@")) {
+            email = cell.textContent.trim();
+        }
+    });
 
-const row = elem.closest("tr")
-const cells = row.querySelectorAll("td");
-let email = '';
-cells.forEach(cell => {
-    if (cell.textContent.includes("@")) {
-        email = cell.textContent.trim();
-    }
-});
-
-try {
-    const token = localStorage.getItem("accessToken");
-    const response = await fetch('http://localhost:3030/api/v1/admin/blockUser', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${token}`
-         },
-        body: JSON.stringify({email: email})
-    })
-    if(response.status == 401){
-        localStorage.removeItem("accessToken")
-        window.open("../dashboard.html");
-      }
+    try {
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch('http://localhost:3030/api/v1/admin/blockUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ email: email })
+        })
+        if (response.status == 401) {
+            localStorage.removeItem("accessToken")
+            window.location.href = "../dashboard.html";
+        }
         const data = await response.json()
-        if (data.success) { 
+        if (data.success) {
             showMessage(data.message)
             elem.classList.add("hide")
             cells.forEach(cell => {
@@ -227,12 +246,14 @@ try {
             const unblockUserButton = row.querySelector('.unblock-user')
             unblockUserButton.classList.remove('hide')
         }
+        elem.disabled = false;
+        loader.remove();
 
-        
 
-} catch (error) {
-    console.error('Error sending data:', error);
-}
+
+    } catch (error) {
+        console.error('Error sending data:', error);
+    }
 }
 
 
@@ -240,57 +261,63 @@ try {
 
 
 async function unblockUser(elem) {
-const row = elem.closest("tr")
-const cells = row.querySelectorAll("td");
-let email = '';
-cells.forEach(cell => {
-    if (cell.textContent.includes("@")) {
-        email = cell.textContent.trim();
-    }
-});
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
+    const row = elem.closest("tr")
+    const cells = row.querySelectorAll("td");
+    let email = '';
+    cells.forEach(cell => {
+        if (cell.textContent.includes("@")) {
+            email = cell.textContent.trim();
+        }
+    });
 
-try {
-    const token = localStorage.getItem("accessToken");
-    const response = await fetch('http://localhost:3030/api/v1/admin/unblockUser', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${token}`
-         },
-        body: JSON.stringify({email: email})
-    })
-    if(response.status == 401){
-localStorage.removeItem("accessToken")
-        window.open("../dashboard.html");
-      }
+    try {
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch('http://localhost:3030/api/v1/admin/unblockUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ email: email })
+        })
+        if (response.status == 401) {
+            localStorage.removeItem("accessToken")
+            window.location.href = "../dashboard.html";
+        }
         const data = await response.json()
-        if (data.success) { 
+        if (data.success) {
             showMessage(data.message)
             elem.classList.add("hide")
             cells.forEach(cell => {
-            cell.style.color = ""
-        });
-        const blockUserButton = row.querySelector('.block-user')
-        blockUserButton.classList.remove('hide')
+                cell.style.color = ""
+            });
+            const blockUserButton = row.querySelector('.block-user')
+            blockUserButton.classList.remove('hide')
         }
-        
-        
+        elem.disabled = false;
+        loader.remove();
 
-} catch (error) {
-    console.error('Error sending data:', error);
-}
+
+    } catch (error) {
+        console.error('Error sending data:', error);
+    }
 }
 function cancelUserRow(elem) {
-const row = elem.closest("tr")
-row.remove();
+    const row = elem.closest("tr")
+    row.remove();
 }
 
 
 function upgradeMaxUserCount() {
-const usersTable = document.querySelector('.users-table')
-const popup = document.createElement("div")
-popup.classList.add("upgradePopup")
-popup.innerHTML = `
+    const usersTable = document.querySelector('.users-table')
+    const popup = document.createElement("div")
+    popup.classList.add("upgradePopup")
+    popup.innerHTML = `
     <span>Enter user count</span>
     <input type="text" class="input userCount" placeholder="Min. 5 user" value="5">
     <div class="priceInfo">
@@ -298,75 +325,82 @@ popup.innerHTML = `
     <span class="lastPrice">Last price:</span>
     </div>
     <div class="popupButtonsDiv">
-        <button class="create-button popupButton" onClick="upgradeUserCount()">Upgrade</button>
+        <button class="create-button popupButton" onClick="upgradeUserCount(this)">Upgrade</button>
         <button class="create-button popupButton" onClick="closePopup()">Cancel</button>
     </div>
 
 `;
-usersTable.appendChild(popup)
+    usersTable.appendChild(popup)
 
 }
 
 
 
-async function upgradeUserCount(){
-try {
-    const userCount = document.querySelector('.userCount').value
-    const token = localStorage.getItem("accessToken");
-    const response = await fetch('http://localhost:3030/api/v1/admin/upgradeUserCount', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${token}`
-         },
-        body: JSON.stringify({userCount: userCount})  
-    })
-    if(response.status == 401){
-        localStorage.removeItem("accessToken")
-        window.open("../dashboard.html");
-      }
-      const data = await response.json()
+async function upgradeUserCount(elem) {
+    try {
+        elem.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        elem.textContent = ""
+        elem.appendChild(loader);
+        const userCount = document.querySelector('.userCount').value
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch('http://localhost:3030/api/v1/admin/upgradeUserCount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ userCount: userCount })
+        })
+        if (response.status == 401) {
+            localStorage.removeItem("accessToken")
+            window.location.href = "../dashboard.html";
+        }
+        const data = await response.json()
         if (!data.success) {
             showMessage(data.errors)
-        }else{
+        } else {
             window.open(data, '_blank');
             window.location.reload()
         }
-}catch (error) {
+        elem.disabled = false;
+        loader.remove();
+    } catch (error) {
         console.error('Error:', error);
     }
 }
 
 function closePopup() {
-document.body.classList.remove('overlay-active');
-const popup = document.querySelector('.upgradePopup')
-popup.classList.add('hide')
+    document.body.classList.remove('overlay-active');
+    const popup = document.querySelector('.upgradePopup')
+    popup.classList.add('hide')
 }
 
 function priceChange() {
 
-const priceInput = document.querySelector('.userCount')
-const lastPriceSpan = document.querySelector('.lastPrice')
-lastPriceSpan.textContent = `Last price: ${priceInput.value} $`
-priceInput.addEventListener('keyup', function () {
-
+    const priceInput = document.querySelector('.userCount')
+    const lastPriceSpan = document.querySelector('.lastPrice')
     lastPriceSpan.textContent = `Last price: ${priceInput.value} $`
+    priceInput.addEventListener('keyup', function () {
 
-})
+        lastPriceSpan.textContent = `Last price: ${priceInput.value} $`
+
+    })
 }
 
 
 
 function showMessage(messageText) {
 
-const messageContainer = document.createElement('div');
-messageContainer.classList.add('messageContainer')
-messageContainer.innerHTML = `
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('messageContainer')
+    messageContainer.innerHTML = `
     <span>${messageText}</span>
 `;
-document.body.appendChild(messageContainer)
-messageContainer.classList.add('showMessageContainer');
-setTimeout(() => {
-    messageContainer.classList.remove('showMessageContainer');
-}, 2000); 
+    document.body.appendChild(messageContainer)
+    messageContainer.classList.add('showMessageContainer');
+    setTimeout(() => {
+        messageContainer.classList.remove('showMessageContainer');
+    }, 2000);
 }

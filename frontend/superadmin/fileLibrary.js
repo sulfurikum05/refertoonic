@@ -6,16 +6,16 @@ async function fetchLibraryData() {
     if (isLoading) return;
     isLoading = true;
     try {
-         const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = await fetch(`http://localhost:3030/api/v1/superadmin/getfileLibraryData?page=${page}&limit=${limit}`, {
             method: 'GET',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
-             },
+            },
         });
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
         }
         const data = await response.json();
         if (data.length > 0) {
@@ -46,15 +46,15 @@ function populateTable(data) {
             <td>${formattedDate}</td>
             <td>
                 <div class="actions_col">
-                    <button class="delete-video action-button" onClick="deleteLibraryVideo(this)" title="Delete"><img src="../icons/delete.gif" class="icon" alt="delete_icon"></button>
+                    <button class="delete-video action-button" onClick="deleteLibraryVideo(this)" title="Delete"><img src="../icons/delete.png" class="icon" alt="delete_icon"></button>
                     <button class="unpublish action-button" onClick="unpublishVideo(this)" title="Unpublish"><img src="../icons/unpublish.png" class="icon" alt="unpublish_icon"></button>
                 </div>
             </td>
         `;
         videosTableBody.insertBefore(row, videosTableBody.firstChild);
-        
-    });        
-}       
+
+    });
+}
 
 window.addEventListener("scroll", () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 1) {
@@ -70,7 +70,7 @@ function fetchVideosCount(data) {
     infoDiv.innerHTML = `
                     <span class="videosCountInfoDiv hide">Videos: ${videosCount}</span>
                 `;
-                infoContainer.appendChild(infoDiv);
+    infoContainer.appendChild(infoDiv);
 }
 
 
@@ -86,9 +86,9 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
             <input type="file" class="video-input" accept="video/*" style="display: none;">
             <input type="file" class="gif-input" accept="gif/*" style="display: none;">
             <div class="actions_col">
-                <button class="upload-gif action-button" title="Upload gif"><img src="../icons/upload.gif" class="icon" alt="upload_icon"></button>
-                <button class="upload-video action-button" title="Upload mp4"><img src="../icons/upload.gif" class="icon" alt="upload_icon"></button>
-                <button class="save-video action-button" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
+                <button class="upload-gif action-button" title="Upload gif"><img src="../icons/upload.png" class="icon" alt="upload_icon"></button>
+                <button class="upload-video action-button" title="Upload mp4"><img src="../icons/upload.png" class="icon" alt="upload_icon"></button>
+                <button class="save-video action-button" title="Save"><img src="../icons/save.png" class="icon" alt="save_icon"></button>
             </div>
         </td>
     `;
@@ -100,22 +100,22 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
     const gifInput = newRow.querySelector('.gif-input');
 
     uploadVideoButton.addEventListener('click', function () {
-        videoInput.click(); 
+        videoInput.click();
     });
     uploadGifButton.addEventListener('click', function () {
-        gifInput.click(); 
+        gifInput.click();
     });
 
     videoInput.addEventListener('change', function () {
         if (videoInput.files && videoInput.files.length > 0) {
-            const fileName = videoInput.files[0].name; 
+            const fileName = videoInput.files[0].name;
             const videoNameCell = newRow.querySelector('.video-name-cell');
             videoNameCell.textContent = fileName;
         }
     });
     gifInput.addEventListener('change', function () {
         if (gifInput.files && gifInput.files.length > 0) {
-            const fileName = gifInput.files[0].name; 
+            const fileName = gifInput.files[0].name;
             const videoNameCell = newRow.querySelector('.video-name-cell');
             videoNameCell.textContent = fileName;
         }
@@ -123,6 +123,11 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
 
     const saveButton = newRow.querySelector('.save-video');
     saveButton.addEventListener('click', async function () {
+        saveButton.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        saveButton.textContent = ""
+        saveButton.appendChild(loader);
         const videoFile = videoInput.files[0];
         const gifFile = gifInput.files[0];
         const title = newRow.querySelector('.title-input');
@@ -140,23 +145,25 @@ document.querySelector('.video-upload-button').addEventListener('click', functio
         const token = localStorage.getItem("accessToken");
         const response = await fetch('http://localhost:3030/api/v1/superadmin/uploadLibraryVideo', {
             method: 'POST',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
             },
             body: formData
         });
-        if(response.status == 401) {
+        if (response.status == 401) {
             localStorage.removeItem("accessToken");
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
         }
         const data = await response.json();
         if (!data.success) {
             showMessage(data.errors);
-        }else{
+        } else {
             fetchLibraryData();
             showMessage(data.message);
             newRow.remove()
         }
+        saveButton.disabled = false;
+        loader.remove();
 
     });
 });
@@ -174,9 +181,9 @@ document.querySelector('.video-bulk-upload-button').addEventListener('click', fu
             <input type="file" class="video-input" accept="video/*" multiple style="display: none;">
             <input type="file" class="gif-input" accept="gif/*" multiple style="display: none;">
             <div class="actions_col">
-                <button class="bulk-upload-gif action-button" title="Upload gif"><img src="../icons/upload.gif" class="icon" alt="upload_icon">
-                <button class="bulk-upload-video action-button" title="Upload mp4"><img src="../icons/upload.gif" class="icon" alt="upload_icon"></button>
-                <button class="save-video action-button" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
+                <button class="bulk-upload-gif action-button" title="Upload gif"><img src="../icons/upload.png" class="icon" alt="upload_icon">
+                <button class="bulk-upload-video action-button" title="Upload mp4"><img src="../icons/upload.png" class="icon" alt="upload_icon"></button>
+                <button class="save-video action-button" title="Save"><img src="../icons/save.png" class="icon" alt="save_icon"></button>
             </div>
         </td>
     `;
@@ -222,6 +229,11 @@ document.querySelector('.video-bulk-upload-button').addEventListener('click', fu
     });
 
     saveButton.addEventListener('click', async function () {
+        saveButton.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        saveButton.textContent = ""
+        saveButton.appendChild(loader);
         if (!formData.has('videos') && !formData.has('gifs')) {
             alert("Please select files before saving");
             return;
@@ -239,7 +251,7 @@ document.querySelector('.video-bulk-upload-button').addEventListener('click', fu
 
         if (response.status == 401) {
             localStorage.removeItem("accessToken");
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
         }
 
         const data = await response.json();
@@ -248,6 +260,8 @@ document.querySelector('.video-bulk-upload-button').addEventListener('click', fu
             showMessage(data.message);
             newRow.remove()
         }
+        saveButton.disabled = false;
+        loader.remove();
     });
 });
 
@@ -257,73 +271,86 @@ fetchLibraryData()
 //DELETE LIBRARY VIDEO START//
 
 async function deleteLibraryVideo(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
 
-         
-        const row = elem.closest("tr");
-        const rowId = row.dataset.id
-        const token = localStorage.getItem("accessToken");
-        const response = await fetch('http://localhost:3030/api/v1/superadmin/deleteLibraryVideo', {
-            method: 'DELETE',
-            headers: { 
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-             },
-            body: JSON.stringify({ id: rowId })
-        })
-        if(response.status == 401){
-            localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-        }
-        const data = await response.json()
-            if (data.success) {
-                fetchLibraryData()
-                showMessage(data.message)
-            }
-            
+    const row = elem.closest("tr");
+    const rowId = row.dataset.id
+    const token = localStorage.getItem("accessToken");
+    const response = await fetch('http://localhost:3030/api/v1/superadmin/deleteLibraryVideo', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: rowId })
+    })
+    if (response.status == 401) {
+        localStorage.removeItem("accessToken")
+        window.location.href = "../dashboard.html";
+    }
+    const data = await response.json()
+    if (data.success) {
+        fetchLibraryData()
+        showMessage(data.message)
+    }
+    elem.disabled = false;
+    loader.remove();
+
 }
 
 
-function showVideosCount(){
+function showVideosCount() {
     const videosCountInfoDiv = document.querySelector(".videosCountInfoDiv");
     if (videosCountInfoDiv.classList.contains('hide')) {
-        
+
         videosCountInfoDiv.classList.remove('hide')
-    }else{
+    } else {
         videosCountInfoDiv.classList.add('hide')
     }
 }
 
 
 async function unpublishVideo(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const row = elem.closest('tr')
     const video_id = row.dataset.id
     const token = localStorage.getItem("accessToken");
     const response = await fetch('http://localhost:3030/api/v1/superadmin/unpublishVideo', {
         method: 'POST',
-        headers: { 
+        headers: {
             'Content-Type': 'application/json',
             "Authorization": `Bearer ${token}`
-         },
+        },
         body: JSON.stringify({ id: video_id })
     })
-    if(response.status == 401){
+    if (response.status == 401) {
         localStorage.removeItem("accessToken")
-        window.open("../dashboard.html");
+        window.location.href = "../dashboard.html";
     }
     const data = await response.json()
-        if (data.success) {
-            fetchLibraryData()
-            showMessage(data.message)
-        }
+    if (data.success) {
+        fetchLibraryData()
+        showMessage(data.message)
+    }
+    elem.disabled = false;
+    loader.remove();
 }
 
-const searchInput  = document.getElementById('searchInput');
-searchInput.addEventListener("keydown", function(event) {
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
         getReferencesBySearch()
     }
-  });
+});
 
 async function getReferencesBySearch() {
     try {
@@ -331,13 +358,13 @@ async function getReferencesBySearch() {
         const token = localStorage.getItem("accessToken");
         const response = await fetch(`http://localhost:3030/api/v1/superadmin/getReferencesBySearch/${searchValue}`, {
             method: 'GET',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
-             },
+            },
         });
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
         }
         const data = await response.json();
         const videoTableBody = document.querySelector('.videos-table tbody')
@@ -359,5 +386,5 @@ function showMessage(messageText) {
     messageContainer.classList.add('showMessageContainer');
     setTimeout(() => {
         messageContainer.classList.remove('showMessageContainer');
-    }, 2000); 
+    }, 2000);
 }

@@ -120,18 +120,15 @@
     <div class="main-text"></div>
     <section class="pricing-header"></section>
     <div class="payment-packages"></div>
-    <div class="demo-section"></div>
-    <div class="team-section demo-section"></div>
+
+    <div class="team-section"></div>
     <div class="contact-section">
         <div class="contact-form">
             <h2 class="contact-form-title">CONTACT US</h2>
             <div class="form-group">
-                <input type="email" id="email" name="email" class="form-control" placeholder="Input your Email *"
-                    required />
-                <input type="text" id="name" name="name" class="form-control" placeholder="Input your name" />
-                <textarea class="form-control" id="message" name="subject" rows="5" placeholder="Input your message*"
-                    required></textarea>
-
+                <input type="email" class="form-control sendMessageEmail">
+                <input type="text"class="form-control sendMessageName name">
+                <textarea class="form-control sendMessageMessage"rows="5"></textarea>
                 <button onclick="sendUnauthMessage(this)" class="btn" id="sendMessage">Send</button>
             </div>
         </div>

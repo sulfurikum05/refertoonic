@@ -2,7 +2,7 @@ async function fetchpaymentPackagesData() {
 
     try {
         const token = localStorage.getItem("accessToken");
-        const response = await fetch("http://localhost:3030/api/v1/vip/getPaymentPackages", {
+        const response = await fetch("http://localhost:3030/api/v1/admin/getPaymentPackages", {
             method: 'GET',
             headers: { "Authorization": `Bearer ${token}` },
         })
@@ -51,7 +51,7 @@ async function fetchpaymentPackagesData() {
                         <li>${Sixteen}</li>
                         </ul>
                     </div>
-                    <button class="${status} ${upgradeButton} currentUpgradeButton" data-package="${item.title}" onClick="upgradeOrExtend(this)">${status}</button>
+                    <button class="${status} ${upgradeButton} currentUpgradeButton" data-package="${item.title}" onClick="extend(this)">${status}</button>
             `;
             ppSecondDiv.appendChild(package);
         })
@@ -94,46 +94,8 @@ function yearlyToggleButtonFunction() {
     monthlyButton.classList.add('show')
 }
 
-async function upgradeOrExtend(elem) {
-    if (elem.classList.contains("Upgrade")) {
-        elem.disabled = true;
-        const loader = document.createElement('span');
-        loader.className = 'loader';
-        elem.appendChild(loader);
-        let period = ""
-        const toggleButtons = document.querySelectorAll('.toggle-btn')
-        toggleButtons.forEach((toggleButton) => {
-            if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('monthly')) {
-                period = "yearly"
-
-            } if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('yearly')) {
-                period = "monthly"
-            }
-        })
-        const package = elem.dataset.package.toLowerCase()
-        const token = localStorage.getItem("accessToken");
-        const response = await fetch("http://localhost:3030/api/v1/vip/upgrade", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ packageForUpgrade: package, period: period })
-        })
-        if (response.status == 401) {
-            localStorage.removeItem("accessToken")
-            window.location.href = "../dashboard.html";
-        }
-        const paymentUrl = await response.json()
-        if (!paymentUrl.success) {
-            showMessage(paymentUrl.errors)
-        } else {
-            window.open(paymentUrl, '_blank');
-        }
-        elem.disabled = false;
-        loader.remove();
-    }
-    if (elem.classList.contains("Extend")) {
+async function extend(elem) {
+   
         elem.disabled = true;
         const loader = document.createElement('span');
         loader.className = 'loader';
@@ -172,7 +134,7 @@ async function upgradeOrExtend(elem) {
             loader.remove();
             window.open(paymentUrl, '_blank');
         }
-    }
+    
 }
 
 

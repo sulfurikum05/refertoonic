@@ -252,35 +252,15 @@ export default class UsersServices {
     return await UsersModel.getSentMessages(id);
   }
 
-  static async getPaymentPackages(role, pp) {
+  static async getPaymentPackages() {
     const trx = await pg.transaction();
     try {
       const ppData = await UsersModel.getPaymentPackages(trx);
       ppData.sort((a, b) => a.id - b.id);
-      if (role == "user") {
         ppData[0].status = "Current";
         ppData[1].status = "Upgrade";
         ppData[2].status = "Upgrade";
         ppData[0].color = "color";
-      }
-      if (role == "vip" && pp !== "vipPro") {
-        ppData[0].status = "hide";
-        ppData[1].status = "Extend";
-        ppData[2].status = "Upgrade";
-        ppData[1].color = "color";
-      }
-      if (role == "vip" && pp == "vipPro") {
-        ppData[0].status = "hide";
-        ppData[1].status = "hide";
-        ppData[2].status = "hide";
-        ppData[1].color = "color";
-      }
-      if (role == "admin") {
-        ppData[0].status = "hide";
-        ppData[1].status = "hide";
-        ppData[2].status = "Extend";
-        ppData[2].color = "color";
-      }
       await trx.commit();
       return ppData;
     } catch (error) {

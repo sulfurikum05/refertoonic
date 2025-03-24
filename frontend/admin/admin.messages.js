@@ -11,7 +11,7 @@ async function fetchMessagesData() {
         });
         if(response.status == 401){
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
+            window.location.href = "../dashboard.html";
           }
         const data = await response.json();
         populateTable(data)
@@ -36,7 +36,7 @@ function populateTable(data) {
             <td>${formattedDate}</td>
             <td>
                 <div class="actions_col">
-                    <button class="delete-message action-button" onClick="deleteMessage(this)" title="Delete"><img src="../icons/delete.gif" class="icon" alt="delete_icon"></button>
+                    <button class="delete-message action-button" onClick="deleteMessage(this)" title="Delete"><img src="../icons/delete.png" class="icon" alt="delete_icon"></button>
                 </div>
             </td>
         `;
@@ -48,6 +48,11 @@ function populateTable(data) {
 fetchMessagesData()
 
 async function deleteMessage(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const row = elem.closest("tr");
     const rowId = row.dataset.id
     const response =  await fetch('http://localhost:3030/api/v1/admin/deleteMessage', {
@@ -57,13 +62,15 @@ async function deleteMessage(elem) {
     })
     if(response.status == 401){
         localStorage.removeItem("accessToken")
-        window.open("../dashboard.html");
+        window.location.href = "../dashboard.html";
       }
         const data = await response.json()
         if (data.success) {
             fetchMessagesData()
             showMessage(data.message)
         }
+        elem.disabled = false;
+        loader.remove();
 
         
 }

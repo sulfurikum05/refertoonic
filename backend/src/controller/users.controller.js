@@ -149,9 +149,12 @@ export default class UsersController {
   static async getPaymentPackages(req, res, next) {
     try {
       const role = req.role;
-      const pp = req.pp;
-      const data = await UsersServices.getPaymentPackages(role, pp);
+      if (role !== "user") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+      const data = await UsersServices.getPaymentPackages();
       SuccessHandlerUtil.handleList(res, next, data);
+      }
     } catch (error) {
       next(error);
     }

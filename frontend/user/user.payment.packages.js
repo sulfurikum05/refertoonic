@@ -1,15 +1,15 @@
-async function fetchpaymentPackagesData(){
-    
+async function fetchpaymentPackagesData() {
+
     try {
         const token = localStorage.getItem("accessToken");
         const response = await fetch("http://localhost:3030/api/v1/users/getPaymentPackages", {
             method: 'GET',
-            headers: {"Authorization": `Bearer ${token}`},
+            headers: { "Authorization": `Bearer ${token}` },
         })
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
+            window.location.href = "../dashboard.html";
+        }
 
         const ppData = await response.json();
         const ppSecondDiv = document.querySelector('.ppSecondDiv')
@@ -30,7 +30,7 @@ async function fetchpaymentPackagesData(){
             const text = item.text;
             const parts = text.split(',');
             const [One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Eleven, Twelve, Thirteen, Fourteen, Fifteen, Sixteen] = parts;
-                package.innerHTML = `
+            package.innerHTML = `
                     <h2 class="${item.color}" >${item.title}</h2>
                     <p class="price">${item.price}$ / month</p>
                     <div class="plan featured">
@@ -55,13 +55,13 @@ async function fetchpaymentPackagesData(){
                         </div>
                         <button class="${status} ${upgradeButton} currentUpgradeButton" onClick=upgradeFunction(this)>${status}</button>
                 `;
-                ppSecondDiv.appendChild(package);
+            ppSecondDiv.appendChild(package);
         })
 
     } catch (error) {
         console.error("Failed to retrieve data", error);
     }
-    
+
 }
 
 fetchpaymentPackagesData()
@@ -70,15 +70,15 @@ fetchpaymentPackagesData()
 
 
 
-function monthlyToggleButtonFunction(){
+function monthlyToggleButtonFunction() {
     const monthlyButton = document.querySelector(".monthly")
     const yearlyButton = document.querySelector(".yearly")
     const paymentPackagesPrices = document.querySelectorAll(".price")
     paymentPackagesPrices.forEach(elem => {
-    const price = elem.textContent.split("$")[0].trim();
-    const notFixedPrice = Number(price) / 12 * 1.25
-    const fixedPrice = notFixedPrice.toFixed(0)
-    elem.textContent = `${fixedPrice}$ / month`
+        const price = elem.textContent.split("$")[0].trim();
+        const notFixedPrice = Number(price) / 12 * 1.25
+        const fixedPrice = notFixedPrice.toFixed(0)
+        elem.textContent = `${fixedPrice}$ / month`
     });
     monthlyButton.classList.remove('show')
     monthlyButton.classList.add('hide')
@@ -88,15 +88,15 @@ function monthlyToggleButtonFunction(){
 
 }
 
-function yearlyToggleButtonFunction(){
+function yearlyToggleButtonFunction() {
     const monthlyButton = document.querySelector(".monthly")
     const yearlyButton = document.querySelector(".yearly")
     const paymentPackagesPrices = document.querySelectorAll(".price")
     paymentPackagesPrices.forEach(elem => {
-    const price = elem.textContent.split("$")[0].trim();
-    const notFixedPrice = Number(price) * 12 * 0.8
-    const fixedPrice = notFixedPrice.toFixed(0)
-    elem.textContent = `${fixedPrice}$ / year` 
+        const price = elem.textContent.split("$")[0].trim();
+        const notFixedPrice = Number(price) * 12 * 0.8
+        const fixedPrice = notFixedPrice.toFixed(0)
+        elem.textContent = `${fixedPrice}$ / year`
     });
     yearlyButton.classList.remove('show')
     yearlyButton.classList.add('hide')
@@ -114,52 +114,52 @@ function upgradeFunction(elem) {
     if (elem.classList.contains('upgradeToEnterprise')) {
         package = "enterprise"
         pay(package)
-    }   
+    }
 }
 
 
 async function pay(package) {
-    
+
     const upgradeButtons = document.querySelectorAll('.Upgrade')
-    upgradeButtons.forEach((button)=>{
+    upgradeButtons.forEach((button) => {
         button.disabled = true;
         const loader = document.createElement('span');
         loader.className = 'loader';
         button.appendChild(loader);
     })
-    
+
     let period = ""
     const toggleButtons = document.querySelectorAll('.toggle-btn')
-    toggleButtons.forEach((toggleButton)=>{
+    toggleButtons.forEach((toggleButton) => {
         if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('monthly')) {
             period = "yearly"
-            
-        }if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('yearly')) {
+
+        } if (!toggleButton.classList.contains('hide') && toggleButton.classList.contains('yearly')) {
             period = "monthly"
         }
     })
-    
+
     const token = localStorage.getItem("accessToken");
-        const response = await fetch("http://localhost:3030/api/v1/users/upgrade", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({packageForUpgrade: package, period: period})
-        })
-        if(response.status == 401){
-            localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
-            const paymentUrl = await response.json()
-            if (!dataLength.success) {
-                showMessage(dataLength.errors)
-            } else {
-                window.open(paymentUrl, '_blank');
-            }
-            button.disabled = false;
-            loader.remove();
+    const response = await fetch("http://localhost:3030/api/v1/users/upgrade", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ packageForUpgrade: package, period: period })
+    })
+    if (response.status == 401) {
+        localStorage.removeItem("accessToken")
+        window.location.href = "../dashboard.html";
+    }
+    const paymentUrl = await response.json()
+    if (!dataLength.success) {
+        showMessage(dataLength.errors)
+    } else {
+        window.open(paymentUrl, '_blank');
+    }
+    button.disabled = false;
+    loader.remove();
 
 }
 

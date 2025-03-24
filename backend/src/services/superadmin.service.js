@@ -61,16 +61,6 @@ export class SuperadminService {
     }
   }
 
-  // static async createPaymentPackage(newData) {
-  //   const data = {
-  //     title: newData[0].element,
-  //     price: newData[1].element,
-  //     text: newData[2].element,
-  //   };
-  //   await SuperadminModel.createPaymentPackage(data);
-  //   return { success: true, message: "Payment package created successfully" };
-  // }
-
   static async updateTeam(data, id) {
     await SuperadminModel.updateTeam(data, id);
     return { success: true, message: "Team updated successfully" };

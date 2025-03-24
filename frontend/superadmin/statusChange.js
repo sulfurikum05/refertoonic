@@ -4,18 +4,18 @@ const tableBody = document.querySelector(".users-table tbody");
 async function fetchUsers() {
     try {
 
-         const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken");
         const response = await fetch("http://localhost:3030/api/v1/superadmin/getUsers", {
             method: 'GET',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
-             },
+            },
         });
         const users = await response.json();
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
+            window.location.href = "../dashboard.html";
+        }
         populateTable(users);
     } catch (error) {
         console.error("Failed to retrieve data", error);
@@ -42,7 +42,7 @@ function populateTable(users) {
             if (user.payment_package == "vipPro") {
                 vipProCount++
             }
-            vipCount ++
+            vipCount++
         }
 
         const date = new Date(user.created_at);
@@ -65,20 +65,20 @@ function populateTable(users) {
             <td  data-id="4" name="payment_package" style="color: ${color}">${user.payment_package}</td>
             <td  style="color: ${color}">${user.admin_id}</td>
             <td  style="color: ${color}">${formattedDate}</td>
-            <td><button class="userInfo action-button" title="User information" onClick="showUserInfo(this)"><img src="../icons/userInfo.gif" class="icon" alt="userInfo_icon"></button></td>
-            <td><button class="userPayments action-button" title="User payments" onClick="showUserPayments(this)"><img src="../icons/userPayments.gif" class="icon" alt="userPayments_icon"></button></td>
+            <td><button class="userInfo action-button" title="User information" onClick="showUserInfo(this)"><img src="../icons/userInfo.png" class="icon" alt="userInfo_icon"></button></td>
+            <td><button class="userPayments action-button" title="User payments" onClick="showUserPayments(this)"><img src="../icons/userPayments.png" class="icon" alt="userPayments_icon"></button></td>
             <td>
-                <button class="edit action-button" onClick="editUserPackage(this)" title="Edit"><img src="../icons/edit.gif" class="icon" alt="edit_icon"></button>
-                <button class="save action-button hide" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
+                <button class="edit action-button" onClick="editUserPackage(this)" title="Edit"><img src="../icons/edit.png" class="icon" alt="edit_icon"></button>
+                <button class="save action-button hide" title="Save"><img src="../icons/save.png" class="icon" alt="save_icon"></button>
             </td>
         `;
         tableBody.appendChild(row);
     });
-        const mainContainer = document.querySelector(".main-container");
-        const infoDiv = document.createElement("div");
-        infoDiv.classList.add('infoDiv')
-        infoDiv.innerHTML = "";
-        infoDiv.innerHTML = `                    
+    const mainContainer = document.querySelector(".main-container");
+    const infoDiv = document.createElement("div");
+    infoDiv.classList.add('infoDiv')
+    infoDiv.innerHTML = "";
+    infoDiv.innerHTML = `                    
                     
                     <div class="usersCountInfoDiv hide">
                         <span>Users: ${usersCount}</span>
@@ -89,7 +89,7 @@ function populateTable(users) {
                     </div>
                     <span class="usersCountInfo" onClick="showUsersCount()"  title="Users statistic"><img src="../icons/info.png"></span>
                     `;
-                    mainContainer.appendChild(infoDiv);
+    mainContainer.appendChild(infoDiv);
 }
 
 fetchUsers();
@@ -111,29 +111,29 @@ document.getElementById("searchInput").addEventListener("input", function () {
 });
 
 
-function showUsersCount(){
+function showUsersCount() {
 
     const usersCountInfoDiv = document.querySelector(".usersCountInfoDiv");
     if (usersCountInfoDiv.classList.contains('hide')) {
-        
+
         usersCountInfoDiv.classList.remove('hide')
-    }else{
+    } else {
         usersCountInfoDiv.classList.add('hide')
     }
 }
 
 
-    
+
 
 
 const headers = document.querySelectorAll("th");
 const table = document.querySelector(".users-table");
-let isAsc = true; 
+let isAsc = true;
 
 headers.forEach((header, index) => {
     header.addEventListener("click", () => {
         sortTable(index);
-        isAsc = !isAsc; 
+        isAsc = !isAsc;
     });
 });
 
@@ -154,7 +154,7 @@ function sortTable(columnIndex) {
             comparison = cellA.localeCompare(cellB);
         }
 
-        return isAsc ? comparison : -comparison; 
+        return isAsc ? comparison : -comparison;
     });
 
 
@@ -162,16 +162,20 @@ function sortTable(columnIndex) {
 }
 
 
-async function showUserInfo(elem){
-
+async function showUserInfo(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const row = elem.closest('tr')
     const userId = row.dataset.id
     const token = localStorage.getItem("accessToken");
     const response = await fetch(`http://localhost:3030/api/v1/superadmin/getUsersPersonalInfo/${userId}`, {
         method: 'GET',
-        headers: { 
+        headers: {
             "Authorization": `Bearer ${token}`
-         },
+        },
     });
     const data = await response.json()
     const usersTable = document.querySelector('.users-table')
@@ -179,10 +183,10 @@ async function showUserInfo(elem){
         const deletedPopup = document.querySelector(".userPopup")
         deletedPopup.remove()
     }
-        const popup = document.createElement("div")
-        popup.classList.add("upgradePopup")
-        popup.classList.add("userPopup")
-        popup.innerHTML = `
+    const popup = document.createElement("div")
+    popup.classList.add("upgradePopup")
+    popup.classList.add("userPopup")
+    popup.innerHTML = `
                     <img src="${data[0].picture}" alt="profilePicture">
                     <h1>${data[0].name} ${data[0].surname}</h1>
                     <span class="phone"><b>Phone:</b> ${data[0].phone}</span>
@@ -194,11 +198,10 @@ async function showUserInfo(elem){
                     <span class="about"><b>About:</b> ${data[0].about}</span>
                     <button class="create-button popupButton" onClick="closePopup()">Cancel</button>
         `;
-        usersTable.appendChild(popup)
-    
+    usersTable.appendChild(popup)
 
-
-
+    elem.disabled = false;
+    loader.remove();
 }
 
 function closePopup() {
@@ -209,6 +212,11 @@ function closePopup() {
 
 
 async function showUserPayments(elem) {
+    elem.disabled = true;
+    const loader = document.createElement('span');
+    loader.className = 'loader';
+    elem.textContent = ""
+    elem.appendChild(loader);
     const usersTable = document.querySelector(".users-table");
     usersTable.remove()
     const row = elem.closest('tr')
@@ -216,31 +224,29 @@ async function showUserPayments(elem) {
     const token = localStorage.getItem("accessToken");
     const response = await fetch(`http://localhost:3030/api/v1/superadmin/getUserPayments/${userId}`, {
         method: 'GET',
-        headers: { 
+        headers: {
             "Authorization": `Bearer ${token}`
-         },
+        },
     });
     const data = await response.json()
     const paymentsTableBody = document.querySelector('.payments-table tbody')
     const paymentsTable = document.querySelector('.payments-table')
     paymentsTable.classList.remove('hide')
 
-    data.forEach((payment)=>{
+    data.forEach((payment) => {
 
         const createDate = new Date(payment.created_at);
         let expireDate
         let formattedexpireDate
         if (payment.expire_at !== null) {
-            console.log(payment.expire_at);
-            
             expireDate = new Date(payment.expire_at);
             formattedexpireDate = `${expireDate.getDate().toString().padStart(2, '0')}.${(expireDate.getMonth() + 1).toString().padStart(2, '0')}.${expireDate.getFullYear()} ${expireDate.getHours().toString().padStart(2, '0')}:${expireDate.getMinutes().toString().padStart(2, '0')}:${expireDate.getSeconds().toString().padStart(2, '0')}`;
         }
-        
-    const formattedcreateDate = `${createDate.getDate().toString().padStart(2, '0')}.${(createDate.getMonth() + 1).toString().padStart(2, '0')}.${createDate.getFullYear()} ${createDate.getHours().toString().padStart(2, '0')}:${createDate.getMinutes().toString().padStart(2, '0')}:${createDate.getSeconds().toString().padStart(2, '0')}`;
-    const paymentRow = document.createElement("tr");
-    paymentRow.dataset.id = payment.order_id
-    paymentRow.innerHTML = `
+
+        const formattedcreateDate = `${createDate.getDate().toString().padStart(2, '0')}.${(createDate.getMonth() + 1).toString().padStart(2, '0')}.${createDate.getFullYear()} ${createDate.getHours().toString().padStart(2, '0')}:${createDate.getMinutes().toString().padStart(2, '0')}:${createDate.getSeconds().toString().padStart(2, '0')}`;
+        const paymentRow = document.createElement("tr");
+        paymentRow.dataset.id = payment.order_id
+        paymentRow.innerHTML = `
         <td>${payment.id}</td>
         <td>${payment.user_id}</td>
         <td>${payment.payment_id}</td>
@@ -254,24 +260,26 @@ async function showUserPayments(elem) {
         <td data-id="2" name="expire_at">${formattedexpireDate || ""}</td>
         <td>${formattedcreateDate}</td>
         <td>
-            <button class="edit action-button" onClick="editPaymentStatus(this)" title="Edit"><img src="../icons/edit.gif" class="icon" alt="edit_icon"></button>
-            <button class="change action-button" onClick="openChangeStatusPopup(this)" title="Change status"><img src="../icons/change.gif" class="icon" alt="change_icon"></button>
-            <button class="save action-button hide" title="Save"><img src="../icons/save.gif" class="icon" alt="save_icon"></button>
+            <button class="edit action-button" onClick="editPaymentStatus(this)" title="Edit"><img src="../icons/edit.png" class="icon" alt="edit_icon"></button>
+            <button class="change action-button" onClick="openChangeStatusPopup(this)" title="Change status"><img src="../icons/change.png" class="icon" alt="change_icon"></button>
+            <button class="save action-button hide" title="Save"><img src="../icons/save.png" class="icon" alt="save_icon"></button>
         </td>
         
 
     `;
-    paymentsTableBody.appendChild(paymentRow);
-})
+        paymentsTableBody.appendChild(paymentRow);
+    })
+    elem.disabled = false;
+    loader.remove();
 }
 
-                       
-function editPaymentStatus(elem){
+
+function editPaymentStatus(elem) {
 
     const row = elem.closest('tr')
     const cells = row.querySelectorAll("td");
     const editButtons = document.querySelectorAll('.edit')
-    editButtons.forEach((button)=>{
+    editButtons.forEach((button) => {
         button.classList.add('hide')
     })
     const saveButton = row.querySelector('.save')
@@ -288,40 +296,47 @@ function editPaymentStatus(elem){
             <input type="date" class="input" value="${cell.textContent}" data-id="${cellId}"></input>
             `
         }
-                
+
     })
-    saveButton.addEventListener('click', async function (){
+    saveButton.addEventListener('click', async function () {
+        saveButton.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        saveButton.textContent = ""
+        saveButton.appendChild(loader);
         const row = elem.closest('tr')
         const inputs = row.querySelectorAll("input");
         const body = {};
-        inputs.forEach(input => {  
+        inputs.forEach(input => {
             body[input.dataset.id] = input.value;
-            })      
-            body.order_id = row.dataset.id
-            const token = localStorage.getItem("accessToken");
-            const response = await fetch(`http://localhost:3030/api/v1/superadmin/updatePaymentSuperadmin`, {
+        })
+        body.order_id = row.dataset.id
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch(`http://localhost:3030/api/v1/superadmin/updatePaymentSuperadmin`, {
             method: 'POST',
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body)
-            });
-            if(response.status == 401){
-                localStorage.removeItem("accessToken")
-                window.open("../dashboard.html");
-            }
-            const data = await response.json()
-            if (!data.success) {
-                showMessage(data.errors)
-            }else{
-                showMessage(data.message)
-                setTimeout(() => {
-                    window.location.reload()
-                }, 2000);
-            }
+        });
+        if (response.status == 401) {
+            localStorage.removeItem("accessToken")
+            window.location.href = "../dashboard.html";
+        }
+        const data = await response.json()
+        if (!data.success) {
+            showMessage(data.errors)
+        } else {
+            showMessage(data.message)
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000);
+        }
+        saveButton.disabled = false;
+        loader.remove();
 
-            })
+    })
 }
 
 
@@ -338,7 +353,7 @@ function showMessage(messageText) {
     messageContainer.classList.add('showMessageContainer');
     setTimeout(() => {
         messageContainer.classList.remove('showMessageContainer');
-    }, 2000); 
+    }, 2000);
 }
 
 
@@ -347,7 +362,7 @@ function editUserPackage(elem) {
     const row = elem.closest('tr')
     const cells = row.querySelectorAll("td");
     const editButtons = document.querySelectorAll('.edit')
-    editButtons.forEach((button)=>{
+    editButtons.forEach((button) => {
         button.classList.add('hide')
     })
     const saveButton = row.querySelector('.save')
@@ -359,42 +374,48 @@ function editUserPackage(elem) {
             <input type="text" class="input" value="${cell.textContent}" data-id="${cellId}">
         `
         }
-                
+
     })
 
-    saveButton.addEventListener('click', async function (){
+    saveButton.addEventListener('click', async function () {
+        saveButton.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        saveButton.textContent = ""
+        saveButton.appendChild(loader);
         const row = elem.closest('tr')
         const inputs = row.querySelectorAll("input");
         const body = {};
-        inputs.forEach(input => {  
+        inputs.forEach(input => {
             body[input.dataset.id] = input.value;
-            })      
-            body.user_id = row.dataset.id
-            const token = localStorage.getItem("accessToken");
-            const response = await fetch(`http://localhost:3030/api/v1/superadmin/editUserPackage`, {
+        })
+        body.user_id = row.dataset.id
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch(`http://localhost:3030/api/v1/superadmin/editUserPackage`, {
             method: 'POST',
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body)
-            });
-            if(response.status == 401){
-                localStorage.removeItem("accessToken")
-                window.open("../dashboard.html");
-            }
-            const data = await response.json()
-            if (!data.success) {
-                showMessage(data.errors)
-            }else{
-                const infoDiv = document.querySelector('.infoDiv')
-                infoDiv.remove()
-                fetchUsers()
-                showMessage(data.message)
-            }
-            
+        });
+        if (response.status == 401) {
+            localStorage.removeItem("accessToken")
+            window.location.href = "../dashboard.html";
+        }
+        const data = await response.json()
+        if (!data.success) {
+            showMessage(data.errors)
+        } else {
+            const infoDiv = document.querySelector('.infoDiv')
+            infoDiv.remove()
+            fetchUsers()
+            showMessage(data.message)
+        }
+        saveButton.disabled = false;
+        loader.remove();
 
-            })
+    })
 
 }
 
@@ -411,9 +432,9 @@ function openChangeStatusPopup(elem) {
     const status8 = "finished"
     const paymentsTable = document.querySelector('.payments-table')
     const popup = document.createElement("div")
-        popup.classList.add("upgradePopup")
-        popup.classList.add("userPopup")
-        popup.innerHTML = `
+    popup.classList.add("upgradePopup")
+    popup.classList.add("userPopup")
+    popup.innerHTML = `
 
                     <p><b>Change status for this order</b></p>
                     <div>
@@ -428,29 +449,29 @@ function openChangeStatusPopup(elem) {
 
                     </div>
         `;
-        paymentsTable.appendChild(popup)
+    paymentsTable.appendChild(popup)
 }
 
 async function changeOrderStatus(elem) {
+    const payment_status = elem.textContent
     elem.disabled = true;
     const loader = document.createElement('span');
     loader.className = 'loader';
     elem.textContent = ""
     elem.appendChild(loader);
     const order_id = elem.dataset.order_id
-    const payment_status = elem.textContent
     const body = {
-        order_id: order_id, 
+        order_id: order_id,
         payment_status: payment_status
     }
     const token = localStorage.getItem("accessToken");
     await fetch(`http://localhost:3030/api/v1/superadmin/ipnPaymentStatus`, {
-    method: 'POST',
-    headers: { 
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify(body)
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
     });
     showMessage(data.message)
     elem.disabled = false;

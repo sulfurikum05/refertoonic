@@ -7,7 +7,7 @@ async function fetchVideos() {
     isLoading = true;
     try {
         const token = localStorage.getItem("accessToken");
-        const response = await fetch(`http://localhost:3030/api/v1/vip/getVideos?page=${page}&limit=${limit}`, {
+        const response = await fetch(`http://localhost:3030/api/v1/admin/getVideos?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
                 "Authorization": `Bearer ${token}`

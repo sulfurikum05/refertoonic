@@ -131,14 +131,40 @@ export class AdminServices {
     }
   }
 
-  static async blockUser(email) {
-    await AdminModel.blockUser(email);
-    return { success: true, message: "User blocked successfully" };
+  static async blockUser(email, adminId) {
+    const trx = await pg.transaction();
+    try {
+      const user = await AdminModel.getUserByEmail(email, trx)
+      if (Number(user[0].admin_id) !== Number(adminId)) {
+        await trx.commit();
+        return { success: true, message: "You dont have permitions to block this user" };
+      }
+        await AdminModel.blockUser(email, trx);
+        await trx.commit();
+        return { success: true, message: "User blocked successfully" };
+
+    } catch (error) {
+      await trx.rollback();
+    }
+
   }
 
-  static async unblockUser(email) {
-    await AdminModel.unblockUser(email);
-    return { success: true, message: "User unblocked successfully" };
+  static async unblockUser(email, adminId) {
+    const trx = await pg.transaction();
+    try {
+      const user = await AdminModel.getUserByEmail(email, trx)
+      if (Number(user[0].admin_id) !== Number(adminId)) {
+        await trx.commit();
+        return { success: true, message: "You dont have permitions to unblock this user" };
+      }
+        await AdminModel.unblockUser(email, trx);
+        await trx.commit();
+        return { success: true, message: "User unblocked successfully" };
+      
+  } catch (error) {
+    await trx.rollback();
+  }
+
   }
 
   static async getMessagesData(userId) {
@@ -199,10 +225,7 @@ export class AdminServices {
       users.forEach((user) => {
         usersId.push(user.id);
       });
-      const videos = await AdminModel.getModerationVideosByUsersId(
-        usersId,
-        trx
-      );
+      const videos = await AdminModel.getModerationVideosByUsersId(usersId, trx);
       await trx.commit();
       return videos;
     } catch (error) {
@@ -210,20 +233,39 @@ export class AdminServices {
     }
   }
 
-  static async changeModerationVideoStatus(videoId) {
-    const data = { status: 0 };
-    await AdminModel.changeModerationVideoStatus(data, videoId);
-    return { success: true, message: "Video successfully sent to moderator" };
-  }
-
-  static async deleteModerationVideo(id) {
+  static async changeModerationVideoStatus(videoId, adminId) {
     const trx = await pg.transaction();
     try {
-      const video = await AdminModel.getVideosById(id, trx);
+      const video = await AdminModel.getVideosById(videoId, trx)
+      const userId = video[0].user_id
+      const user = await AdminModel.getUsersById(userId, trx)
+      if (Number(user[0].admin_id) !== Number(adminId)) {
+        await trx.commit();
+        return { success: true, message: "You dont have permitions send this video to moderation" };
+      }
+      const data = { status: 0 };
+      await AdminModel.changeModerationVideoStatus(data, videoId, trx);
+      await trx.commit();
+      return { success: true, message: "Video successfully sent to moderator" };
+    } catch (error) {
+      await trx.rollback();
+    }
+  }
+
+  static async deleteModerationVideo(videoId, adminId) {
+    const trx = await pg.transaction();
+    try {
+      const video = await AdminModel.getVideosById(videoId, trx);
+      const userId = video[0].user_id
+      const user = await AdminModel.getUsersById(userId, trx)
+      if (Number(user[0].admin_id) !== Number(adminId)) {
+        await trx.commit();
+        return { success: true, message: "You dont have permitions delete this video" };
+      }
       const filePath = video[0].video_url;
       const cleanPath = filePath.trim();
       await DeleteFiles.deleteFileFromStorage(cleanPath);
-      await AdminModel.deleteModerationVideoById(id, trx);
+      await AdminModel.deleteModerationVideoById(videoId, trx);
       await trx.commit();
       return { success: true, message: "Video deleted successfully" };
     } catch (error) {
@@ -231,12 +273,41 @@ export class AdminServices {
     }
   }
 
-  static async rejectModerationVideo(id) {
+  static async rejectModerationVideo(videoId, adminId) {
+    const trx = await pg.transaction();
+    try {
+      const video = await AdminModel.getVideosById(videoId, trx);
+      const userId = video[0].user_id
+      const user = await AdminModel.getUsersById(userId, trx)
+      if (Number(user[0].admin_id) !== Number(adminId)) {
+        await trx.commit();
+        return { success: true, message: "You dont have permitions reject this video" };
+      }
     const data = { status: -1 };
-    await AdminModel.rejectModerationVideo(data, id);
+    await AdminModel.rejectModerationVideo(data, videoId, trx);
+    await trx.commit();
     return { success: true, message: "Video rejected successfully" };
+  } catch (error) {
+    await trx.rollback();
+  }
   }
 
+      static async getPaymentPackages() {
+        const trx = await pg.transaction();
+        try {
+          const ppData = await UsersModel.getPaymentPackages(trx);
+          ppData.sort((a, b) => a.id - b.id);
+          ppData[0].status = "hide";
+          ppData[1].status = "hide";
+          ppData[2].status = "Extend";
+          ppData[2].color = "color";
+          await trx.commit();
+          return ppData;
+        } catch (error) {
+          await trx.rollback();
+        }
+      }
+  
   static async getNotificationsData(userId) {
     const trx = await pg.transaction();
     try {
@@ -281,11 +352,7 @@ export class AdminServices {
       const price = userCount * 1;
       const period = "";
       const packageForUpgrade = "Upgrade users count";
-      const data = await PaymentService.createPayment(
-        price,
-        period,
-        packageForUpgrade
-      );
+      const data = await PaymentService.createPayment(price,period,packageForUpgrade);
       data.user_id = adminId;
       data.payment_id = Math.floor(
         1000000000 + Math.random() * 9000000000

@@ -5,14 +5,14 @@ async function fetcPaymentHistoryData() {
         const token = localStorage.getItem("accessToken");
         const response = await fetch("http://localhost:3030/api/v1/users/getPaymentHistoryData", {
             method: 'GET',
-            headers: { 
+            headers: {
                 "Authorization": `Bearer ${token}`
-             }
+            }
         });
-        if(response.status == 401){
+        if (response.status == 401) {
             localStorage.removeItem("accessToken")
-            window.open("../dashboard.html");
-          }
+            window.location.href = "../dashboard.html";
+        }
         const data = await response.json();
         populatePaymentHistoryTable(data)
     } catch (error) {
@@ -24,8 +24,8 @@ fetcPaymentHistoryData()
 
 
 function populatePaymentHistoryTable(data) {
-    
-    paymentHistoryTableBody.innerHTML = ""; 
+
+    paymentHistoryTableBody.innerHTML = "";
     data.forEach(item => {
         let expire = ''
         let expireDate = ''
@@ -52,7 +52,7 @@ function populatePaymentHistoryTable(data) {
             <td>${item.status}</td>
         `;
         paymentHistoryTableBody.insertBefore(row, paymentHistoryTableBody.firstChild);
-        
+
     });
 }
 

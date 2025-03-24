@@ -28,3 +28,5 @@ const ErrorsUtil = ERRORS_NAME.reduce((acc, className) => {
 }, {});
 
 export default ErrorsUtil;
+
+

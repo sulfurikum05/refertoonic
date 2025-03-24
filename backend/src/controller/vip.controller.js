@@ -7,15 +7,15 @@ export class VipController {
   static async getVideos(req, res, next) {
     try {
       const role = req.role;
-      if (role === "vip" || role === "admin" || role === "superadmin") {
+      if (role !== "vip") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
         const userId = req.userId;
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 16;
         const offset = page * limit;
         const data = await VipServices.getVideos(limit, offset, userId);
         SuccessHandlerUtil.handleList(res, next, data);
-      } else {
-        return res.status(401).json({ message: "Unauthorized" });
       }
     } catch (error) {
       next(error);
@@ -54,12 +54,12 @@ export class VipController {
   static async getFileLibraryData(req, res, next) {
     try {
       const role = req.role;
-      if (role == "vip" || role == "admin") {
+      if (role !== "vip") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
         const userId = req.userId;
         const data = await VipServices.getFileLibraryData(userId);
         SuccessHandlerUtil.handleList(res, next, data);
-      } else {
-        return res.status(401).json({ message: "Unauthorized" });
       }
     } catch (error) {
       next(error);
@@ -113,6 +113,21 @@ export class VipController {
     }
   }
   
+  static async getPaymentPackages(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "vip") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const pp = req.pp
+        const data = await VipServices.getPaymentPackages(pp);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getNotificationsData(req, res, next) {
     try {
       const role = req.role;

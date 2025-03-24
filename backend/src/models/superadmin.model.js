@@ -39,10 +39,6 @@ export class SuperadminModel {
     await pg("slider_videos").where({ id: id }).delete().transacting(trx);
   }
 
-  // static async createPaymentPackage(data) {
-  //   await pg("payment_packages").insert(data);
-  // }
-
   static async updateTeam(data, id) {
     await pg("team").update(data).where({ id: id });
   }

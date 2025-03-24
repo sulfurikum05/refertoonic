@@ -7,6 +7,7 @@ import Validation from '../middlewares/validation/validation';
 
 const router = express.Router();
 
+  router.get("/getVideos", AuthService.validateAccessToken, SuperadminController.getVideos);
   router.get("/getUsers", AuthService.validateAccessToken, SuperadminController.getUsers);
   router.get("/getSliderVideosData", AuthService.validateAccessToken, SuperadminController.getSliderVideosData);
   router.get("/getDashboardTextsData", AuthService.validateAccessToken, SuperadminController.getDashboardTextsData);

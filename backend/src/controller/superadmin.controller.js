@@ -1,7 +1,26 @@
 import { SuperadminService } from "../services/superadmin.service";
 import { SuccessHandlerUtil } from "../utils";
+import { VipServices } from "../services/vip.services";
 
 export class SuperadminController {
+  static async getVideos(req, res, next) {
+    try {
+      const role = req.role;
+      if (role !== "superadmin") {
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        const userId = req.userId;
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 16;
+        const offset = page * limit;
+        const data = await VipServices.getVideos(limit, offset, userId);
+        SuccessHandlerUtil.handleList(res, next, data);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getUsers(req, res, next) {
     try {
       const role = req.role;
@@ -11,7 +30,7 @@ export class SuperadminController {
         const data = await SuperadminService.getUsers();
         SuccessHandlerUtil.handleList(res, next, data);
       }
-    } catch (error) {
+    } catch (error) {    
       next(error);
     }
   }
@@ -155,21 +174,6 @@ export class SuperadminController {
       next(error);
     }
   }
-
-  // static async createPaymentPackage(req, res, next) {
-  //   try {
-  //     const role = req.role;
-  //     if (role !== "superadmin") {
-  //       return res.status(401).json({ message: "Unauthorized" });
-  //     } else {
-  //       const newData = req.body.newData;
-  //       const data = await SuperadminService.createPaymentPackage(newData);
-  //       SuccessHandlerUtil.handleList(res, next, data);
-  //     }
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
 
   static async updatePaymentPackage(req, res, next) {
     try {
